@@ -1,0 +1,6715 @@
+{
+ "source": "조색 스포이드 v16 기본 도료 목록. Mr.컬러는 GSI Creos 공식 컬러리스트(2024-2025) 인쇄 견본 CMYK를 FOGRA39로 sRGB 변환한 값, 가이아노츠는 공식 컬러 차트의 대표색, Finisher's는 공식 쇼핑몰의 프라판 도색 견본 사진에서 잰 값, 나머지는 임시 근사값",
+ "brands": [
+  {
+   "id": "tamiya",
+   "name": {
+    "ko": "타미야 에나멜",
+    "en": "Tamiya Enamel",
+    "ja": "タミヤ エナメル"
+   },
+   "note": {
+    "ko": "에나멜 도료끼리만 섞으세요. 락카 도료와는 섞지 않습니다.",
+    "en": "Mix enamels only with other enamels, never with lacquers.",
+    "ja": "エナメル塗料同士だけで混ぜてください。ラッカー塗料とは混ぜません。"
+   }
+  },
+  {
+   "id": "tamiya_lp",
+   "name": {
+    "ko": "타미야 락카 (LP)",
+    "en": "Tamiya Lacquer (LP)",
+    "ja": "タミヤ ラッカー（LP）"
+   },
+   "note": {
+    "ko": "보유한 타미야 락카(LP)만으로 계산했습니다. 에나멜과는 섞지 않습니다.",
+    "en": "Calculated only from the Tamiya lacquer (LP) paints you own. Don't mix with enamels.",
+    "ja": "所有しているタミヤ ラッカー（LP）だけで計算しました。エナメルとは混ぜません。"
+   }
+  },
+  {
+   "id": "mr",
+   "name": {
+    "ko": "Mr.컬러 (락카)",
+    "en": "Mr. Color (lacquer)",
+    "ja": "Mr.カラー（ラッカー）"
+   },
+   "note": {
+    "ko": "보유한 Mr.컬러만으로 계산했습니다.",
+    "en": "Calculated only from the Mr. Color paints you own.",
+    "ja": "所有しているMr.カラーだけで計算しました。"
+   }
+  },
+  {
+   "id": "gaia",
+   "name": {
+    "ko": "가이아노츠 (락카)",
+    "en": "Gaianotes (lacquer)",
+    "ja": "ガイアノーツ（ラッカー）"
+   },
+   "note": {
+    "ko": "보유한 가이아 컬러만으로 계산했습니다.",
+    "en": "Calculated only from the Gaia Color paints you own.",
+    "ja": "所有しているガイアカラーだけで計算しました。"
+   }
+  },
+  {
+   "id": "fin",
+   "name": {
+    "ko": "Finisher's (락카)",
+    "en": "Finisher's (lacquer)",
+    "ja": "フィニッシャーズ（ラッカー）"
+   },
+   "note": {
+    "ko": "보유한 Finisher's 도료만으로 계산했습니다.",
+    "en": "Calculated only from the Finisher's paints you own.",
+    "ja": "所有しているフィニッシャーズの塗料だけで計算しました。"
+   }
+  },
+  {
+   "id": "mk",
+   "name": {
+    "ko": "Model Kasten (락카)",
+    "en": "Model Kasten (lacquer)",
+    "ja": "モデルカステン（ラッカー）"
+   },
+   "note": {
+    "ko": "보유한 Model Kasten 도료만으로 계산했습니다.",
+    "en": "Calculated only from the Model Kasten paints you own.",
+    "ja": "所有しているモデルカステンの塗料だけで計算しました。"
+   }
+  },
+  {
+   "id": "aq",
+   "name": {
+    "ko": "수성 도료",
+    "en": "Water-based",
+    "ja": "水性塗料"
+   },
+   "note": {
+    "ko": "보유한 수성 도료만으로 계산했습니다. 락카·에나멜 도료와는 섞지 않습니다.",
+    "en": "Calculated only from the water-based paints you own. Don't mix with lacquers or enamels.",
+    "ja": "所有している水性塗料だけで計算しました。ラッカー・エナメル塗料とは混ぜません。"
+   }
+  }
+ ],
+ "paints": [
+  {
+   "brand": "tamiya",
+   "no": "X-2",
+   "name": "화이트",
+   "hex": "#f2f2ef",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "화이트",
+    "en": "White",
+    "ja": "ホワイト"
+   }
+  },
+  {
+   "brand": "tamiya",
+   "no": "X-1",
+   "name": "블랙",
+   "hex": "#1a1a1a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "블랙",
+    "en": "Black",
+    "ja": "ブラック"
+   }
+  },
+  {
+   "brand": "tamiya",
+   "no": "X-7",
+   "name": "레드",
+   "hex": "#c8202a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "레드",
+    "en": "Red",
+    "ja": "レッド"
+   }
+  },
+  {
+   "brand": "tamiya",
+   "no": "X-8",
+   "name": "레몬 옐로",
+   "hex": "#f2d21f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "레몬 옐로",
+    "en": "Lemon Yellow",
+    "ja": "レモンイエロー"
+   }
+  },
+  {
+   "brand": "tamiya",
+   "no": "X-4",
+   "name": "블루",
+   "hex": "#1f3f93",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "블루",
+    "en": "Blue",
+    "ja": "ブルー"
+   }
+  },
+  {
+   "brand": "tamiya",
+   "no": "X-5",
+   "name": "그린",
+   "hex": "#1d7a45",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "그린",
+    "en": "Green",
+    "ja": "グリーン"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "C1",
+   "name": "White",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "화이트",
+    "en": "White",
+    "ja": "ホワイト"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "C2",
+   "name": "Black",
+   "hex": "#2b2b2a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "블랙",
+    "en": "Black",
+    "ja": "ブラック"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "C3",
+   "name": "Red",
+   "hex": "#e41e25",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "레드",
+    "en": "Red",
+    "ja": "レッド"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "C4",
+   "name": "Yellow",
+   "hex": "#ffdd00",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "옐로",
+    "en": "Yellow",
+    "ja": "イエロー"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "C5",
+   "name": "Blue",
+   "hex": "#0455a0",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "블루",
+    "en": "Blue",
+    "ja": "ブルー"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "C6",
+   "name": "Green",
+   "hex": "#00683a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "그린",
+    "en": "Green",
+    "ja": "グリーン"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "C7",
+   "name": "Brown",
+   "hex": "#c83e34",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C8",
+   "name": "Silver",
+   "hex": "#dadada",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C9",
+   "name": "Gold",
+   "hex": "#e1b228",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C10",
+   "name": "Copper",
+   "hex": "#ce7037",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C11",
+   "name": "Light Gull Gray",
+   "hex": "#c0c4c7",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C12",
+   "name": "Olive Drab 1",
+   "hex": "#6f5c39",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C13",
+   "name": "Neutral Gray",
+   "hex": "#78868d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C14",
+   "name": "Navy Blue",
+   "hex": "#2e4b56",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C15",
+   "name": "IJN Green Nakajima",
+   "hex": "#1c412e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C16",
+   "name": "IJA Green",
+   "hex": "#2e503e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C17",
+   "name": "RLM71 Dark Green",
+   "hex": "#5f6056",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C18",
+   "name": "RLM70 Black Green",
+   "hex": "#3a4555",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C19",
+   "name": "Sandy Brown",
+   "hex": "#a28140",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C20",
+   "name": "Light Blue",
+   "hex": "#59bba4",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C21",
+   "name": "Middle Stone",
+   "hex": "#b4904c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C22",
+   "name": "Dark Earth",
+   "hex": "#5d4e42",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C23",
+   "name": "Dark Green 2",
+   "hex": "#52604e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C25",
+   "name": "Dark Seagray",
+   "hex": "#767b64",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C26",
+   "name": "Duck Egg Green",
+   "hex": "#d9dfaf",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C27",
+   "name": "Interior Green",
+   "hex": "#b9a529",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C28",
+   "name": "Steel",
+   "hex": "#2b2b2a",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C29",
+   "name": "Hull Red",
+   "hex": "#60383a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C30",
+   "name": "Flat Base",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C31",
+   "name": "Dark Gray 1",
+   "hex": "#929898",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C32",
+   "name": "Dark Gray 2",
+   "hex": "#4c595f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C33",
+   "name": "Flat Black",
+   "hex": "#2b2b2a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C34",
+   "name": "Sky Blue",
+   "hex": "#008dd3",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C35",
+   "name": "IJN Gray Mitsubishi",
+   "hex": "#a7bbc6",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C36",
+   "name": "RLM74 Gray Green",
+   "hex": "#304444",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C37",
+   "name": "RLM75 Gray Violet",
+   "hex": "#56605c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C38",
+   "name": "Olive Drab 2",
+   "hex": "#474c3c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C39",
+   "name": "Dark Yellow Sandy Yellow",
+   "hex": "#c29c62",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C40",
+   "name": "German Gray",
+   "hex": "#364245",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C41",
+   "name": "Red Brown",
+   "hex": "#563938",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C42",
+   "name": "Mahogany",
+   "hex": "#4d3a38",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C43",
+   "name": "Wood Brown",
+   "hex": "#714f38",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C44",
+   "name": "Tan",
+   "hex": "#cba86d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C45",
+   "name": "Sail Color",
+   "hex": "#c3b686",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C46",
+   "name": "Clear",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C47",
+   "name": "Clear Red",
+   "hex": "#e41e25",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C48",
+   "name": "Clear Yellow",
+   "hex": "#ffd500",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C49",
+   "name": "Clear Orange",
+   "hex": "#eb5f22",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C50",
+   "name": "Clear Blue",
+   "hex": "#00a1e4",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C51",
+   "name": "Flesh",
+   "hex": "#e7b280",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C52",
+   "name": "Field Gray 2",
+   "hex": "#44524e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C54",
+   "name": "Khaki Green",
+   "hex": "#3f473f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C55",
+   "name": "Khaki",
+   "hex": "#5b543b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C56",
+   "name": "IJN Gray Green Nakajima",
+   "hex": "#76a29e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C57",
+   "name": "Metallic Blue Green",
+   "hex": "#00756d",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C58",
+   "name": "Orange Yellow",
+   "hex": "#ef741e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C59",
+   "name": "Orange",
+   "hex": "#e63b24",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C60",
+   "name": "RLM02 Gray",
+   "hex": "#9e9c8b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C61",
+   "name": "Burnt Iron",
+   "hex": "#5a5457",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C62",
+   "name": "Flat White",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C63",
+   "name": "Pink",
+   "hex": "#ee7199",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C64",
+   "name": "Yellow Green",
+   "hex": "#2da240",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C65",
+   "name": "Bright Blue",
+   "hex": "#234896",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C66",
+   "name": "Bright Green",
+   "hex": "#009847",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C67",
+   "name": "Purple",
+   "hex": "#4c337e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C68",
+   "name": "Madder Red",
+   "hex": "#d52427",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C69",
+   "name": "Off White",
+   "hex": "#f8f6f3",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C70",
+   "name": "Dark Green",
+   "hex": "#3f473f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C71",
+   "name": "Midnight Blue",
+   "hex": "#3e474b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C72",
+   "name": "Intermediate Blue",
+   "hex": "#36515d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C73",
+   "name": "Aircraft Gray",
+   "hex": "#789c9b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C74",
+   "name": "Air Superiority Blue",
+   "hex": "#1d707c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C75",
+   "name": "Metallic Red",
+   "hex": "#af2e2d",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C76",
+   "name": "Metallic Blue",
+   "hex": "#0455a0",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C77",
+   "name": "Metallic Green",
+   "hex": "#008751",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C78",
+   "name": "Metal Black",
+   "hex": "#2b2b2a",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C79",
+   "name": "Shine Red",
+   "hex": "#e41e25",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C80",
+   "name": "Cobalt Blue",
+   "hex": "#383286",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C81",
+   "name": "Russet",
+   "hex": "#7a3638",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C90",
+   "name": "Shine Silver",
+   "hex": "#d1d1d1",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C92",
+   "name": "Semi Gloss Black",
+   "hex": "#2b2b2a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C97",
+   "name": "Light Gray",
+   "hex": "#b5beb6",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C100",
+   "name": "Wine Red",
+   "hex": "#af2e39",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C101",
+   "name": "Smoke Gray",
+   "hex": "#483c2f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C104",
+   "name": "Gun Chrome",
+   "hex": "#b4c0c6",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C107",
+   "name": "Character White",
+   "hex": "#f4f5f3",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C108",
+   "name": "Character Red",
+   "hex": "#c6292a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C109",
+   "name": "Character Yellow",
+   "hex": "#f07f1c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C110",
+   "name": "Character Blue",
+   "hex": "#234896",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C111",
+   "name": "Character Flesh 1",
+   "hex": "#fde3d8",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C112",
+   "name": "Character Flesh 2",
+   "hex": "#f7bdbc",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C113",
+   "name": "RLM04 Yellow",
+   "hex": "#f8a70a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C114",
+   "name": "RLM23 Red",
+   "hex": "#c82745",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C115",
+   "name": "RLM65 Light Blue",
+   "hex": "#799ba9",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C116",
+   "name": "RLM66 Black Gray",
+   "hex": "#444343",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C117",
+   "name": "RLM76 Light Blue",
+   "hex": "#bfd3d2",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C118",
+   "name": "RLM78 Light Blue",
+   "hex": "#83a7b6",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C119",
+   "name": "RLM79 Sand Yellow",
+   "hex": "#97715c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C120",
+   "name": "RLM80 Olive Green",
+   "hex": "#2d4636",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C121",
+   "name": "RLM81 Brown Violet",
+   "hex": "#5f6056",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C122",
+   "name": "RLM82 Light Green",
+   "hex": "#678457",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C123",
+   "name": "RLM83 Dark Green",
+   "hex": "#415750",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C124",
+   "name": "Dark Green Mitsubishi",
+   "hex": "#20532f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C125",
+   "name": "Cowling Color",
+   "hex": "#03222c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C126",
+   "name": "Cockpit Color Mitsubishi",
+   "hex": "#566647",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C127",
+   "name": "Cockpit Color Nakajima",
+   "hex": "#adb57e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C128",
+   "name": "Gray Green",
+   "hex": "#b3b5aa",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C129",
+   "name": "Dark Green Nakajima",
+   "hex": "#556652",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C130",
+   "name": "Dark Green Kawasaki",
+   "hex": "#585f46",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C131",
+   "name": "Red Brown",
+   "hex": "#553226",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C132",
+   "name": "Earth Green",
+   "hex": "#6f5c39",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C135",
+   "name": "Russian Green 1",
+   "hex": "#3b944e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C136",
+   "name": "Russian Green 2",
+   "hex": "#3e5d47",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C137",
+   "name": "Tire Black",
+   "hex": "#2b2b2a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C138",
+   "name": "Clear Green",
+   "hex": "#009847",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C151",
+   "name": "White Pearl",
+   "hex": "#ffffff",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C156",
+   "name": "Super White Ⅳ",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C158",
+   "name": "Super Italian Red",
+   "hex": "#d52427",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C159",
+   "name": "Super Silver",
+   "hex": "#dadada",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C171",
+   "name": "Fluorescent Red",
+   "hex": "#e41e25",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C172",
+   "name": "Fluorescent Yellow",
+   "hex": "#ffed00",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C173",
+   "name": "Fluorescent Orange",
+   "hex": "#e52e25",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C174",
+   "name": "Fluorescent Pink",
+   "hex": "#e6146c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C175",
+   "name": "Fluorescent Green",
+   "hex": "#009847",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C181",
+   "name": "Semi-Gloss Super Clear",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C182",
+   "name": "Flat Clear",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C183",
+   "name": "Super Clear Gray Tone",
+   "hex": "#f4f5f6",
+   "type": "clear",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C188",
+   "name": "Flat Base Rough",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C189",
+   "name": "Flat Base Smooth",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C301",
+   "name": "Gray FS36081",
+   "hex": "#404249",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C302",
+   "name": "Green FS34092",
+   "hex": "#405855",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C303",
+   "name": "Green FS34102",
+   "hex": "#576056",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C304",
+   "name": "Olive Drab FS34087",
+   "hex": "#4a423a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C305",
+   "name": "Gray FS36118",
+   "hex": "#506e6d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C306",
+   "name": "Gray FS36270",
+   "hex": "#6e8a8c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C307",
+   "name": "Gray FS36320",
+   "hex": "#6e8b93",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C308",
+   "name": "Gray FS36375",
+   "hex": "#86a0a3",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C309",
+   "name": "Green FS34079",
+   "hex": "#405855",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C310",
+   "name": "Brown FS30219",
+   "hex": "#786455",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C311",
+   "name": "Gray FS36622",
+   "hex": "#ebebd6",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C312",
+   "name": "Green FS34227",
+   "hex": "#448561",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C313",
+   "name": "Yellow FS33531",
+   "hex": "#e9c58f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C314",
+   "name": "Blue FS35622",
+   "hex": "#ebf4ec",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C315",
+   "name": "Gray FS16440",
+   "hex": "#9eaea8",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C316",
+   "name": "White FS17875",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C317",
+   "name": "Gray FS36231",
+   "hex": "#747b6f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C318",
+   "name": "Radome",
+   "hex": "#fed493",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C319",
+   "name": "Light Green",
+   "hex": "#2b6e5c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C320",
+   "name": "Dark Green",
+   "hex": "#4e594a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C321",
+   "name": "Light Brown",
+   "hex": "#b69271",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C322",
+   "name": "Phthalo Cyanne Blue",
+   "hex": "#373d54",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C323",
+   "name": "Light Blue",
+   "hex": "#00b2eb",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C324",
+   "name": "Light Gray",
+   "hex": "#91aaa8",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C325",
+   "name": "Gray FS26440",
+   "hex": "#aab2a9",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C326",
+   "name": "Blue FS15044",
+   "hex": "#3a394a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C327",
+   "name": "Red FS11136",
+   "hex": "#9e3130",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C328",
+   "name": "Blue FS15050",
+   "hex": "#373d54",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C329",
+   "name": "Yellow FS13538",
+   "hex": "#f69d11",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C330",
+   "name": "Dark Green BS381C/641",
+   "hex": "#464c4c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C331",
+   "name": "Dark Seagray BS381C 638",
+   "hex": "#585a5f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C332",
+   "name": "Light Aircraft Gray BS381C 627",
+   "hex": "#9ca299",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C333",
+   "name": "Extra Dark Seagray BS381C 640",
+   "hex": "#3b4c56",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C334",
+   "name": "Barley Gray BS4800/18B21",
+   "hex": "#889898",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C335",
+   "name": "Medium Seagray BS381C 637",
+   "hex": "#67797d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C336",
+   "name": "Hemp BS4800/10B21",
+   "hex": "#6f8f70",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C337",
+   "name": "Grayish Blue FS35237",
+   "hex": "#4b747d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C338",
+   "name": "Light Gray FS36495",
+   "hex": "#c0c4c7",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C339",
+   "name": "Engine Gray FS16081",
+   "hex": "#3b4c56",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C340",
+   "name": "Field Green FS34097",
+   "hex": "#425742",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C351",
+   "name": "Zinc-Chromate Type FS34151",
+   "hex": "#7d794d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C352",
+   "name": "Chromate Yellow Primer FS33481",
+   "hex": "#bda028",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C361",
+   "name": "Dark Green BS641",
+   "hex": "#48473f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C362",
+   "name": "Ocean Gray",
+   "hex": "#646b6f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C363",
+   "name": "Medium Seagray BS637",
+   "hex": "#83949c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C364",
+   "name": "Aircraft Gray Green BS283",
+   "hex": "#6f8363",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C365",
+   "name": "Gloss Seablue FS151042",
+   "hex": "#1d1f2e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C366",
+   "name": "Intermediate Blue FS35164",
+   "hex": "#627b8d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C367",
+   "name": "Blue Gray FS35189",
+   "hex": "#74939b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C368",
+   "name": "Sky BS381C/210",
+   "hex": "#aebc9c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C369",
+   "name": "Dark Earth BS381C/450",
+   "hex": "#65563f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C370",
+   "name": "Azure Blue",
+   "hex": "#5d88b3",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C374",
+   "name": "JASDF Shallow Ocean Blue",
+   "hex": "#5784ab",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C375",
+   "name": "JASDF Deep Ocean Blue",
+   "hex": "#393a4b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C376",
+   "name": "JASDF Radome Gray",
+   "hex": "#c0c9c7",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C383",
+   "name": "Dark Green Kawanishi",
+   "hex": "#314b40",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C384",
+   "name": "Cockpit Color Kawanishi",
+   "hex": "#817f45",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C385",
+   "name": "Red IJN Aircraft Marking",
+   "hex": "#b02224",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C391",
+   "name": "Interior Turquoise Green Soviet",
+   "hex": "#00a28a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C392",
+   "name": "Interior Blue Soviet",
+   "hex": "#229ebe",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C393",
+   "name": "Russian Aircraft Blue",
+   "hex": "#271c22",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C511",
+   "name": "Russian Green \"4Bo\"",
+   "hex": "#545f37",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C512",
+   "name": "Russian Green \"4Bo\" 1947-",
+   "hex": "#636238",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C513",
+   "name": "Dark Gray \"Dunkel Grau\"",
+   "hex": "#495763",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C514",
+   "name": "Gray \"Grau\"",
+   "hex": "#557582",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C515",
+   "name": "Faded Gray \"Blassgrau\"",
+   "hex": "#607f89",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C516",
+   "name": "Dark Green 3414",
+   "hex": "#485043",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C517",
+   "name": "Brown 3606",
+   "hex": "#554539",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C518",
+   "name": "Olive Drab 2314",
+   "hex": "#463f2e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C519",
+   "name": "Bronzegrun",
+   "hex": "#4c5241",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C520",
+   "name": "Lederbraun",
+   "hex": "#5b4431",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C521",
+   "name": "Teer Schwarz",
+   "hex": "#373837",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C522",
+   "name": "Ground Color",
+   "hex": "#5a4c4b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C523",
+   "name": "Grass Color",
+   "hex": "#5b5f4c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C524",
+   "name": "Hay Color",
+   "hex": "#8b7943",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C525",
+   "name": "Green",
+   "hex": "#3c4d3d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C526",
+   "name": "Brown",
+   "hex": "#8a6653",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C527",
+   "name": "Khaki",
+   "hex": "#a47f56",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C528",
+   "name": "IDF Gray1 -1981 Sinai",
+   "hex": "#ccb38a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C529",
+   "name": "IDF Gray2 -1981 Golan",
+   "hex": "#8c806f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C530",
+   "name": "IDF Gray3 Modern",
+   "hex": "#81755f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C601",
+   "name": "IJN Hull Color/Kure",
+   "hex": "#8f9097",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C602",
+   "name": "IJN Hull Color/Sasebo",
+   "hex": "#747373",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C603",
+   "name": "IJN Hull Color/Maizuru",
+   "hex": "#a2a5b0",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C604",
+   "name": "IJN Type21 Camoflage Color",
+   "hex": "#5a7e49",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C605",
+   "name": "IJN Type22 Camoflage Color",
+   "hex": "#88ad71",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C606",
+   "name": "IJN Linoleum Deck Color",
+   "hex": "#72524a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C607",
+   "name": "JMSDF 2704 Gray",
+   "hex": "#7d8386",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C608",
+   "name": "JMSDF 2705 Dark Gray",
+   "hex": "#5d6162",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "C609",
+   "name": "JMSDF Cleated Deck Color",
+   "hex": "#4a4d4e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CR1",
+   "name": "Cyan",
+   "hex": "#00a1e4",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "색의 근원 시안",
+    "en": "Iro-no-Moto Cyan",
+    "ja": "色ノ源 シアン"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "CR2",
+   "name": "Magenta",
+   "hex": "#e60c80",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "색의 근원 마젠타",
+    "en": "Iro-no-Moto Magenta",
+    "ja": "色ノ源 マゼンタ"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "CR3",
+   "name": "Yellow",
+   "hex": "#ffed00",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "색의 근원 옐로",
+    "en": "Iro-no-Moto Yellow",
+    "ja": "色ノ源 イエロー"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "GX1",
+   "name": "Cool White",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "GX2",
+   "name": "Ueno Black",
+   "hex": "#2b2b2a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "GX3",
+   "name": "Harmann Red",
+   "hex": "#e41e25",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "GX4",
+   "name": "Chiara Yellow",
+   "hex": "#ffdd00",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "GX5",
+   "name": "Susie Blue",
+   "hex": "#0455a0",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "GX6",
+   "name": "Morrie Green",
+   "hex": "#00683a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "GX100",
+   "name": "Super Clear Ⅲ",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "GX112",
+   "name": "Super Clear Ⅲ UV Cut Gloss",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "GX113",
+   "name": "Super Clear Ⅲ UV Cut Matt",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "GX114",
+   "name": "Super Smooth Clear Matt",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "LG1",
+   "name": "White",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "LG2",
+   "name": "Black",
+   "hex": "#2b2b2a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "LG112",
+   "name": "Clear Cut Gross",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "LG113",
+   "name": "Clear Cut Matt",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL01",
+   "name": "White Peach",
+   "hex": "#fcd6c1",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL02",
+   "name": "Cocoa Milk",
+   "hex": "#ab8178",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL03",
+   "name": "Clear Pale Red",
+   "hex": "#facdc7",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL04",
+   "name": "Clear Pale Orange",
+   "hex": "#fccc9d",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL05",
+   "name": "Clear Pale Brown",
+   "hex": "#f4996c",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL06",
+   "name": "Clear White",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL07",
+   "name": "Rosy Peach",
+   "hex": "#f8bdb7",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL08",
+   "name": "Nuts White",
+   "hex": "#fffcf7",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL09",
+   "name": "Smooth Pearl Coat",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL101",
+   "name": "Blonde",
+   "hex": "#f7f09d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL102",
+   "name": "Copper Brown",
+   "hex": "#c45336",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL103",
+   "name": "Black Hair",
+   "hex": "#4a4646",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL104",
+   "name": "Pink Purple",
+   "hex": "#e99cc3",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL105",
+   "name": "Lilac",
+   "hex": "#caa4cc",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL106",
+   "name": "Icy White",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL107",
+   "name": "Flaxen",
+   "hex": "#aea796",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL108",
+   "name": "Pale Blue-Green",
+   "hex": "#009eac",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL109",
+   "name": "Lime Green",
+   "hex": "#a2c966",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL110",
+   "name": "Scarlet",
+   "hex": "#e83567",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CL111",
+   "name": "Azure",
+   "hex": "#75c5ef",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "LAC101",
+   "name": "Alumite Black",
+   "hex": "#2b2b2a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "LAC102",
+   "name": "Parker Gun Metallic",
+   "hex": "#5e524e",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "LAC103",
+   "name": "Stainless Silver",
+   "hex": "#b3b3b4",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "LAC105",
+   "name": "Flat Dark Earth 1",
+   "hex": "#94824b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "LAC106",
+   "name": "Flat Dark Earth 2",
+   "hex": "#8e7158",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "XGC01",
+   "name": "Brunhild White",
+   "hex": "#e8e8e6",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "XGC02",
+   "name": "Hyperion Green",
+   "hex": "#44828d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "XGC03",
+   "name": "Free Planets Alliance Standard Battleship Green",
+   "hex": "#8ea276",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CA01",
+   "name": "Glay Tone 1",
+   "hex": "#474444",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CA02",
+   "name": "Glay Tone 2",
+   "hex": "#737073",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CA03",
+   "name": "Glay Tone 3",
+   "hex": "#acaaac",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CA04",
+   "name": "Glay Tone 4",
+   "hex": "#e5e5e6",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CA05",
+   "name": "Carbon Glay",
+   "hex": "#625655",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CRE01",
+   "name": "Cranberry Red Pearl",
+   "hex": "#773a39",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CRE02",
+   "name": "Cerulean Blue",
+   "hex": "#35b8be",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "CRE03",
+   "name": "British Green",
+   "hex": "#445045",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "UM01",
+   "name": "Ultra Silver",
+   "hex": "#a3a3a4",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "UM02",
+   "name": "Ultra Gold",
+   "hex": "#daab1b",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM201",
+   "name": "Super Fine Silver 2",
+   "hex": "#d1d1d1",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM202",
+   "name": "Super Gold 2",
+   "hex": "#cba86d",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM203",
+   "name": "Super Iron 2",
+   "hex": "#b9baba",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM204",
+   "name": "Super Stainless 2",
+   "hex": "#c3c3c3",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM205",
+   "name": "Super Titanium 2",
+   "hex": "#dad6d8",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM206",
+   "name": "Super Chrome Silver 2",
+   "hex": "#d1d1d1",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM207",
+   "name": "Super Rich Gold",
+   "hex": "#e1b228",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM208",
+   "name": "Super Duralumin",
+   "hex": "#dadada",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM209",
+   "name": "Super Copper",
+   "hex": "#ca6653",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM210",
+   "name": "Super Pink Gold",
+   "hex": "#da9b9f",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM211",
+   "name": "Super Red Gold",
+   "hex": "#dc942d",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "mr",
+   "no": "SM212",
+   "name": "Super Matt Aluminum",
+   "hex": "#dadada",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false
+  },
+  {
+   "brand": "gaia",
+   "no": "001",
+   "name": "퓨어 화이트",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "퓨어 화이트",
+    "en": "Pure White",
+    "ja": "ピュアホワイト"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "002",
+   "name": "퓨어 블랙",
+   "hex": "#000000",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "퓨어 블랙",
+    "en": "Pure Black",
+    "ja": "ピュアブラック"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "003",
+   "name": "브라이트 레드",
+   "hex": "#ff0000",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "브라이트 레드",
+    "en": "Bright Red",
+    "ja": "ブライトレッド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "004",
+   "name": "울트라 블루",
+   "hex": "#144ea2",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "울트라 블루",
+    "en": "Ultra Blue",
+    "ja": "ウルトラブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "005",
+   "name": "선샤인 옐로",
+   "hex": "#ffff00",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "선샤인 옐로",
+    "en": "Sunshine Yellow",
+    "ja": "サンシャインイエロー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "006",
+   "name": "플랫 베이스",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "플랫 베이스",
+    "en": "Flat Base",
+    "ja": "フラットベース"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "007",
+   "name": "클리어",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어",
+    "en": "Clear",
+    "ja": "クリアー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "008",
+   "name": "플랫 클리어",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "플랫 클리어",
+    "en": "Flat Clear",
+    "ja": "フラットクリアー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "009",
+   "name": "브라이트 실버",
+   "hex": "#727a7d",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "브라이트 실버",
+    "en": "Bright Silver",
+    "ja": "ブライトシルバー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "010",
+   "name": "브라이트 골드",
+   "hex": "#905c20",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "브라이트 골드",
+    "en": "Bright Gold",
+    "ja": "ブライトゴールド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "011",
+   "name": "플랫 화이트",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "플랫 화이트",
+    "en": "Flat White",
+    "ja": "フラットホワイト"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "012",
+   "name": "플랫 블랙",
+   "hex": "#000000",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "플랫 블랙",
+    "en": "Flat Black",
+    "ja": "フラットブラック"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "013",
+   "name": "비리디언 그린",
+   "hex": "#007a65",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "비리디언 그린",
+    "en": "Viridian Green",
+    "ja": "ビリジアングリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "014",
+   "name": "내추럴 브라운",
+   "hex": "#9e1f0c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "내추럴 브라운",
+    "en": "Natural Brown",
+    "ja": "ナチュラルブラウン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "015",
+   "name": "퓨어 오렌지",
+   "hex": "#ff3300",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "퓨어 오렌지",
+    "en": "Pure Orange",
+    "ja": "ピュアオレンジ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "016",
+   "name": "브릴리언트 핑크",
+   "hex": "#f75f86",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "브릴리언트 핑크",
+    "en": "Brilliant Pink",
+    "ja": "ブリリアントピンク"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "017",
+   "name": "퍼플 바이올렛",
+   "hex": "#4b45bf",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "퍼플 바이올렛",
+    "en": "Purple Violet",
+    "ja": "パープルヴァイオレット"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "018",
+   "name": "에메랄드 그린",
+   "hex": "#69e795",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "에메랄드 그린",
+    "en": "Emerald Green",
+    "ja": "エメラルドグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "019",
+   "name": "라벤더",
+   "hex": "#d8ccf4",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "라벤더",
+    "en": "Lavender",
+    "ja": "ラベンダー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "020",
+   "name": "건메탈",
+   "hex": "#0c0c0c",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "건메탈",
+    "en": "Gunmetal",
+    "ja": "ガンメタル"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "021",
+   "name": "세미글로스 화이트",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "세미글로스 화이트",
+    "en": "Semi-Gloss White",
+    "ja": "セミグロスホワイト"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "022",
+   "name": "세미글로스 블랙",
+   "hex": "#4e4d52",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "세미글로스 블랙",
+    "en": "Semi-Gloss Black",
+    "ja": "セミグロスブラック"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "023",
+   "name": "스칼렛",
+   "hex": "#eb3729",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스칼렛",
+    "en": "Scarlet",
+    "ja": "スカーレット"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "024",
+   "name": "코발트 블루",
+   "hex": "#356bf1",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "코발트 블루",
+    "en": "Cobalt Blue",
+    "ja": "コバルトブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "025",
+   "name": "등황색",
+   "hex": "#fe8a01",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "등황색",
+    "en": "Orange Yellow (Tokoshoku)",
+    "ja": "橙黄色"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "026",
+   "name": "라이트 그린",
+   "hex": "#93a267",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "라이트 그린",
+    "en": "Light Green",
+    "ja": "ライトグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "027",
+   "name": "다크 그린",
+   "hex": "#202a1f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "다크 그린",
+    "en": "Dark Green",
+    "ja": "ダークグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "028",
+   "name": "스톤 그린",
+   "hex": "#01b6ad",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스톤 그린",
+    "en": "Stone Green",
+    "ja": "ストーングリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "030",
+   "name": "세미글로스 클리어",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "세미글로스 클리어",
+    "en": "Semi-Gloss Clear",
+    "ja": "セミグロスクリアー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "031",
+   "name": "얼티밋 화이트",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "얼티밋 화이트",
+    "en": "Ultimate White",
+    "ja": "アルティメットホワイト"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "032",
+   "name": "얼티밋 블랙",
+   "hex": "#000000",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "얼티밋 블랙",
+    "en": "Ultimate Black",
+    "ja": "アルティメットブラック"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "033",
+   "name": "순색 시안",
+   "hex": "#0a4197",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "순색 시안",
+    "en": "Pure Cyan",
+    "ja": "純色シアン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "034",
+   "name": "순색 마젠타",
+   "hex": "#cb1384",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "순색 마젠타",
+    "en": "Pure Magenta",
+    "ja": "純色マゼンタ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "035",
+   "name": "순색 옐로",
+   "hex": "#f5c700",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "순색 옐로",
+    "en": "Pure Yellow",
+    "ja": "純色イエロー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "036",
+   "name": "순색 그린",
+   "hex": "#00796f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "순색 그린",
+    "en": "Pure Green",
+    "ja": "純色グリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "037",
+   "name": "순색 바이올렛",
+   "hex": "#4a308f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "순색 바이올렛",
+    "en": "Pure Violet",
+    "ja": "純色バイオレット"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "038",
+   "name": "프라이머리 메탈릭 레드",
+   "hex": "#a41c1a",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프라이머리 메탈릭 레드",
+    "en": "Primary Metallic Red",
+    "ja": "プライマリーメタリックレッド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "039",
+   "name": "프라이머리 메탈릭 블루",
+   "hex": "#004dac",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프라이머리 메탈릭 블루",
+    "en": "Primary Metallic Blue",
+    "ja": "プライマリーメタリックブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "040",
+   "name": "프라이머리 메탈릭 옐로",
+   "hex": "#b79901",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프라이머리 메탈릭 옐로",
+    "en": "Primary Metallic Yellow",
+    "ja": "プライマリーメタリックイエロー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "041",
+   "name": "클리어 레드",
+   "hex": "#be2531",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 레드",
+    "en": "Clear Red",
+    "ja": "クリアーレッド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "042",
+   "name": "클리어 오렌지",
+   "hex": "#d12f12",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 오렌지",
+    "en": "Clear Orange",
+    "ja": "クリアーオレンジ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "043",
+   "name": "클리어 블랙",
+   "hex": "#3d403b",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 블랙",
+    "en": "Clear Black",
+    "ja": "クリアーブラック"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "044",
+   "name": "클리어 블루",
+   "hex": "#0243c3",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 블루",
+    "en": "Clear Blue",
+    "ja": "クリアーブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "045",
+   "name": "클리어 옐로",
+   "hex": "#fff003",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 옐로",
+    "en": "Clear Yellow",
+    "ja": "クリアーイエロー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "046",
+   "name": "클리어 브라운",
+   "hex": "#6c2a2b",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 브라운",
+    "en": "Clear Brown",
+    "ja": "クリアーブラウン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "047",
+   "name": "클리어 퍼플",
+   "hex": "#6d2edd",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 퍼플",
+    "en": "Clear Purple",
+    "ja": "クリアーパープル"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "048",
+   "name": "클리어 그린",
+   "hex": "#00b60a",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 그린",
+    "en": "Clear Green",
+    "ja": "クリアーグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "049",
+   "name": "클리어 핑크",
+   "hex": "#ff329c",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 핑크",
+    "en": "Clear Pink",
+    "ja": "クリアーピンク"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "050",
+   "name": "클리어 화이트",
+   "hex": "#f3f3f3",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 화이트",
+    "en": "Clear White",
+    "ja": "クリアーホワイト"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "051",
+   "name": "노츠 플레시",
+   "hex": "#f7e5cf",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "노츠 플레시",
+    "en": "Notes Flesh",
+    "ja": "ノーツフレッシュ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "052",
+   "name": "노츠 플레시 화이트",
+   "hex": "#eaded2",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "노츠 플레시 화이트",
+    "en": "Notes Flesh White",
+    "ja": "ノーツフレッシュ ホワイト"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "053",
+   "name": "노츠 플레시 핑크",
+   "hex": "#f3a69c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "노츠 플레시 핑크",
+    "en": "Notes Flesh Pink",
+    "ja": "ノーツフレッシュ ピンク"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "054",
+   "name": "노츠 플레시 오렌지",
+   "hex": "#e7b78f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "노츠 플레시 오렌지",
+    "en": "Notes Flesh Orange",
+    "ja": "ノーツフレッシュ オレンジ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "059",
+   "name": "서페이서리스 플레시 핑크",
+   "hex": "#fea29c",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "서페이서리스 플레시 핑크",
+    "en": "Surfacerless Flesh Pink",
+    "ja": "サフレスフレッシュピンク"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "060",
+   "name": "서페이서리스 플레시 오렌지",
+   "hex": "#ffe879",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "서페이서리스 플레시 오렌지",
+    "en": "Surfacerless Flesh Orange",
+    "ja": "サフレスフレッシュオレンジ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "061",
+   "name": "미드나이트 블루",
+   "hex": "#222129",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "미드나이트 블루",
+    "en": "Midnight Blue",
+    "ja": "ミッドナイトブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "062",
+   "name": "미디엄 블루",
+   "hex": "#41637f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "미디엄 블루",
+    "en": "Medium Blue",
+    "ja": "ミディアムブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "063",
+   "name": "블루 그레이",
+   "hex": "#446a6d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "블루 그레이",
+    "en": "Blue Gray",
+    "ja": "ブルーグレー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "071",
+   "name": "뉴트럴 그레이 I",
+   "hex": "#cecece",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "뉴트럴 그레이 I",
+    "en": "Neutral Gray I",
+    "ja": "ニュートラルグレーI"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "072",
+   "name": "뉴트럴 그레이 II",
+   "hex": "#b4b4b4",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "뉴트럴 그레이 II",
+    "en": "Neutral Gray II",
+    "ja": "ニュートラルグレーII"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "073",
+   "name": "뉴트럴 그레이 III",
+   "hex": "#8e8e8e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "뉴트럴 그레이 III",
+    "en": "Neutral Gray III",
+    "ja": "ニュートラルグレーIII"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "074",
+   "name": "뉴트럴 그레이 IV",
+   "hex": "#6c6c6c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "뉴트럴 그레이 IV",
+    "en": "Neutral Gray IV",
+    "ja": "ニュートラルグレーIV"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "075",
+   "name": "뉴트럴 그레이 V",
+   "hex": "#4e4e4e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "뉴트럴 그레이 V",
+    "en": "Neutral Gray V",
+    "ja": "ニュートラルグレーV"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "101",
+   "name": "형광 블루",
+   "hex": "#002ac9",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "형광 블루",
+    "en": "Fluorescent Blue",
+    "ja": "蛍光ブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "102",
+   "name": "형광 핑크",
+   "hex": "#fd0154",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "형광 핑크",
+    "en": "Fluorescent Pink",
+    "ja": "蛍光ピンク"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "103",
+   "name": "형광 레드",
+   "hex": "#fd0c15",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "형광 레드",
+    "en": "Fluorescent Red",
+    "ja": "蛍光レッド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "104",
+   "name": "형광 그린",
+   "hex": "#00d34d",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "형광 그린",
+    "en": "Fluorescent Green",
+    "ja": "蛍光グリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "105",
+   "name": "형광 옐로",
+   "hex": "#ebff24",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "형광 옐로",
+    "en": "Fluorescent Yellow",
+    "ja": "蛍光イエロー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "106",
+   "name": "형광 오렌지",
+   "hex": "#fe2f07",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "형광 오렌지",
+    "en": "Fluorescent Orange",
+    "ja": "蛍光オレンジ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "107",
+   "name": "형광 옐로 그린",
+   "hex": "#00fe07",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "형광 옐로 그린",
+    "en": "Fluorescent Yellow Green",
+    "ja": "蛍光イエローグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "108",
+   "name": "형광 블루 그린",
+   "hex": "#04afb7",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "형광 블루 그린",
+    "en": "Fluorescent Blue Green",
+    "ja": "蛍光ブルーグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "110",
+   "name": "형광 클리어",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "형광 클리어",
+    "en": "Fluorescent Clear",
+    "ja": "蛍光クリアー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "121",
+   "name": "스타브라이트 실버",
+   "hex": "#bbbbbb",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스타브라이트 실버",
+    "en": "Starbright Silver",
+    "ja": "スターブライトシルバー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "122",
+   "name": "스타브라이트 골드",
+   "hex": "#b48334",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스타브라이트 골드",
+    "en": "Starbright Gold",
+    "ja": "スターブライトゴールド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "123",
+   "name": "스타브라이트 듀랄루민",
+   "hex": "#67675f",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스타브라이트 듀랄루민",
+    "en": "Starbright Duralumin",
+    "ja": "スターブライトジュラルミン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "124",
+   "name": "스타브라이트 브라스",
+   "hex": "#a5850a",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스타브라이트 브라스",
+    "en": "Starbright Brass",
+    "ja": "スターブライトブラス"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "125",
+   "name": "스타브라이트 아이언",
+   "hex": "#5f5f5f",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스타브라이트 아이언",
+    "en": "Starbright Iron",
+    "ja": "スターブライトアイアン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "126",
+   "name": "스타브라이트 샴페인 골드",
+   "hex": "#ffffff",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스타브라이트 샴페인 골드",
+    "en": "Starbright Champagne Gold",
+    "ja": "スターブライト シャンパンゴールド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "131",
+   "name": "펄 실버",
+   "hex": "#e2dfda",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "펄 실버",
+    "en": "Pearl Silver",
+    "ja": "パールシルバー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "132",
+   "name": "펄 골드",
+   "hex": "#c47c34",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "펄 골드",
+    "en": "Pearl Gold",
+    "ja": "パールゴールド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "133",
+   "name": "펄 코퍼",
+   "hex": "#be6f44",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "펄 코퍼",
+    "en": "Pearl Copper",
+    "ja": "パールカッパー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "134",
+   "name": "프리즘 퍼플 그린",
+   "hex": "#b0c09c",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리즘 퍼플 그린",
+    "en": "Prism Purple Green",
+    "ja": "プリズム パープルグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "135",
+   "name": "프리즘 블루 그린",
+   "hex": "#c4d9d4",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리즘 블루 그린",
+    "en": "Prism Blue Green",
+    "ja": "プリズム ブルーグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "136",
+   "name": "프리즘 마젠타 골드",
+   "hex": "#cd541b",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리즘 마젠타 골드",
+    "en": "Prism Magenta Gold",
+    "ja": "プリズム マゼンタゴールド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "137",
+   "name": "프리즘 파스텔 터콰이즈 블루 옐로",
+   "hex": "#00b1c5",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리즘 파스텔 터콰이즈 블루 옐로",
+    "en": "Prism Pastel Turquoise Blue Yellow",
+    "ja": "プリズム パステル ターコイズブルーイエロー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "138",
+   "name": "프리즘 파스텔 체리 핑크 블루",
+   "hex": "#db519d",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리즘 파스텔 체리 핑크 블루",
+    "en": "Prism Pastel Cherry Pink Blue",
+    "ja": "プリズム パステル チェリーピンクブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "139",
+   "name": "프리즘 파스텔 민트 그린 블루",
+   "hex": "#02c0b3",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리즘 파스텔 민트 그린 블루",
+    "en": "Prism Pastel Mint Green Blue",
+    "ja": "プリズム パステル ミントグリーンブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "201",
+   "name": "다크 옐로 1 (둥켈겔프 1)",
+   "hex": "#b69d4c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "다크 옐로 1 (둥켈겔프 1)",
+    "en": "Dark Yellow 1 (Dunkelgelb 1)",
+    "ja": "ダークイエロー1 (ドゥンケルゲルプ1)"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "202",
+   "name": "올리브 그린 (올리프그륀)",
+   "hex": "#485f42",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "올리브 그린 (올리프그륀)",
+    "en": "Olive Green (Olivgrün)",
+    "ja": "オリーブグリーン (オリーフグリュン)"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "203",
+   "name": "레드 브라운 (로트브라운)",
+   "hex": "#3a2123",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "레드 브라운 (로트브라운)",
+    "en": "Red Brown (Rotbraun)",
+    "ja": "レッドブラウン (ロートブラウン)"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "204",
+   "name": "다크 옐로 2 (둥켈겔프 2)",
+   "hex": "#c1ac7a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "다크 옐로 2 (둥켈겔프 2)",
+    "en": "Dark Yellow 2 (Dunkelgelb 2)",
+    "ja": "ダークイエロー2 (ドゥンケルゲルプ2)"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "205",
+   "name": "겔프브라운 (옐로 브라운)",
+   "hex": "#ac8642",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "겔프브라운 (옐로 브라운)",
+    "en": "Gelbbraun (Yellow Brown)",
+    "ja": "ゲルプブラウン (イエローブラウン)"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "206",
+   "name": "그라우그륀 (그레이 그린)",
+   "hex": "#8b693b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "그라우그륀 (그레이 그린)",
+    "en": "Graugrün (Gray Green)",
+    "ja": "グラウグリュン (グレーグリーン)"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "207",
+   "name": "브라운",
+   "hex": "#cd9d69",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "브라운",
+    "en": "Brown",
+    "ja": "ブラウン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "208",
+   "name": "그라우 (그레이)",
+   "hex": "#cab793",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "그라우 (그레이)",
+    "en": "Grau (Gray)",
+    "ja": "グラウ (グレー)"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "211",
+   "name": "회록색",
+   "hex": "#c4c392",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "회록색",
+    "en": "Gray Green (Hairyokushoku)",
+    "ja": "灰緑色"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "212",
+   "name": "녹색",
+   "hex": "#324134",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "녹색",
+    "en": "Green (Midori-iro)",
+    "ja": "緑色"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "213",
+   "name": "회록색",
+   "hex": "#cdcfb4",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "회록색",
+    "en": "Gray Green (Hairyokushoku)",
+    "ja": "灰緑色"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "214",
+   "name": "암록색",
+   "hex": "#1f5539",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "암록색",
+    "en": "Dark Green (Anryokushoku)",
+    "ja": "暗緑色"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "215",
+   "name": "FS34079 다크 그린",
+   "hex": "#3e3d21",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "FS34079 다크 그린",
+    "en": "FS34079 Dark Green",
+    "ja": "FS34079 ダークグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "216",
+   "name": "FS34102 그린",
+   "hex": "#484e10",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "FS34102 그린",
+    "en": "FS34102 Green",
+    "ja": "FS34102 グリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "217",
+   "name": "FS30219 탄",
+   "hex": "#876d48",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "FS30219 탄",
+    "en": "FS30219 Tan",
+    "ja": "FS30219 タン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "218",
+   "name": "FS36622 그레이",
+   "hex": "#bebb9c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "FS36622 그레이",
+    "en": "FS36622 Gray",
+    "ja": "FS36622 グレー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "219",
+   "name": "FS36440 라이트 걸 그레이",
+   "hex": "#999884",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "FS36440 라이트 걸 그레이",
+    "en": "FS36440 Light Gull Gray",
+    "ja": "FS36440 ライトガルグレー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "221",
+   "name": "저먼 그레이 (둥켈그라우)",
+   "hex": "#29282c",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "저먼 그레이 (둥켈그라우)",
+    "en": "German Gray (Dunkelgrau)",
+    "ja": "ジャーマングレー (ドゥンケルグラウ)"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "222",
+   "name": "옥사이드 레드",
+   "hex": "#9a3e31",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "옥사이드 레드",
+    "en": "Oxide Red",
+    "ja": "オキサイドレッド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "223",
+   "name": "인테리어 컬러 (전차 내부색)",
+   "hex": "#ecdebd",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "인테리어 컬러 (전차 내부색)",
+    "en": "Interior Color (tank interior)",
+    "ja": "インテリアカラー (戦車車内色)"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "TL-001",
+   "name": "NATO 그린",
+   "hex": "#45543e",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "NATO 그린",
+    "en": "NATO Green",
+    "ja": "NATOグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "TL-002",
+   "name": "NATO 브라운",
+   "hex": "#544437",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "NATO 브라운",
+    "en": "NATO Brown",
+    "ja": "NATOブラウン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "TL-003",
+   "name": "NATO 블랙",
+   "hex": "#2f3335",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "NATO 블랙",
+    "en": "NATO Black",
+    "ja": "NATOブラック"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "TL-004",
+   "name": "라이트 그레이 FS36251",
+   "hex": "#838882",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "라이트 그레이 FS36251",
+    "en": "Light Gray FS36251",
+    "ja": "ライトグレーFS36251"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "TL-005",
+   "name": "다크 그레이 FS36176",
+   "hex": "#7a8894",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "다크 그레이 FS36176",
+    "en": "Dark Gray FS36176",
+    "ja": "ダークグレーFS36176"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1000",
+   "name": "스테인리스 실버",
+   "hex": "#dddbd7",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스테인리스 실버",
+    "en": "Stainless Silver",
+    "ja": "ステンレスシルバー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1001",
+   "name": "라이트 스테인리스 실버",
+   "hex": "#c5c5c5",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "라이트 스테인리스 실버",
+    "en": "Light Stainless Silver",
+    "ja": "ライトステンレスシルバー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1002",
+   "name": "다크 스테인리스 실버",
+   "hex": "#9e9da2",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "다크 스테인리스 실버",
+    "en": "Dark Stainless Silver",
+    "ja": "ダークステンレスシルバー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1003",
+   "name": "청15호",
+   "hex": "#3a4559",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "청15호",
+    "en": "Blue No.15",
+    "ja": "青15号"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1004",
+   "name": "포도색 2호",
+   "hex": "#362825",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "포도색 2호",
+    "en": "Grape No.2",
+    "ja": "ぶどう色2号"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1005",
+   "name": "쥐색 1호",
+   "hex": "#9e9b92",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "쥐색 1호",
+    "en": "Mouse Gray No.1",
+    "ja": "ねずみ色1号"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1006",
+   "name": "회색 9호",
+   "hex": "#bebbaf",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "회색 9호",
+    "en": "Gray No.9",
+    "ja": "灰色9号"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1007",
+   "name": "다크 그레이",
+   "hex": "#595a55",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "다크 그레이",
+    "en": "Dark Gray",
+    "ja": "ダークグレー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1008",
+   "name": "크림 1호",
+   "hex": "#fffcd8",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "크림 1호",
+    "en": "Cream No.1",
+    "ja": "クリーム1号"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1009",
+   "name": "로즈 핑크",
+   "hex": "#c02823",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "로즈 핑크",
+    "en": "Rose Pink",
+    "ja": "ローズピンク"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1010",
+   "name": "포도색 1호",
+   "hex": "#0d0d0b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "포도색 1호",
+    "en": "Grape No.1",
+    "ja": "ぶどう色1号"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1011",
+   "name": "검정",
+   "hex": "#000000",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "검정",
+    "en": "Black",
+    "ja": "黒"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1012",
+   "name": "붉은 녹",
+   "hex": "#9c4b47",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "붉은 녹",
+    "en": "Red Rust",
+    "ja": "赤サビ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1013",
+   "name": "누런 녹",
+   "hex": "#f26434",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "누런 녹",
+    "en": "Yellow Rust",
+    "ja": "黄サビ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1021",
+   "name": "컨테이너 블루",
+   "hex": "#3a96ab",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "컨테이너 블루",
+    "en": "Container Blue",
+    "ja": "コンテナブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1022",
+   "name": "컨테이너 레드",
+   "hex": "#4c0b21",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "컨테이너 레드",
+    "en": "Container Red",
+    "ja": "コンテナレッド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1023",
+   "name": "메이테츠 스칼렛",
+   "hex": "#930710",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "메이테츠 스칼렛",
+    "en": "Meitetsu Scarlet",
+    "ja": "名鉄スカーレット"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1024",
+   "name": "세이부 101계 옐로",
+   "hex": "#e4b559",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "세이부 101계 옐로",
+    "en": "Seibu 101 Series Yellow",
+    "ja": "西武101系イエロー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1025",
+   "name": "세이부 2000계 옐로",
+   "hex": "#e8b542",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "세이부 2000계 옐로",
+    "en": "Seibu 2000 Series Yellow",
+    "ja": "西武2000系イエロー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1026",
+   "name": "세이부 베이지",
+   "hex": "#bfa276",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "세이부 베이지",
+    "en": "Seibu Beige",
+    "ja": "西武ベージュ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "1027",
+   "name": "세이부 레드",
+   "hex": "#932a31",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "세이부 레드",
+    "en": "Seibu Red",
+    "ja": "西武レッド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "Ex-01",
+   "name": "Ex-화이트",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "Ex-화이트",
+    "en": "Ex-White",
+    "ja": "Ex-ホワイト"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "Ex-02",
+   "name": "Ex-블랙",
+   "hex": "#000000",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "Ex-블랙",
+    "en": "Ex-Black",
+    "ja": "Ex-ブラック"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "Ex-03",
+   "name": "Ex-클리어",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "Ex-클리어",
+    "en": "Ex-Clear",
+    "ja": "Ex-クリアー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "Ex-04",
+   "name": "Ex-플랫 클리어",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "Ex-플랫 클리어",
+    "en": "Ex-Flat Clear",
+    "ja": "Ex-フラットクリアー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "Ex-05",
+   "name": "Ex-플랫 화이트",
+   "hex": "#ffffff",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "Ex-플랫 화이트",
+    "en": "Ex-Flat White",
+    "ja": "Ex-フラットホワイト"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "Ex-06",
+   "name": "Ex-플랫 블랙",
+   "hex": "#000000",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "Ex-플랫 블랙",
+    "en": "Ex-Flat Black",
+    "ja": "Ex-フラットブラック"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "Ex-07",
+   "name": "Ex-실버",
+   "hex": "#cccccc",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "Ex-실버",
+    "en": "Ex-Silver",
+    "ja": "Ex-シルバー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "Ex-08",
+   "name": "Ex-골드",
+   "hex": "#e3ab47",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "Ex-골드",
+    "en": "Ex-Gold",
+    "ja": "Ex-ゴールド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "Ex-09",
+   "name": "Ex-세미글로스 클리어 프리미엄",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "Ex-세미글로스 클리어 프리미엄",
+    "en": "Ex-Semi-Gloss Clear Premium",
+    "ja": "Ex-セミグロスクリアー プレミアム"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "Ex-10",
+   "name": "Ex-플랫 클리어 프리미엄",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "Ex-플랫 클리어 프리미엄",
+    "en": "Ex-Flat Clear Premium",
+    "ja": "Ex-フラットクリアー プレミアム"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "GP-01",
+   "name": "울트라마린 블루",
+   "hex": "#1844d5",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "울트라마린 블루",
+    "en": "Ultramarine Blue",
+    "ja": "ウルトラマリンブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "GP-02",
+   "name": "프리미엄 레드",
+   "hex": "#f50100",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리미엄 레드",
+    "en": "Premium Red",
+    "ja": "プレミアムレッド"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "GP-03",
+   "name": "울트라마린 블루 2",
+   "hex": "#055dd9",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "울트라마린 블루 2",
+    "en": "Ultramarine Blue 2",
+    "ja": "ウルトラマリンブルー2"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "GP-04",
+   "name": "프리미엄 글라스 펄",
+   "hex": "#f4fbfb",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리미엄 글라스 펄",
+    "en": "Premium Glass Pearl",
+    "ja": "プレミアムガラスパール"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "GP-05",
+   "name": "울트라마린 블루",
+   "hex": "#016ad3",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "울트라마린 블루",
+    "en": "Ultramarine Blue",
+    "ja": "ウルトラマリンブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "GP-06",
+   "name": "클리어 울트라마린 블루",
+   "hex": "#0031ec",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 울트라마린 블루",
+    "en": "Clear Ultramarine Blue",
+    "ja": "クリアーウルトラマリンブルー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "GP-07",
+   "name": "프리미엄 도금 실버",
+   "hex": "#bab9c1",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리미엄 도금 실버",
+    "en": "Premium Plating Silver",
+    "ja": "プレミアムメッキシルバー"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "GP-08",
+   "name": "프리미엄 미러 크롬",
+   "hex": "#bab9c1",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리미엄 미러 크롬",
+    "en": "Premium Mirror Chrome",
+    "ja": "プレミアムミラークローム"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "GP-09",
+   "name": "프리즘 블루 블랙",
+   "hex": "#23375a",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "프리즘 블루 블랙",
+    "en": "Prism Blue Black",
+    "ja": "プリズムブルーブラック"
+   }
+  },
+  {
+   "brand": "fin",
+   "no": "Foundation White",
+   "name": "파운데이션 화이트",
+   "hex": "#fbfdfa",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "파운데이션 화이트",
+    "en": "Foundation White",
+    "ja": "ファンデーションホワイト"
+   }
+  },
+  {
+   "brand": "fin",
+   "no": "Baby Clear",
+   "name": "베이비 클리어",
+   "hex": "#f6d6c4",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "베이비 클리어",
+    "en": "Baby Clear",
+    "ja": "ベイビークリアー"
+   }
+  },
+  {
+   "brand": "fin",
+   "no": "Fluorescent Pink",
+   "name": "형광 핑크",
+   "hex": "#ed1d42",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "형광 핑크",
+    "en": "Fluorescent Pink",
+    "ja": "蛍光ピンク"
+   }
+  },
+  {
+   "brand": "fin",
+   "no": "Baby Natural",
+   "name": "베이비 내추럴",
+   "hex": "#e5c1b5",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": true,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "베이비 내추럴",
+    "en": "Baby Natural",
+    "ja": "ベイビーナチュラル"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "GX122",
+   "name": "GX 클리어 피콕 그린",
+   "hex": "#006b5e",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "GX 클리어 피콕 그린",
+    "en": "GX Clear Peacock Green",
+    "ja": "GXクリアピーコックグリーン"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "GX209",
+   "name": "GX 레드 골드",
+   "hex": "#b5733c",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "GX 레드 골드",
+    "en": "GX Red Gold",
+    "ja": "GXレッドゴールド"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "CL200",
+   "name": "골드 펄 베이스 (첨가제)",
+   "hex": "#ffffff",
+   "type": "clear",
+   "colorless": true,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "골드 펄 베이스 (첨가제)",
+    "en": "Gold Pearl Base (additive)",
+    "ja": "ゴールドパールベース（添加剤）"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "CL201",
+   "name": "스타킹 블랙",
+   "hex": "#1d1b1d",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스타킹 블랙",
+    "en": "Stocking Black",
+    "ja": "ストッキングブラック"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "CL202",
+   "name": "스타킹 브라운",
+   "hex": "#3b2b25",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스타킹 브라운",
+    "en": "Stocking Brown",
+    "ja": "ストッキングブラウン"
+   }
+  },
+  {
+   "brand": "mr",
+   "no": "CL203",
+   "name": "스타킹 화이트",
+   "hex": "#f1efeb",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스타킹 화이트",
+    "en": "Stocking White",
+    "ja": "ストッキングホワイト"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "EV-02",
+   "name": "에바 그린",
+   "hex": "#6cb33f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "에바 그린",
+    "en": "Eva Green",
+    "ja": "エヴァグリーン"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "VO-33",
+   "name": "마일드 오렌지",
+   "hex": "#f2c29a",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "마일드 오렌지",
+    "en": "Mild Orange",
+    "ja": "マイルドオレンジ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "FG-01",
+   "name": "플라스틱 플레시",
+   "hex": "#f2dccb",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "플라스틱 플레시",
+    "en": "Plastic Flesh",
+    "ja": "プラスチックフレッシュ"
+   }
+  },
+  {
+   "brand": "gaia",
+   "no": "FG-02",
+   "name": "베이스 플레시",
+   "hex": "#eccfbd",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "베이스 플레시",
+    "en": "Base Flesh",
+    "ja": "ベースフレッシュ"
+   }
+  },
+  {
+   "brand": "tamiya",
+   "no": "X-15",
+   "name": "라이트 그린",
+   "hex": "#62a83b",
+   "type": "normal",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "라이트 그린",
+    "en": "Light Green",
+    "ja": "ライトグリーン"
+   }
+  },
+  {
+   "brand": "tamiya",
+   "no": "X-19",
+   "name": "스모크",
+   "hex": "#3b3632",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스모크",
+    "en": "Smoke",
+    "ja": "スモーク"
+   }
+  },
+  {
+   "brand": "tamiya",
+   "no": "X-27",
+   "name": "클리어 레드",
+   "hex": "#b3192b",
+   "type": "clear",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "클리어 레드",
+    "en": "Clear Red",
+    "ja": "クリヤーレッド"
+   }
+  },
+  {
+   "brand": "tamiya",
+   "no": "XF-1",
+   "name": "플랫 블랙",
+   "hex": "#1f1f1f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "matte",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "플랫 블랙",
+    "en": "Flat Black",
+    "ja": "フラットブラック"
+   }
+  },
+  {
+   "brand": "aq",
+   "no": "HLP103",
+   "name": "스텔라 터콰이즈 (펄)",
+   "hex": "#3cc2bd",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "스텔라 터콰이즈 (펄)",
+    "en": "Stella Turquoise (pearl)",
+    "ja": "ステラターコイズ"
+   }
+  },
+  {
+   "brand": "aq",
+   "no": "HGQ01",
+   "name": "GQuuuuuuX 화이트",
+   "hex": "#f4f4f1",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "GQuuuuuuX 화이트",
+    "en": "GQuuuuuuX White",
+    "ja": "GQuuuuuuXホワイト"
+   }
+  },
+  {
+   "brand": "aq",
+   "no": "HGQ03",
+   "name": "GQuuuuuuX 옐로",
+   "hex": "#f4a91f",
+   "type": "normal",
+   "colorless": false,
+   "finish": "semi",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "GQuuuuuuX 옐로",
+    "en": "GQuuuuuuX Yellow",
+    "ja": "GQuuuuuuXイエロー"
+   }
+  },
+  {
+   "brand": "aq",
+   "no": "HSM02",
+   "name": "슈퍼 파인 골드",
+   "hex": "#c8a04c",
+   "type": "metallic",
+   "colorless": false,
+   "finish": "gloss",
+   "own": false,
+   "custom": false,
+   "renamed": false,
+   "name_i18n": {
+    "ko": "슈퍼 파인 골드",
+    "en": "Super Fine Gold",
+    "ja": "スーパーファインゴールド"
+   }
+  }
+ ],
+ "primaries_generic": [
+  {
+   "letter": "C",
+   "hex": "#00a0dc"
+  },
+  {
+   "letter": "M",
+   "hex": "#d6007a"
+  },
+  {
+   "letter": "Y",
+   "hex": "#fae100"
+  },
+  {
+   "letter": "K",
+   "hex": "#141414"
+  },
+  {
+   "letter": "W",
+   "hex": "#f7f7f7"
+  }
+ ],
+ "bases": {
+  "generic": null,
+  "mr": [
+   [
+    "mr",
+    "CR1"
+   ],
+   [
+    "mr",
+    "CR2"
+   ],
+   [
+    "mr",
+    "CR3"
+   ],
+   [
+    "mr",
+    "C2"
+   ],
+   [
+    "mr",
+    "C1"
+   ]
+  ],
+  "gaia": [
+   [
+    "gaia",
+    "033"
+   ],
+   [
+    "gaia",
+    "034"
+   ],
+   [
+    "gaia",
+    "035"
+   ],
+   [
+    "gaia",
+    "002"
+   ],
+   [
+    "gaia",
+    "001"
+   ]
+  ]
+ },
+ "old_default_hex": {
+  "mr|C1": "#f3f3f0",
+  "mr|C2": "#181818",
+  "mr|C3": "#c5242b",
+  "mr|C4": "#f0c419",
+  "mr|C5": "#1c4a9c",
+  "mr|C6": "#1f7d4a",
+  "mr|CR1": "#0094d4",
+  "mr|CR2": "#d2007c",
+  "mr|CR3": "#f5da00"
+ }
+}

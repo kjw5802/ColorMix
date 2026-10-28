@@ -1,0 +1,1646 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>조색 스포이드</title>
+</head>
+<body>
+<style>
+/* exe 버전: 인터넷 없이 동작하도록 글꼴을 로컬에서 읽는다. IBM Plex Sans KR/JP는 포함하지 않고 시스템 글꼴(맑은 고딕, Yu Gothic)로 대체한다. */
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-style:normal;src:url(vendor/ibm-plex-mono-400.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-style:normal;src:url(vendor/ibm-plex-mono-500.woff2) format("woff2")}
+/* 레이아웃: 좌상단 메뉴로 세 화면을 전환. 스포이드 화면은 왼쪽 중립 회색(N5) 무대 + 오른쪽 측정값. UI에는 유채색을 쓰지 않아 색 판단을 방해하지 않는다. */
+:root{
+  --bg:#ececec; --panel:#f8f8f8; --fg:#161616; --muted:#5e5e5e; --line:#cfcfcf; --stage:#7a7a7a; --inv:#f8f8f8;
+  --sans:"IBM Plex Sans KR",system-ui,-apple-system,"Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1c1c;--panel:#262626;--fg:#efefef;--muted:#a3a3a3;--line:#3d3d3d;--stage:#7a7a7a;--inv:#1c1c1c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1c1c1c;--panel:#262626;--fg:#efefef;--muted:#a3a3a3;--line:#3d3d3d;--stage:#7a7a7a;--inv:#1c1c1c;color-scheme:dark}
+:root:lang(ja){--sans:"IBM Plex Sans JP",system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:1.5;padding-inline:16px;padding-block:16px}
+.wrap{max-width:1280px;margin:0 auto;display:grid;gap:16px}
+header{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+h1{font-size:18px;font-weight:600;margin:0}
+h2{font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--muted);margin:0 0 8px}
+nav{display:flex;flex-wrap:wrap;gap:4px}
+button,select,input[type=text],.filebtn{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:6px 12px}
+button,select,.filebtn{cursor:pointer}
+nav button[aria-pressed="true"],.seg button[aria-pressed="true"],.filebtn{background:var(--fg);color:var(--inv);border-color:var(--fg)}
+.filebtn{font-weight:500}
+.hright{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#filebar{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+#filebar button{padding:4px 10px;font-size:12px}
+#filestat{font-family:var(--mono);font-size:12px;color:var(--muted)}
+#filestat.dirty{color:var(--fg);font-weight:500}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px;z-index:20}
+.mbox{background:var(--panel);color:var(--fg);border:1px solid var(--line);padding:20px;max-width:460px;width:100%;display:grid;gap:12px}
+.mbox h2{font-size:16px;color:var(--fg);letter-spacing:0;margin:0}
+/* 스포이드 탭 오른쪽 칸을 촘촘하게: 찍은 색 + 배합 제안이 한 화면에 들어오도록 */
+#tab-main .side{gap:8px}
+#tab-main .side section{padding:12px 14px}
+#tab-main .side h2{margin-bottom:6px}
+#tab-main .pickrow{grid-template-columns:96px minmax(0,1fr);gap:12px}
+#tab-main .pickrow .big{border-width:10px}
+#tab-main .pickinfo{gap:6px}
+#tab-main .pickinfo dl{font-size:12px;gap:1px 12px;line-height:1.45}
+#tab-main .pickinfo .bar button,#tab-main .setsec button:not(.slot){padding:3px 9px;font-size:12px}
+#tab-main .pickinfo .note,#tab-main .warn{font-size:11px}
+#tab-main .warn{margin-top:6px;padding:4px 8px}
+#tab-main .rsw button{width:18px;height:18px}
+#seg{margin-bottom:6px;gap:3px}
+#seg button{padding:2px 8px;font-size:11px}
+#tab-main .rec{grid-template-columns:52px minmax(0,1fr);gap:10px;padding-block:7px}
+#tab-main .rec:first-of-type{padding-top:2px}
+#tab-main .pair{height:50px}
+#tab-main .rec li{font-size:12px;gap:6px;line-height:1.3}
+#tab-main .rec ul{gap:1px}
+#tab-main .de{font-size:11px;margin-top:3px}
+#mixnote{font-size:11px;margin-top:4px}
+/* 명암 세트 접기 (▸ 삼각형) */
+#setbox>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px}
+#setbox>summary::-webkit-details-marker{display:none}
+#setbox>summary::before{content:"▸";font-size:11px;color:var(--muted);transition:transform .15s}
+#setbox[open]>summary::before{transform:rotate(90deg)}
+#setbox>summary h2{margin:0}
+#setbox[open]>summary{margin-bottom:8px}
+/* 배합 제안의 슬라이드 스위치 (펄·메탈릭 제외) */
+.switch{float:right;display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;margin:-2px 0 0 8px}
+.switch input{position:absolute;opacity:0;width:1px;height:1px}
+.switch .track{width:34px;height:18px;border-radius:9px;border:1.5px solid var(--fg);position:relative;flex:none;transition:background .15s}
+.switch .track::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:var(--fg);transition:transform .15s}
+.switch input:checked+.track{background:var(--fg)}
+.switch input:checked+.track::after{transform:translateX(16px);background:var(--inv)}
+.switch input:focus-visible+.track{outline:2px solid var(--fg);outline-offset:2px}
+/* 사진에서 도료 색상값 등록: 안내 띠, 도료 선택 창, 확인 창, 실측 배지 */
+.regbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 10px;border:2px solid var(--fg);background:var(--panel)}
+.regbar span{flex:1 1 220px;font-weight:500}
+button.eyed{padding:3px 5px;line-height:0}
+.regbox{max-width:620px;max-height:84vh;overflow:auto}
+.regbox input[type=search],.regnote input{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:6px 8px;width:100%}
+.reglist{display:grid;max-height:44vh;overflow:auto;border:1px solid var(--line)}
+.regitem{display:flex;gap:8px;align-items:center;text-align:left;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:6px 8px;min-width:0}
+.regitem[aria-pressed="true"]{background:var(--fg);color:var(--inv)}
+.regitem .mono{margin-left:auto;flex:none}
+.regsel{display:flex;flex-wrap:wrap;gap:4px}
+.regsel:empty{display:none}
+.regchip{font-size:12px;border:1px solid var(--line);border-radius:3px;padding:1px 6px}
+.regcmp{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.regcmp>div{display:grid;gap:4px;justify-items:start}
+.regcmp .arrow{font-size:20px}
+.rsw2{width:84px;height:84px;border:10px solid #808080;display:block}
+.regcond{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:13px}
+.regcond li.ok::before{content:"✓ "}
+.regcond li.warn{border-left:3px solid var(--fg);padding:2px 0 2px 8px;background:var(--bg)}
+.regnote{display:grid;gap:4px;font-size:12px;color:var(--muted)}
+.mbadge{font-size:11px;border:1px solid var(--fg);border-radius:3px;padding:0 5px;color:var(--fg)}
+/* 도움말: 각 탭 첫 줄의 (i) 버튼과 도움말 창 */
+button.help{width:24px;height:24px;padding:0;border-radius:50%;border:1.5px solid var(--fg);background:var(--panel);color:var(--fg);font:italic 600 14px/1 Georgia,"Times New Roman",serif;flex:none;display:inline-grid;place-items:center}
+button.help:hover{background:var(--fg);color:var(--inv)}
+.bar>button.help,.lbar>button.help{margin-left:auto}
+button.help.fl{float:right;margin:-3px 0 0 8px}
+.helpbox{max-width:680px;max-height:84vh;overflow:auto;gap:4px}
+.hhead{display:flex;align-items:center;gap:8px;position:sticky;top:-20px;background:var(--panel);padding:4px 0 8px;margin-top:-4px}
+.hhead button{margin-left:auto;padding:0 10px;font-size:18px;line-height:1.4}
+#helpbody h3{font-size:13px;font-weight:600;margin:14px 0 4px}
+#helpbody ul{margin:0;padding-left:20px;display:grid;gap:4px}
+#helpbody li{font-size:13px;line-height:1.55}
+#helpbody b{font-weight:600}
+.closed{max-width:520px;margin:15vh auto 0;display:grid;gap:12px;text-align:center;justify-items:center}
+#langbtn{padding:4px 10px;font-size:12px;min-width:76px}
+button.primary{background:var(--fg);color:var(--inv);border-color:var(--fg);font-weight:500}
+button:disabled{opacity:.45;cursor:default}
+.prow,.srow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-block:8px;border-top:1px solid var(--line)}
+.prow .mono,.srow .sinfo{flex:1 1 130px;min-width:0;overflow-wrap:anywhere}
+.srow:first-child{border-top:0}
+.srow img{width:72px;height:48px;object-fit:cover;border:1px solid var(--line);flex:none}
+.srow button{padding:2px 8px;font-size:12px}
+.sinfo b{font-weight:500;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:2px;margin-top:4px}
+.filebtn.plain{background:var(--panel);color:var(--fg);border-color:var(--line);font-weight:400}
+input[type=text].wide{flex:1 1 140px;min-width:0;cursor:text}
+.prow:first-child{border-top:0}
+.prow .chip{width:28px;height:28px}
+.prow button{padding:2px 8px;font-size:12px}
+button:focus-visible,select:focus-visible,.filebtn:focus-within,input:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.filebtn input{position:absolute;opacity:0;width:1px;height:1px}
+.bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.main{grid-template-columns:minmax(0,1fr)}}
+.left{display:grid;gap:8px;min-width:0}
+.stage{background:var(--stage);border:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.stage.drag{outline:2px dashed var(--fg);outline-offset:-6px}
+.cv{position:relative;line-height:0;align-self:center;max-width:100%}
+canvas{max-width:100%;height:auto;max-height:72vh;cursor:crosshair;display:block}
+/* 확대·축소: 사진은 스크롤되는 창(.vp) 안에 실제 배율 크기로 놓는다. 200% 이상이면 픽셀을 또렷하게 보여 준다 */
+.vp{width:100%;max-height:72vh;overflow:auto;display:flex}
+.vp .cv{margin:auto;max-width:none;flex:none}
+.vp canvas#cv{max-width:none;max-height:none}
+.vp.px canvas#cv{image-rendering:pixelated}
+.vp.panning canvas#cv,.vp.panning{cursor:grabbing}
+.zoom{display:flex;gap:4px;align-items:center}
+.zoom button{padding:4px 10px;min-width:34px}
+#zoomval{font-family:var(--mono);font-size:12px;color:var(--muted);min-width:48px;text-align:right}
+.mark{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1.5px #000;pointer-events:none}
+.hint{color:#f2f2f2;font-size:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;line-height:1.4}
+.refmark{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border:2px dashed #fff;box-shadow:0 0 0 1.5px #000;pointer-events:none}
+.stage.picking canvas{cursor:copy}
+.bar button[aria-pressed="true"]{background:var(--fg);color:var(--inv);border-color:var(--fg)}
+.slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.slot{display:grid;gap:4px;padding:6px;text-align:left;min-width:0}
+.slot .ssw{height:48px;border:1px dashed var(--line)}
+.slot .ssw.on{border-style:solid}
+.slot .shx{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.slot[aria-pressed="true"]{outline:2px solid var(--fg);outline-offset:1px}
+.rel{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px;font-size:13px}
+.plabel{font-size:12px;color:var(--muted)}
+.form2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.form2 label{display:grid;gap:2px;font-size:12px;color:var(--muted);min-width:0}
+.form2 .full{grid-column:1/-1}
+.form2 input,.form2 textarea,.lbar input[type=search]{font:inherit;font-size:14px;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:6px 8px;width:100%;min-width:0}
+@media (max-width:520px){.form2{grid-template-columns:minmax(0,1fr)}}
+.lbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lbar input[type=search]{flex:1 1 200px;width:auto}
+.lcard{display:grid;grid-template-columns:140px minmax(0,1fr);gap:14px;padding-block:14px;border-top:1px solid var(--line)}
+.lcard:first-child{border-top:0}
+@media (max-width:560px){.lcard{grid-template-columns:minmax(0,1fr)}}
+.lcard img{width:100%;max-width:140px;border:1px solid var(--line);display:block}
+.linfo{display:grid;gap:6px;min-width:0}
+.linfo b{font-size:15px;font-weight:600;overflow-wrap:anywhere}
+.lmeta{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.lmeta a{color:var(--fg)}
+.lset{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-end}
+.lset .plabel{width:100%}
+.lsets{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:flex-start}
+.lset{max-width:100%}
+.lsw{width:64px;display:grid;gap:2px}
+.lsw span:first-child{height:40px;border:1px solid var(--line)}
+.lsw span+span{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.lrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,1.4fr);gap:8px;padding-block:10px;border-top:1px solid var(--line);align-items:stretch}
+.lrow .big2{min-height:72px;border:1px solid var(--line);padding:4px 6px;font-family:var(--mono);font-size:11px;display:flex;align-items:flex-end}
+@media (max-width:560px){.lrow{grid-template-columns:repeat(3,minmax(0,1fr))}.lrow .lsrc{grid-column:1/-1}}
+.lactions{display:flex;flex-wrap:wrap;gap:6px}
+.lactions button{padding:2px 10px;font-size:12px}
+.warn{font-size:12px;margin:8px 0 0;padding:6px 8px;border-left:3px solid var(--fg);background:var(--bg)}
+.hov{width:14px;height:14px;border:1px solid #fff;display:inline-block}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+/* 스포이드 화면의 오른쪽 칸은 창 높이에 맞추고 따로 스크롤한다 (높이는 fitSide()가 정한다). 사진은 그 자리에 둔다 */
+@media (min-width:821px){#tab-main .side{position:sticky;top:16px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-right:4px}}
+section{background:var(--panel);border:1px solid var(--line);padding:16px;min-width:0}
+.big{height:96px;border:1px solid var(--line)}
+/* 찍은 색: 왼쪽 정사각형 견본, 오른쪽 값과 팔레트 추가 버튼 */
+.pickrow{display:grid;grid-template-columns:136px minmax(0,1fr);gap:16px;align-items:start}
+/* 찍은 색·명암 세트 견본은 중성 회색(#808080) 테두리 안에 보여 주변색과의 동시대비를 줄인다 */
+.pickrow .big{border:14px solid #808080;outline:1px solid var(--line)}
+.slot .ssw.on{border:6px solid #808080}
+.mixsub{display:block;font-size:11px;color:var(--muted)}
+.row input.tint{width:120px;font:inherit;font-size:12px;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:2px 6px}
+.row .hue{min-width:120px}
+.satb{display:inline-block}
+.prow .mixsub{display:inline}
+.pickrow .big{height:auto;aspect-ratio:1}
+.pickinfo{display:grid;gap:10px;justify-items:start;min-width:0}
+.pickinfo dl{margin:0;width:100%}
+.recent{display:grid;gap:4px;width:100%}
+.rsw{display:flex;flex-wrap:wrap;gap:4px}
+.rsw button{width:22px;height:22px;padding:0;border:1px solid var(--line);border-radius:2px}
+@media (max-width:420px){.pickrow{grid-template-columns:88px minmax(0,1fr);gap:12px}}
+dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;margin:12px 0 0;font-family:var(--mono);font-variant-numeric:tabular-nums}
+dt{color:var(--muted)} dd{margin:0;overflow-wrap:anywhere}
+.seg{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.rec{border-top:1px solid var(--line);padding-block:12px;display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px}
+.rec:first-of-type{border-top:0;padding-top:0}
+.pair{display:grid;grid-template-rows:1fr 1fr;height:64px;border:1px solid var(--line)}
+.pair span{font-size:10px;font-family:var(--mono);padding:2px 4px;line-height:1.2}
+.rec ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.rec li{display:flex;gap:8px;align-items:center}
+.chip{width:12px;height:12px;border:1px solid var(--line);flex:none}
+.parts{font-family:var(--mono);font-weight:500;margin-left:auto}
+.de{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
+.note{font-size:12px;color:var(--muted);margin:8px 0 0}
+.mono{font-family:var(--mono);font-size:12px;color:var(--muted)}
+/* 보유 도료 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
+.card{border:1px solid var(--line);background:var(--bg);min-width:0}
+.card .sw{height:64px;border-bottom:1px solid var(--line)}
+.card div.t{padding:8px;display:grid;gap:0}
+.card b{font-family:var(--mono);font-weight:500}
+.card span{overflow-wrap:anywhere}
+/* 보정 */
+.rows{display:grid;gap:0;margin-top:8px}
+.row{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;padding-block:6px;border-top:1px solid var(--line)}
+.row .nm{flex:1 1 120px;min-width:0}
+.row select{padding:2px 6px;font-size:12px}
+.nocolor{width:40px;height:26px;border:1px solid var(--line);display:inline-block;flex:none}
+.checker{background:repeating-conic-gradient(var(--line) 0 25%,var(--panel) 0 50%) 0 0/10px 10px}
+.badge{font-size:11px;border:1px solid var(--line);border-radius:3px;padding:0 5px;justify-self:start;width:max-content;color:var(--muted)}
+.row input[type=color]{width:40px;height:26px;padding:0;border:1px solid var(--line);background:none}
+.row input[type=checkbox]{width:16px;height:16px}
+.row .nm{overflow-wrap:anywhere}
+.row button{padding:2px 8px;font-size:12px}
+.grp{font-weight:600;margin:16px 0 0}
+/* 도료 관리: 브랜드 탭·검색 줄은 위에 붙이고, 목록은 넓은 창에서 2~3단 */
+.ptool{position:sticky;top:0;z-index:3;background:var(--panel);margin:12px -16px 0;padding:10px 16px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.ptool .seg{margin:0}
+.ptool .seg button{padding:4px 10px;font-size:12px}
+.ptool .seg .cnt{font-family:var(--mono);margin-left:6px;opacity:.7}
+#rows .rows{grid-template-columns:repeat(auto-fill,minmax(min(540px,100%),1fr));column-gap:28px}
+form.add{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+form.add input[type=text]{min-width:0;width:140px;cursor:text}
+form.add input[type=color]{width:40px;height:32px;padding:0;border:1px solid var(--line);background:none}
+</style>
+
+<div class="wrap" id="app">
+  <header>
+    <h1 data-i18n="title"></h1>
+    <nav id="nav" data-i18n-aria="menu">
+      <button type="button" data-tab="main" data-i18n="tabMain"></button>
+      <button type="button" data-tab="palette" id="navpal"></button>
+      <button type="button" data-tab="library" data-i18n="tabLib"></button>
+      <button type="button" data-tab="owned" data-i18n="tabOwned"></button>
+      <button type="button" data-tab="paints" data-i18n="tabPaints"></button>
+      <button type="button" data-tab="data" data-i18n="tabData"></button>
+    </nav>
+    <div class="hright">
+    <div id="filebar"><span id="filestat"></span><button type="button" id="fsave" data-i18n="fileSave"></button><button type="button" id="fexit" data-i18n="exit"></button></div>
+    <button type="button" id="langbtn" data-i18n-title="lang"></button>
+    </div>
+  </header>
+
+  <!-- 스포이드 -->
+  <div class="main" id="tab-main">
+    <div class="left">
+      <div class="bar">
+        <label class="filebtn"><span data-i18n="load"></span><input id="file" type="file" accept="image/*"></label>
+        <label><span data-i18n="size"></span>
+          <select id="size"><option value="0">1×1 px</option><option value="2" selected data-i18n="avg" data-arg="5×5"></option><option value="5" data-i18n="avg" data-arg="11×11"></option></select>
+        </label>
+        <div class="zoom" role="group" data-i18n-aria="zoom">
+          <button type="button" id="zoomout" data-i18n-aria="zoomOut" data-i18n-title="zoomOut">－</button>
+          <span id="zoomval"></span>
+          <button type="button" id="zoomin" data-i18n-aria="zoomIn" data-i18n-title="zoomIn">＋</button>
+          <button type="button" id="zoomfit" data-i18n="zoomFit"></button>
+          <button type="button" id="zoom100">100%</button>
+        </div>
+      </div>
+      <div class="bar">
+        <button type="button" id="refwhite" data-i18n="refWhite"></button>
+        <button type="button" id="refgray" data-i18n="refGray"></button>
+        <label><input type="checkbox" id="showorig"> <span data-i18n="showOrig"></span></label>
+        <button type="button" id="corroff" data-i18n="corrOff" disabled></button>
+      </div>
+      <div class="regbar" id="regbar" hidden><span id="regtext"></span><button type="button" id="regskip" data-i18n="regSkip"></button><button type="button" id="regcancel" data-i18n="regCancel"></button></div>
+      <div class="stage" id="stage">
+        <div class="vp" id="vp"><div class="cv"><canvas id="cv" width="900" height="560"></canvas><div class="mark" id="mark" hidden></div><div class="refmark" id="refmark" hidden></div></div></div>
+        <div class="hint"><span class="hov" id="hov"></span><span id="hint"></span></div>
+        <div class="hint" id="corrmsg"></div>
+        <div class="hint" data-i18n="zoomHelp"></div>
+      </div>
+    </div>
+    <div class="side">
+      <section>
+        <h2 data-i18n="picked"></h2>
+        <div class="pickrow">
+          <div class="big" id="big"></div>
+          <div class="pickinfo">
+            <dl>
+              <dt>HEX</dt><dd id="hex"></dd>
+              <dt>RGB</dt><dd id="rgb"></dd>
+              <dt>HSV</dt><dd id="hsv"></dd>
+              <dt>L*a*b*</dt><dd id="lab"></dd>
+              <dt data-i18n="mixDt"></dt><dd id="mixr"></dd>
+              <dt data-i18n="printDt"></dt><dd id="cmyk"></dd>
+            </dl>
+            <span class="badge satb" id="satbadge" hidden></span>
+            <div class="bar" style="gap:6px"><button type="button" id="addpal" class="primary" data-i18n="addPal"></button><button type="button" id="regpick" data-i18n="regFromPicked"></button></div>
+            <span class="note" id="addmsg" style="margin:0"></span>
+            <div class="recent" id="recent" hidden><span class="plabel" data-i18n="recentTitle"></span><div class="rsw" id="recentsw"></div></div>
+          </div>
+        </div>
+        <p class="warn" id="clipwarn" hidden></p>
+        <p class="warn" id="spreadwarn" hidden></p>
+      </section>
+      <!-- 배합 제안을 찍은 색 바로 아래에 둔다 (스크롤 없이 보이도록) -->
+      <section class="mixsec">
+        <label class="switch"><input type="checkbox" id="nometal" checked><span class="track" aria-hidden="true"></span><span data-i18n="noMetal"></span></label>
+        <h2 data-i18n="mixTitle"></h2>
+        <div class="seg" id="seg"></div>
+        <div id="recs"></div>
+        <p class="note" id="mixnote"></p>
+      </section>
+      <!-- 명암 세트: 필요할 때만 펼친다 -->
+      <section class="setsec">
+        <details id="setbox">
+        <summary><h2 data-i18n="setTitle"></h2></summary>
+        <label><span data-i18n="partLabel"></span> <select id="part"></select></label>
+        <div class="slots">
+          <button type="button" class="slot" id="slot-hl" data-tone="hl"><span class="ssw"></span><span data-i18n="tone_hl"></span><span class="shx">—</span></button>
+          <button type="button" class="slot" id="slot-base" data-tone="base"><span class="ssw"></span><span data-i18n="tone_base"></span><span class="shx">—</span></button>
+          <button type="button" class="slot" id="slot-sh" data-tone="sh"><span class="ssw"></span><span data-i18n="tone_sh"></span><span class="shx">—</span></button>
+        </div>
+        <ul class="rel" id="rel"></ul>
+        <p class="note" data-i18n="setHelp"></p>
+        <p class="bar" style="margin:12px 0 0"><button type="button" id="setadd" class="primary" data-i18n="setAdd"></button><button type="button" id="setclear" data-i18n="setClear"></button><span class="note" id="setmsg" style="margin:0"></span></p>
+        </details>
+      </section>
+    </div>
+  </div>
+
+  <!-- 팔레트 -->
+  <div class="main" id="tab-palette" hidden>
+    <div class="left">
+      <div class="stage"><canvas id="pal" width="1600" height="1000" style="cursor:default;align-self:center"></canvas></div>
+    </div>
+    <div class="side">
+      <section>
+        <h2 data-i18n="palColors"></h2>
+        <label><span data-i18n="basisLabel"></span> <select id="basis"></select></label>
+        <p class="mono" id="basismap" style="margin:4px 0 8px"></p>
+        <p class="note" data-i18n="mixDtNote" style="margin:0 0 8px"></p>
+        <div id="pallist"></div>
+        <p class="note" data-i18n="palNote"></p>
+      </section>
+      <section>
+        <h2 data-i18n="export"></h2>
+        <div class="bar"><button type="button" id="expng" class="primary" disabled data-i18n="savePng"></button><button type="button" id="expdf" class="primary" disabled data-i18n="savePdf"></button><button type="button" id="palclear" data-i18n="clearPal"></button></div>
+        <p class="note" id="exmsg"></p>
+      </section>
+      <section>
+        <h2 data-i18n="libSaveTitle"></h2>
+        <div class="form2" id="metaform">
+          <label class="full"><span data-i18n="f_name"></span><input type="text" id="m-name" maxlength="60"></label>
+          <label><span data-i18n="f_event"></span><input type="text" id="m-event" list="dl-event" maxlength="80"></label>
+          <label><span data-i18n="f_date"></span><input type="date" id="m-date"></label>
+          <label><span data-i18n="f_sculptor"></span><input type="text" id="m-sculptor" list="dl-sculptor" maxlength="80"></label>
+          <label><span data-i18n="f_link"></span><input type="url" id="m-link" maxlength="300" placeholder="https://"></label>
+          <label class="full"><span data-i18n="f_memo"></span><textarea id="m-memo" rows="2" maxlength="500"></textarea></label>
+        </div>
+        <datalist id="dl-event"></datalist><datalist id="dl-sculptor"></datalist>
+        <label id="ow-wrap" hidden style="display:block;margin-top:8px"><input type="checkbox" id="m-overwrite" checked> <span id="ow-text"></span></label>
+        <p class="bar" style="margin:10px 0 0"><button type="button" id="palsave" class="primary" data-i18n="savePal"></button></p>
+        <p class="note" id="savemsg"></p>
+        <p class="note" data-i18n="libSaveNote"></p>
+      </section>
+    </div>
+  </div>
+
+  <!-- 라이브러리 -->
+  <section id="tab-library" hidden>
+    <div class="lbar">
+      <input type="search" id="lq" data-i18n-ph="libSearch" data-i18n-aria="libSearch">
+      <select id="lpart" data-i18n-aria="partLabel"></select>
+      <select id="levent" data-i18n-aria="f_event"></select>
+      <div class="seg" id="lview" style="margin:0"><button type="button" data-v="entry" data-i18n="viewEntry"></button><button type="button" data-v="part" data-i18n="viewPart"></button></div>
+    </div>
+    <p class="mono" id="lcount"></p>
+    <div id="libbody"></div>
+    <h2 style="margin-top:24px" data-i18n="printTitle"></h2>
+    <div class="bar"><label><input type="checkbox" id="lphoto" checked> <span data-i18n="withPhoto"></span></label><button type="button" id="lpdf" class="primary" data-i18n="savePdfA4"></button></div>
+    <p class="note" id="lmsg"></p>
+    <p class="note" id="lprintnote"></p>
+  </section>
+
+  <!-- 보유 도료 -->
+  <section id="tab-owned" hidden>
+    <div class="bar">
+      <h2 style="margin:0" id="ownedcount"></h2>
+      <label><span data-i18n="sort"></span>
+        <select id="sort"><option value="brand" data-i18n="sBrand"></option><option value="no" data-i18n="sNo"></option><option value="color" data-i18n="sColor"></option></select>
+      </label>
+      <label><span data-i18n="typeLabel"></span>
+        <select id="tfilter"><option value="all" data-i18n="filterAll"></option><option value="normal" data-i18n="type_normal"></option><option value="clear" data-i18n="type_clear"></option><option value="colorless" data-i18n="clearColorless"></option><option value="metallic" data-i18n="type_metallic"></option></select>
+      </label>
+      <label><span data-i18n="finishLabel"></span>
+        <select id="ffilter"><option value="all" data-i18n="filterAllFinish"></option><option value="gloss" data-i18n="fin_gloss"></option><option value="semi" data-i18n="fin_semi"></option><option value="matte" data-i18n="fin_matte"></option></select>
+      </label>
+    </div>
+    <div class="grid" id="ownedgrid"></div>
+    <p class="note" data-i18n="ownedNote"></p>
+  </section>
+
+  <!-- 보정 -->
+  <section id="tab-paints" hidden>
+    <h2 data-i18n="addTitle"></h2>
+    <form class="add" id="add">
+      <select id="add-brand" data-i18n-aria="brand"></select>
+      <input type="text" id="add-no" data-i18n-ph="phNo" required data-i18n-aria="phNo">
+      <input type="text" id="add-name" data-i18n-ph="phName" required data-i18n-aria="phName">
+      <select id="add-type" data-i18n-aria="typeLabel"><option value="normal" data-i18n="type_normal"></option><option value="clear" data-i18n="type_clear"></option><option value="metallic" data-i18n="type_metallic"></option></select>
+      <label id="add-cl-wrap" hidden><input type="checkbox" id="add-colorless"> <span data-i18n="colorless"></span></label>
+      <select id="add-finish" data-i18n-aria="finishLabel"><option value="gloss" data-i18n="fin_gloss"></option><option value="semi" data-i18n="fin_semi"></option><option value="matte" data-i18n="fin_matte"></option></select>
+      <input type="color" id="add-hex" value="#808080" data-i18n-aria="color">
+      <button type="submit" data-i18n="add"></button>
+    </form>
+    <p class="note" data-i18n="calNote"></p>
+    <p class="note" data-i18n="clearInfo"></p>
+    <div class="ptool" id="ptool">
+      <div class="seg" id="pbrand" role="group" data-i18n-aria="brand"></div>
+      <div class="lbar"><input type="search" id="psearch" data-i18n-ph="paintSearch" data-i18n-aria="paintSearch"><label><input type="checkbox" id="ponly"> <span data-i18n="ownedOnly"></span></label><label><input type="checkbox" id="pmeas"> <span data-i18n="measEdit"></span></label><button type="button" id="regbatch" data-i18n="regBatch"></button><span class="note" id="regmsg" style="margin:0"></span></div>
+    </div>
+    <div id="rows"></div>
+    <div class="bar" style="margin-top:20px"><button id="reset" type="button" data-i18n="reset"></button><span class="note" id="resetmsg" style="margin:0"></span></div>
+  </section>
+
+  <!-- 데이터 -->
+  <section id="tab-data" hidden>
+    <h2 data-i18n="fileTitle"></h2>
+    <div class="bar"><button type="button" id="fsave2" class="primary" data-i18n="fileSave"></button><button type="button" id="backsave" data-i18n="saveAs"></button><button type="button" id="backfile" data-i18n="backupLoadData"></button></div>
+    <p class="note" id="filemsg"></p>
+    <p class="mono" id="filepath" style="margin:8px 0;overflow-wrap:anywhere"></p>
+    <p class="note" data-i18n="noteSave"></p>
+    <p class="note" data-i18n="noteSaveAs"></p>
+    <p class="note" data-i18n="noteLoad"></p>
+  </section>
+</div>
+
+<div class="modal" id="regdlg" hidden>
+  <div class="mbox regbox" role="dialog" aria-modal="true" aria-labelledby="regdlgtitle">
+    <div class="hhead"><h2 id="regdlgtitle"></h2><button type="button" id="regdlgclose" data-i18n-aria="close">×</button></div>
+    <input type="search" id="regq" data-i18n-ph="paintSearch" data-i18n-aria="paintSearch">
+    <div class="regsel" id="regsel"></div>
+    <div class="reglist" id="reglist"></div>
+    <div class="bar"><button type="button" id="regstart" class="primary"></button></div>
+  </div>
+</div>
+<div class="modal" id="regconf" hidden>
+  <div class="mbox regbox" role="dialog" aria-modal="true" aria-labelledby="regconftitle">
+    <h2 id="regconftitle"></h2>
+    <div class="regcmp">
+      <div><span class="plabel" data-i18n="regNow"></span><span class="rsw2" id="rc-old"></span><span class="mono" id="rc-oldhex"></span></div>
+      <div class="arrow">→</div>
+      <div><span class="plabel" data-i18n="regNew"></span><span class="rsw2" id="rc-new"></span><span class="mono" id="rc-newhex"></span></div>
+      <div class="mono" id="rc-de"></div>
+    </div>
+    <ul class="regcond" id="rc-cond"></ul>
+    <label class="regnote"><span data-i18n="regNote"></span><input type="text" id="rc-note" maxlength="120" data-i18n-ph="regNotePh"></label>
+    <div class="bar"><button type="button" id="rc-ok" class="primary" data-i18n="regOk"></button><button type="button" id="rc-again" data-i18n="regAgain"></button><button type="button" id="rc-skip" data-i18n="regSkip"></button><button type="button" id="rc-cancel" data-i18n="regCancel"></button></div>
+  </div>
+</div>
+<div class="modal" id="helpdlg" hidden>
+  <div class="mbox helpbox" role="dialog" aria-modal="true" aria-labelledby="helptitle">
+    <div class="hhead"><h2 id="helptitle"></h2><button type="button" id="helpclose" data-i18n-aria="close">×</button></div>
+    <div id="helpbody"></div>
+  </div>
+</div>
+<div class="modal" id="exitdlg" role="dialog" aria-modal="true" aria-labelledby="exittitle" hidden>
+  <div class="mbox">
+    <h2 id="exittitle" data-i18n="exitTitle"></h2>
+    <p id="exitbody" style="margin:0"></p>
+    <div class="bar"><button type="button" id="exsave" class="primary" data-i18n="exitSave"></button><button type="button" id="exnosave" data-i18n="exitNoSave"></button><button type="button" id="excancel" data-i18n="cancel"></button></div>
+    <p class="note" id="exitmsg"></p>
+  </div>
+</div>
+<div class="closed" id="closed" hidden>
+  <h1 data-i18n="closedTitle"></h1>
+  <p class="note" data-i18n="closedBody"></p>
+  <button type="button" id="reopen" data-i18n="reopen"></button>
+</div>
+
+<script src="vendor/jspdf.umd.min.js"></script>
+<script>
+// ---- 언어 ---- 각 항목은 [한국어, English, 日本語]
+const LANGS=["ko","en","ja"];
+const T={
+title:["조색 스포이드","Paint Mix Eyedropper","調色スポイト"],
+menu:["메뉴","Menu","メニュー"],lang:["언어","Language","言語"],
+tabMain:["스포이드","Eyedropper","スポイト"],tabPal:["팔레트","Palette","パレット"],palN:["팔레트 ({0})","Palette ({0})","パレット ({0})"],
+tabOwned:["보유 도료","My paints","所有塗料"],tabPaints:["도료 관리","Manage paints","塗料管理"],tabData:["데이터","Data","データ"],
+dataNote:["내보내기 파일 하나에 도료 목록(추가한 도료, 보유 여부, 종류·광택, 색상값), 설정(언어, 정렬, 측정 범위, 선택한 브랜드), 저장된 팔레트가 모두 담깁니다. 불러오면 도료 목록과 설정은 파일 내용으로 바뀌고, 팔레트는 없는 것만 추가됩니다.","One export file holds your paint list (added paints, owned status, type and finish, color values), settings (language, sort, sample size, selected brand) and saved palettes. Importing replaces the paint list and settings with the file's contents and adds only palettes you don't already have.","書き出しファイル1つに、塗料リスト（追加した塗料、所有の有無、種類・ツヤ、色値）、設定（言語、並べ替え、測定範囲、選択中のブランド）、保存したパレットがすべて入ります。読み込むと塗料リストと設定はファイルの内容に置き換わり、パレットはまだないものだけ追加されます。"],
+storageTitle:["저장 상태","Storage","保存状態"],
+resetSure:["한 번 더 누르면 도료 목록이 처음 상태로 돌아갑니다.","Press again to reset the paint list.","もう一度押すと塗料リストが初期状態に戻ります。"],
+resetDone:["도료 목록을 처음 상태로 되돌렸습니다.","The paint list was reset.","塗料リストを初期状態に戻しました。"],
+load:["사진 불러오기","Open photo","写真を開く"],size:["측정 범위","Sample size","測定範囲"],avg:["{0} px 평균","{0} px average","{0} px 平均"],
+hintSample:["예시 이미지입니다. 사진을 불러오거나 여기에 끌어다 놓은 뒤, 원하는 위치를 클릭하세요.","This is a sample image. Open a photo or drop one here, then click the spot you want.","これはサンプル画像です。写真を開くかここにドロップして、取りたい位置をクリックしてください。"],
+hintLoaded:["{0} · 원하는 위치를 클릭하세요.","{0} · Click the spot you want.","{0} · 取りたい位置をクリックしてください。"],
+hintLoadedCleared:["{0} · 원하는 위치를 클릭하세요. 이전 사진의 팔레트는 비웠습니다.","{0} · Click the spot you want. The palette from the previous photo was cleared.","{0} · 取りたい位置をクリックしてください。前の写真のパレットは空にしました。"],
+errType:["이미지 파일(JPG, PNG 등)만 불러올 수 있습니다.","Only image files (JPG, PNG, etc.) can be opened.","画像ファイル（JPG、PNGなど）のみ開けます。"],
+errOpen:["이 파일은 열 수 없습니다. JPG나 PNG로 변환해 다시 시도하세요.","This file can't be opened. Convert it to JPG or PNG and try again.","このファイルは開けません。JPGかPNGに変換してもう一度お試しください。"],
+picked:["찍은 색","Picked color","取得した色"],
+cmykNote:["CMYK는 ICC 프로파일 없이 단순 공식으로 환산한 값입니다.","CMYK is converted with a simple formula, without an ICC profile.","CMYKはICCプロファイルを使わず、単純な式で換算した値です。"],
+addPal:["이 색을 팔레트에 추가","Add this color to palette","この色をパレットに追加"],
+dupPal:["{0} 은 이미 팔레트에 있습니다.","{0} is already in the palette.","{0} はすでにパレットにあります。"],
+added:["{0} 추가됨 · 현재 {1}색","{0} added · {1} in palette","{0} を追加 · 現在 {1} 色"],
+mixTitle:["배합 제안","Mix suggestions","配合の提案"],
+noOwned:["이 브랜드에는 보유로 표시된 도료가 없습니다. \"도료 관리\" 메뉴에서 보유 표시를 하거나 도료를 추가하세요.","No paints of this brand are marked as owned. Mark them as owned or add paints under \"Manage paints\".","このブランドには所有として登録された塗料がありません。「塗料管理」で所有にチェックするか、塗料を追加してください。"],
+target:["목표","Target","目標"],predicted:["예상","Est.","予想"],ratio:["비율 {0}","Ratio {0}","比率 {0}"],
+de0:["거의 같음","near match","ほぼ同じ"],de1:["가까움","close","近い"],de2:["차이 큼","far off","差が大きい"],
+mixWarn:["근사 계산이니 반드시 소량으로 시험 조색하세요.", "Approximate: always test with a small batch first.", "近似計算なので必ず少量で試し調色してください。"],
+note_tamiya:["에나멜 도료끼리만 섞으세요. 락카 도료와는 섞지 않습니다.","Mix enamels only with other enamels, never with lacquers.","エナメル塗料同士だけで混ぜてください。ラッカー塗料とは混ぜません。"],
+note_mr:["보유한 Mr.컬러만으로 계산했습니다.","Calculated only from the Mr. Color paints you own.","所有しているMr.カラーだけで計算しました。"],
+note_gaia:["보유한 가이아 컬러만으로 계산했습니다.","Calculated only from the Gaia Color paints you own.","所有しているガイアカラーだけで計算しました。"],
+brand_tamiya_lp:["타미야 락카 (LP)","Tamiya Lacquer (LP)","タミヤ ラッカー（LP）"],
+note_tamiya_lp:["보유한 타미야 락카(LP)만으로 계산했습니다. 에나멜과는 섞지 않습니다.","Calculated only from the Tamiya lacquer (LP) paints you own. Don't mix with enamels.","所有しているタミヤ ラッカー（LP）だけで計算しました。エナメルとは混ぜません。"],
+brand_fin:["Finisher's (락카)","Finisher's (lacquer)","フィニッシャーズ（ラッカー）"],brand_mk:["Model Kasten (락카)","Model Kasten (lacquer)","モデルカステン（ラッカー）"],
+note_fin:["보유한 Finisher's 도료만으로 계산했습니다.","Calculated only from the Finisher's paints you own.","所有しているフィニッシャーズの塗料だけで計算しました。"],
+note_mk:["보유한 Model Kasten 도료만으로 계산했습니다.","Calculated only from the Model Kasten paints you own.","所有しているモデルカステンの塗料だけで計算しました。"],
+brand_tamiya:["타미야 에나멜","Tamiya Enamel","タミヤ エナメル"],brand_mr:["Mr.컬러 (락카)","Mr. Color (lacquer)","Mr.カラー（ラッカー）"],brand_gaia:["가이아노츠 (락카)","Gaianotes (lacquer)","ガイアノーツ（ラッカー）"],
+palColors:["팔레트 색","Palette colors","パレットの色"],
+palNote:["각 색 오른쪽 아래 값은 위에서 고른 기준 원색 다섯 가지(시안 C, 마젠타 M, 옐로 Y, 검정 K, 흰색 W)를 0.5% 단위까지 섞어 그 색에 가장 가깝게 만드는 비율입니다. 원색의 색상값은 도료 관리 메뉴의 값을 쓰며, 지금은 근사값입니다. 원색 병을 흰 바탕에 칠해 찍은 색으로 바꾸면 정확해집니다.","The values at the bottom right of each color are the ratio of the five primaries chosen above (cyan C, magenta M, yellow Y, black K, white W), mixed in steps down to 0.5%, that comes closest to that color. The primaries' color values come from Manage paints and are approximate for now; replacing them with colors picked from samples painted on white makes this accurate.","各色の右下の値は、上で選んだ基準原色5色（シアンC、マゼンタM、イエローY、黒K、白W）を0.5%刻みまで混ぜて、その色に最も近づく比率です。原色の色値は塗料管理の値を使い、今は近似値です。原色を白地に塗って取った色に置き換えると正確になります。"],
+export:["내보내기","Export","書き出し"],savePng:["PNG로 저장","Save as PNG","PNGで保存"],savePdf:["PDF로 저장","Save as PDF","PDFで保存"],clearPal:["팔레트 비우기","Clear palette","パレットを空にする"],
+exPrep:["저장 기능을 준비하는 중입니다.","Getting saving ready.","保存機能を準備しています。"],
+exReady:["저장을 누르면 확인 창이 한 번 뜹니다.","A confirmation appears once when you save.","保存を押すと確認ウィンドウが一度表示されます。"],
+exNone:["이 화면에서는 파일 저장을 쓸 수 없습니다. 왼쪽 팔레트 이미지를 우클릭해 저장할 수 있습니다.","Files can't be saved in this view. You can right-click the palette image on the left to save it.","この画面ではファイルを保存できません。左のパレット画像を右クリックして保存できます。"],
+exEmpty:["먼저 팔레트에 색을 추가하세요.","Add a color to the palette first.","先にパレットに色を追加してください。"],
+exPdfFail:["PDF를 만들지 못했습니다. PNG로 저장해 보세요.","Couldn't create the PDF. Try saving as PNG.","PDFを作成できませんでした。PNGで保存してみてください。"],
+exImgFail:["이미지를 만들지 못했습니다.","Couldn't create the image.","画像を作成できませんでした。"],
+exSaved:["{0} 파일을 저장했습니다.","Saved the {0} file.","{0}ファイルを保存しました。"],
+exDeclined:["저장을 취소했습니다.","Save cancelled.","保存をキャンセルしました。"],
+exBusy:["저장 확인 창이 이미 열려 있습니다. 잠시 후 다시 누르세요.","A save confirmation is already open. Try again in a moment.","保存の確認ウィンドウがすでに開いています。少し待ってからもう一度押してください。"],
+exFail:["이 화면에서는 파일을 저장할 수 없습니다.","Files can't be saved in this view.","この画面ではファイルを保存できません。"],
+palEmpty:["아직 색이 없습니다. 스포이드 화면에서 색을 찍고 \"이 색을 팔레트에 추가\"를 누르세요.","No colors yet. Pick a color on the Eyedropper screen and press \"Add this color to palette\".","まだ色がありません。スポイト画面で色を取り、「この色をパレットに追加」を押してください。"],
+fwd:["앞으로","move forward","前へ"],back:["뒤로","move back","後ろへ"],del:["삭제","Delete","削除"],
+ownedCount:["보유 도료 {0}종 (전체 {1}종 중)","{0} paints owned (of {1})","所有塗料 {0}種（全{1}種中）"],
+sort:["정렬","Sort","並べ替え"],sBrand:["브랜드별","By brand","ブランド別"],sNo:["제품 번호별","By product number","製品番号別"],sColor:["색상별","By color","色別"],
+ownedNote:["보유 여부는 \"도료 관리\" 메뉴에서 바꿉니다. 배합 제안은 보유 도료만으로 계산합니다.","Change what you own under \"Manage paints\". Mix suggestions use only owned paints.","所有の有無は「塗料管理」で変更します。配合の提案は所有塗料だけで計算します。"],
+ownedNone:["보유로 표시된 도료가 없습니다.","No paints are marked as owned.","所有として登録された塗料がありません。"],
+addTitle:["도료 추가","Add a paint","塗料を追加"],brand:["브랜드","Brand","ブランド"],
+phNo:["제품 번호 (예: XF-1)","Product number (e.g. XF-1)","製品番号（例: XF-1）"],phName:["색 이름","Color name","色名"],color:["색상","Color","色"],add:["추가","Add","追加"],
+calNote:["Mr.컬러의 색상값은 GSI Creos 공식 컬러리스트(2024-2025)의 인쇄 견본을 화면용 색으로 변환한 값입니다. 제조사도 \"견본은 실제 도료 색과 다르니 참고로만 쓰라\"고 밝히고 있어 근사값입니다. 나머지 브랜드는 임시 근사값입니다. 실제로 칠해 찍은 색으로 바꾸면 배합 제안이 정확해집니다.","Mr. Color values are converted from the printed swatches in GSI Creos's official color list (2024-2025). The maker notes the swatches differ from the actual paint and are for reference only, so these are approximations. Other brands use provisional approximations. Replacing them with colors picked from real painted samples makes suggestions more accurate.","Mr.カラーの色値は、GSIクレオス公式カラーリスト（2024-2025）の印刷見本を画面用の色に変換した値です。メーカーも「見本は実際の塗料の色と異なるので参考に」としているため近似値です。他のブランドは暫定の近似値です。実際に塗って取った色に置き換えると配合の提案が正確になります。"],
+syncWait:["계정 저장소에 연결하는 중입니다.","Connecting to account storage.","アカウントの保存先に接続しています。"],
+syncOn:["도료 목록과 저장한 팔레트는 계정에 저장되어 다른 기기에서도 보입니다.","Your paint list and saved palettes are stored with your account and appear on your other devices.","塗料リストと保存したパレットはアカウントに保存され、他の端末でも表示されます。"],
+syncOff:["계정 저장소를 쓸 수 없어 도료 목록과 팔레트는 이 브라우저에만 저장합니다. 내보내기로 백업해 두세요.","Account storage isn't available here, so the paint list and palettes are saved only in this browser. Use Export to keep a backup.","アカウントの保存先が使えないため、塗料リストとパレットはこのブラウザにのみ保存します。書き出しでバックアップしてください。"],
+syncErr:["계정에 저장하지 못했습니다. 이 브라우저에는 저장되어 있습니다.","Couldn't save to your account. The data is still saved in this browser.","アカウントに保存できませんでした。このブラウザには保存されています。"],
+savedTitle:["저장된 팔레트","Saved palettes","保存したパレット"],phPalName:["팔레트 이름","Palette name","パレット名"],savePal:["라이브러리에 저장","Save to library","ライブラリに保存"],
+savedNone:["저장된 팔레트가 없습니다.","No saved palettes yet.","保存したパレットはまだありません。"],
+savedOk:["\"{0}\" 저장됨","Saved \"{0}\"","「{0}」を保存しました"],saveFail:["팔레트를 저장하지 못했습니다.","Couldn't save the palette.","パレットを保存できませんでした。"],
+saveNeedDb:["계정 저장소를 쓸 수 없어 팔레트를 저장할 수 없습니다.","Palettes can't be saved because account storage isn't available here.","アカウントの保存先が使えないため、パレットを保存できません。"],
+open:["열기","Open","開く"],sure:["정말 삭제?","Really delete?","本当に削除？"],viewMix:["배합","Mix","配合"],
+backupTitle:["내보내기 / 불러오기","Export / Import","書き出し / 読み込み"],backupSave:["도료·설정·팔레트 내보내기","Export paints, settings and palettes","塗料・設定・パレットを書き出す"],backupLoad:["백업 파일 불러오기","Load backup file","バックアップを読み込む"],
+backupOk:["백업에서 도료 {0}종, 팔레트 {1}개를 불러왔습니다.","Loaded {0} paints and {1} palettes from the backup.","バックアップから塗料{0}種、パレット{1}件を読み込みました。"],
+backupBad:["이 프로그램의 백업 파일이 아닙니다.","This isn't a backup file from this program.","このプログラムのバックアップファイルではありません。"],
+backupSaved:["백업 파일을 저장했습니다.","Backup file saved.","バックアップファイルを保存しました。"],
+typeLabel:["종류","Type","種類"],filterAll:["전체 종류","All types","すべての種類"],
+type_normal:["일반","Standard","通常"],type_clear:["클리어","Clear","クリアー"],clearColorless:["클리어 (무색)","Clear (colorless)","クリアー（無色）"],
+finishLabel:["광택","Finish","ツヤ"],filterAllFinish:["전체 광택","All finishes","すべてのツヤ"],fin_gloss:["유광","Gloss","光沢"],fin_semi:["반광","Semi-gloss","半光沢"],fin_matte:["무광","Matte","つや消し"],
+colorless:["무색","Colorless","無色"],
+clearInfo:["종류를 \"클리어\"로 하고 \"무색\"을 체크하면 색상값 없이 저장됩니다. 무색 클리어는 섞어도 완전히 덮었을 때의 색을 바꾸지 않으므로 배합 계산에서 빠집니다. 무광·반광 클리어는 소광제 때문에 실제로는 색을 약간 밝고 탁하게 만들지만, 지금은 유광과 같이 다룹니다.","Set the type to \"Clear\" and tick \"Colorless\" to save a paint without a color value. A colorless clear doesn't change the fully covered color when mixed, so it's left out of mix calculations. Matte and semi-gloss clears contain a matting agent that makes colors slightly lighter and duller; for now they're treated like gloss.","種類を「クリアー」にして「無色」にチェックすると、色値なしで保存されます。無色クリアーは混ぜても完全に覆ったときの色を変えないため、配合計算から外れます。つや消し・半光沢クリアーはつや消し剤のため実際には色を少し明るく濁らせますが、今は光沢と同じに扱います。"],
+clearMixNote:["보유한 클리어로 희석해도 완전히 덮었을 때의 색은 같고, 얇게 올릴 때만 옅어집니다. 얇게 올릴 때의 색은 다음 단계(레이어 판정)에서 계산합니다.","Diluting with a clear you own keeps the fully covered color the same and only makes thin coats paler. Thin-coat color will be calculated in the next stage (layer check).","所有しているクリアーで薄めても完全に覆ったときの色は同じで、薄く重ねたときだけ淡くなります。薄塗りの色は次の段階（レイヤー判定）で計算します。"],
+refWhite:["기준 흰색 찍기","Pick white reference","基準の白を取る"],refGray:["기준 회색 찍기","Pick gray reference","基準のグレーを取る"],
+showOrig:["원본 보기","Show original","元画像を表示"],corrOff:["보정 해제","Remove correction","補正を解除"],
+refPromptWhite:["사진에서 원래 흰색이었을 곳(흰 옷, 받침대, 가격표나 설명 카드 등)을 클릭하세요.","Click a spot that was originally white (white clothing, a base, a price tag or info card, etc.).","写真の中で本来白だった場所（白い服、台座、値札や説明カードなど）をクリックしてください。"],
+refPromptGray:["사진에서 원래 회색이나 무채색이었을 곳(회색 배경지, 금속이 아닌 회색 부품 등)을 클릭하세요.","Click a spot that was originally gray or neutral (a gray backdrop, a non-metallic gray part, etc.).","写真の中で本来グレーや無彩色だった場所（グレーの背景紙、金属でないグレーの部品など）をクリックしてください。"],
+corrNone:["조명 보정 없음 · 사진 속 흰색이나 회색 부분을 기준으로 색 치우침을 걷어 낼 수 있습니다.","No lighting correction · You can remove a color cast using a white or gray area in the photo.","照明補正なし · 写真内の白やグレーの部分を基準に色かぶりを取り除けます。"],
+corrWhite:["흰색 기준으로 보정 중 (색 치우침과 밝기) · R ×{0}  G ×{1}  B ×{2}","Corrected to white reference (cast and brightness) · R ×{0}  G ×{1}  B ×{2}","白基準で補正中（色かぶりと明るさ） · R ×{0}  G ×{1}  B ×{2}"],
+corrGray:["회색 기준으로 보정 중 (색 치우침만) · R ×{0}  G ×{1}  B ×{2}","Corrected to gray reference (cast only) · R ×{0}  G ×{1}  B ×{2}","グレー基準で補正中（色かぶりのみ） · R ×{0}  G ×{1}  B ×{2}"],
+corrShowingOrig:["원본을 보는 중 · 이 상태에서 찍은 색은 보정되지 않은 값입니다.","Showing the original · Colors picked now are uncorrected.","元画像を表示中 · この状態で取った色は補正されていない値です。"],
+refClipped:["선택한 곳이 하얗게 날아가 있어 기준으로 쓸 수 없습니다. 조금 덜 밝은 부분을 찍으세요.","That spot is blown out to white and can't be used as a reference. Pick a slightly less bright area.","選んだ場所が白飛びしているため基準に使えません。少し明るさの低い部分を選んでください。"],
+refColored:["선택한 곳은 색이 너무 강해서 원래 흰색이나 회색이었다고 보기 어렵습니다. 무채색 부분을 찍으세요.","That spot is too strongly colored to have been white or gray. Pick a neutral area.","選んだ場所は色が強すぎて、本来白やグレーだったとは考えにくいです。無彩色の部分を選んでください。"],
+refDark:["선택한 곳이 너무 어두워 기준으로 쓸 수 없습니다.","That spot is too dark to use as a reference.","選んだ場所が暗すぎるため基準に使えません。"],
+clipWarn:["하얗게 날아간 하이라이트가 섞여 실제보다 밝게 측정됩니다. 덜 밝은 곳을 찍어 보세요.", "A blown-out highlight makes this read lighter than it is; pick a less bright spot.", "白飛びが混ざり実際より明るく測定されます。明るすぎない所を取ってください。"],
+setTitle:["명암 세트","Shade set","陰影セット"],partLabel:["부위","Part","部位"],
+part_skin:["피부","Skin","肌"],part_hair:["머리카락","Hair","髪"],part_eyes:["눈","Eyes","目"],part_cloth:["의상","Clothing","衣装"],part_stocking:["스타킹","Stockings","ストッキング"],part_other:["기타","Other","その他"],
+tone_hl:["하이라이트","Highlight","ハイライト"],tone_base:["기본","Base","基本色"],tone_sh:["그림자","Shadow","影"],
+setHelp:["칸을 누른 뒤 사진을 클릭하면 그 칸에 색이 들어가고, 하이라이트 → 기본 → 그림자 순서로 다음 빈칸으로 넘어갑니다. 측정 범위를 11×11로 넓게 두면 표면 질감에 덜 흔들립니다.","Press a slot, then click the photo to fill it; it moves on to the next empty slot in the order highlight → base → shadow. Setting the sample size to 11×11 makes readings less sensitive to surface texture.","枠を押してから写真をクリックすると、その枠に色が入り、ハイライト → 基本色 → 影の順に次の空き枠へ進みます。測定範囲を11×11に広げると表面の質感に左右されにくくなります。"],
+setAdd:["세트를 팔레트에 추가","Add set to palette","セットをパレットに追加"],setClear:["비우기","Clear","クリア"],
+setAdded:["{0}색을 팔레트에 추가했습니다.","Added {0} colors to the palette.","{0}色をパレットに追加しました。"],setEmpty:["먼저 칸을 채우세요.","Fill a slot first.","先に枠を埋めてください。"],
+relNeedBase:["기본 칸을 채우면 하이라이트·그림자가 기본색과 어떻게 다른지 표시됩니다.","Fill the base slot to see how the highlight and shadow differ from it.","基本色の枠を埋めると、ハイライトと影が基本色とどう違うかが表示されます。"],
+relLine:["{0}: 기본보다 명도 {1}, {2}","{0}: lightness {1} vs base, {2}","{0}: 基本色より明度 {1}、{2}"],
+relRed:["더 붉게","redder","より赤く"],relGreen:["더 초록빛으로","greener","より緑寄りに"],relYellow:["더 노랗게","yellower","より黄色く"],relBlue:["더 푸르게","bluer","より青く"],
+relLessRed:["덜 붉게","less red","赤みを抑えて"],relLessGreen:["덜 초록빛으로","less green","緑みを抑えて"],relLessYellow:["덜 노랗게","less yellow","黄みを抑えて"],relLessBlue:["덜 푸르게","less blue","青みを抑えて"],
+relSat:["채도 높게","more saturated","彩度高め"],relDesat:["채도 낮게","less saturated","彩度低め"],relSame:["색감은 거의 같음","about the same hue","色味はほぼ同じ"],sep:[", ",", ","、"],
+tabLib:["라이브러리","Library","ライブラリ"],libSaveTitle:["라이브러리에 저장","Save to library","ライブラリに保存"],
+f_name:["작품·캐릭터","Work · character","作品・キャラクター"],f_event:["행사·장소","Event · place","イベント・場所"],f_date:["날짜","Date","日付"],
+f_sculptor:["원형사·딜러","Sculptor · dealer","原型師・ディーラー"],f_link:["링크","Link","リンク"],f_memo:["메모","Memo","メモ"],
+overwrite:["열어 둔 기록 \"{0}\"에 덮어쓰기","Overwrite the open record \"{0}\"","開いている記録「{0}」に上書き"],
+libSaveNote:["저장한 기록은 라이브러리 메뉴에서 행사·부위별로 걸러 보고, 인쇄용 PDF로 내보낼 수 있습니다. 행사·장소와 원형사는 전에 입력한 값이 후보로 나와 표기를 통일하기 쉽습니다.","Saved records can be filtered by event and part in the Library menu and exported as a printable PDF. Event and sculptor fields suggest values you've entered before, which keeps names consistent.","保存した記録はライブラリメニューでイベント・部位別に絞り込み、印刷用PDFに書き出せます。イベント・場所と原型師は以前の入力が候補に出るので、表記を統一しやすくなります。"],
+libSearch:["이름, 행사, 원형사, 메모 검색","Search name, event, sculptor, memo","名前・イベント・原型師・メモを検索"],
+allParts:["전체 부위","All parts","すべての部位"],allEvents:["전체 행사·장소","All events","すべてのイベント"],
+viewEntry:["기록별","By record","記録別"],viewPart:["부위별 모아 보기","Compare by part","部位別に比較"],
+libCount:["기록 {0}개 · 색 {1}개","{0} records · {1} colors","記録{0}件 · 色{1}個"],
+libEmpty:["조건에 맞는 기록이 없습니다.","No records match.","条件に合う記録がありません。"],
+libNone:["아직 기록이 없습니다. 팔레트 메뉴에서 \"라이브러리에 저장\"으로 추가하세요.","No records yet. Add one with \"Save to library\" in the Palette menu.","まだ記録がありません。パレットメニューの「ライブラリに保存」で追加してください。"],
+edit:["편집","Edit","編集"],saveBtn:["저장","Save","保存"],cancel:["취소","Cancel","キャンセル"],
+printTitle:["인쇄용 내보내기","Print export","印刷用書き出し"],withPhoto:["사진 포함","Include photos","写真を含める"],savePdfA4:["A4 PDF로 저장","Save as A4 PDF","A4 PDFで保存"],
+libPrintNote:["지금 걸러 보고 있는 기록만 담깁니다. 각 색 칸에는 C·M·Y·K·W 비율과, 스포이드 화면에서 고른 브랜드({0})의 보유 도료로 만든 가장 가까운 배합이 함께 들어갑니다.","Only the records currently shown are included. Each swatch carries its C·M·Y·K·W ratio and the closest mix from your owned paints of the brand selected on the Eyedropper screen ({0}).","今絞り込んでいる記録だけが入ります。各色にはC·M·Y·K·Wの比率と、スポイト画面で選んだブランド（{0}）の所有塗料で作る最も近い配合が入ります。"],
+pdfTitle:["색 라이브러리","Color library","カラーライブラリ"],single:["단색","Single","単色"],
+libPdfEmpty:["내보낼 기록이 없습니다.","There's nothing to export.","書き出す記録がありません。"],
+libPdfBusy:["PDF를 만드는 중입니다…","Building the PDF…","PDFを作成しています…"],
+updatedOk:["\"{0}\" 수정됨","Updated \"{0}\"","「{0}」を更新しました"],
+basisLabel:["비율 기준 원색","Primaries for ratios","比率の基準原色"],
+basis_generic:["기본 (가상 원색)","Generic (virtual primaries)","汎用（仮想原色）"],basis_mr:["Mr.컬러 색의 근원 + C1·C2","Mr. Color Iro-no-Moto + C1·C2","Mr.カラー 色ノ源 + C1・C2"],basis_gaia:["가이아 순색 033~035 + 001·002","Gaia Pure 033–035 + 001·002","ガイア 純色033〜035 + 001・002"],
+paintSearch:["번호나 이름으로 찾기","Find by number or name","番号や名前で検索"],ownedOnly:["보유만","Owned only","所有のみ"],
+fileTitle:["데이터 파일 (이 컴퓨터)","Data file (this computer)","データファイル（このパソコン）"],
+fileNote:["내려받은 HTML로 열었을 때, 데이터를 브라우저가 아니라 이 컴퓨터의 파일에 저장합니다. HTML과 같은 폴더에 colormix_data.json을 만들어 두는 것을 권합니다. 형식은 내보내기 파일과 같아서 Claude 페이지의 \"불러오기\"로 그대로 옮길 수 있습니다. 브라우저에는 파일 위치만 기억해 두며, 다시 열 때 \"다시 열기\"를 한 번 눌러 접근을 허용하면 됩니다.","When opened as a downloaded HTML file, data is saved to a file on this computer instead of the browser. Creating colormix_data.json in the same folder as the HTML is recommended. It uses the same format as the export file, so you can bring it into the Claude page with Import. The browser only remembers where the file is; when you reopen, press \"Reopen\" once to allow access.","ダウンロードしたHTMLで開いたとき、データをブラウザではなくこのパソコンのファイルに保存します。HTMLと同じフォルダにcolormix_data.jsonを作っておくのがおすすめです。形式は書き出しファイルと同じなので、Claudeページの「読み込み」でそのまま移せます。ブラウザはファイルの場所だけを覚えていて、開き直すときに「開き直す」を一度押してアクセスを許可します。"],
+fileUnsupported:["이 브라우저는 파일 직접 저장을 지원하지 않습니다. PC의 크롬이나 엣지에서 열면 쓸 수 있습니다. 지금은 이 브라우저 안에 저장합니다.","This browser can't save to files directly. Open it in Chrome or Edge on a PC to use this. For now, data is saved inside this browser.","このブラウザはファイルへの直接保存に対応していません。PCのChromeかEdgeで開くと使えます。今はこのブラウザ内に保存します。"],
+fileNew:["새 데이터 파일 만들기","Create data file","新しいデータファイルを作成"],fileOpen:["데이터 파일 열기","Open data file","データファイルを開く"],fileSave:["저장","Save","保存"],fileDisconnect:["연결 해제","Disconnect","接続を解除"],
+fsNone:["데이터 파일 없음","No data file","データファイルなし"],fsUnsavedShort:["저장 안 됨","unsaved","未保存"],fsReconnect:["{0} 다시 열기","Reopen {0}","{0} を開き直す"],
+fsSaved:["{0} · 저장됨","{0} · saved","{0} · 保存済み"],fsDirty:["{0} · 저장 안 됨","{0} · unsaved","{0} · 未保存"],
+fsSavedAt:["{0}에 저장했습니다.","Saved at {0}.","{0}に保存しました。"],
+fsLoaded:["{0}에서 도료 {1}종, 라이브러리 기록 {2}개를 불러왔습니다.","Loaded {1} paints and {2} library records from {0}.","{0}から塗料{1}種、ライブラリの記録{2}件を読み込みました。"],
+fsError:["파일에 저장하지 못했습니다. 파일이 다른 프로그램에서 열려 있거나 접근이 허용되지 않았는지 확인하세요.","Couldn't save to the file. Check that it isn't open in another program and that access was allowed.","ファイルに保存できませんでした。ほかのプログラムで開いていないか、アクセスが許可されているか確認してください。"],
+fsReadError:["파일을 읽지 못했습니다. 이 프로그램의 데이터 파일인지 확인하세요.","Couldn't read the file. Check that it's a data file from this program.","ファイルを読めませんでした。このプログラムのデータファイルか確認してください。"],
+exit:["종료","Exit","終了"],exitTitle:["종료하기 전에 저장할까요?","Save before exiting?","終了する前に保存しますか？"],
+exitBody:["저장하지 않은 변경 사항이 있습니다. 저장하지 않고 나가면, 다음에 열 때 데이터 파일에 마지막으로 저장한 상태로 돌아갑니다.","You have unsaved changes. If you exit without saving, the next time you open it you'll return to the last state saved in the data file.","保存していない変更があります。保存せずに終了すると、次に開いたときはデータファイルに最後に保存した状態に戻ります。"],
+exitBodyClean:["모든 변경 사항이 저장되어 있습니다.","All changes are saved.","すべての変更は保存済みです。"],
+exitSave:["저장하고 나가기","Save and exit","保存して終了"],exitNoSave:["저장하지 않고 나가기","Exit without saving","保存せずに終了"],
+closedTitle:["종료했습니다","Closed","終了しました"],closedBody:["이제 이 창(탭)을 닫으셔도 됩니다.","You can close this tab now.","このタブを閉じて大丈夫です。"],reopen:["다시 열기","Open again","もう一度開く"],
+reset:["도료 목록 초기화","Reset paint list","塗料リストを初期化"],grp:["{0} · {1}종","{0} · {1} paints","{0} · {1}種"],own:["보유","Owned","所有"],
+// exe 버전 전용 문구
+brand_aq:["수성 도료","Water-based","水性塗料"],note_aq:["보유한 수성 도료만으로 계산했습니다. 락카·에나멜 도료와는 섞지 않습니다.","Calculated only from the water-based paints you own. Don't mix with lacquers or enamels.","所有している水性塗料だけで計算しました。ラッカー・エナメル塗料とは混ぜません。"],
+help:["도움말","Help","ヘルプ"],close:["닫기","Close","閉じる"],
+// 사진에서 도료 색상값 등록
+type_metallic:["메탈릭·펄","Metallic/pearl","メタリック・パール"],noMetal:["펄·메탈릭 제외","Exclude metallic/pearl","パール・メタリック除外"],
+noMetalNote:["보유한 펄·메탈릭 {0}종은 뺐습니다.","{0} owned metallic/pearl paints were left out.","所有しているパール・メタリック{0}種は除外しました。"],
+brand_mix:["브랜드 혼합 (락카)","Mixed brands (lacquer)","ブランド混合（ラッカー）"],
+note_mix:["보유 락카 도료 전체에서 브랜드 상관없이 계산했습니다 (에나멜·수성 제외).", "Calculated from all owned lacquers regardless of brand (enamels and water-based excluded).", "所有ラッカー塗料全体からブランドを問わず計算しました（エナメル・水性は除外）。"],
+regFromPicked:["도료 색상값으로 등록","Set as paint color","塗料の色値に登録"],regPhotoBtn:["사진에서 찍어 색상값 등록","Pick this paint's color from a photo","写真から色値を登録"],
+regBatch:["사진에서 연속 찍기","Pick several from a photo","写真から連続で取る"],
+regBanner:["등록 중 ({0}/{1}): {2} — 사진에서 견본을 클릭하세요","Registering ({0}/{1}): {2} — click the swatch in the photo","登録中 ({0}/{1}): {2} — 写真の見本をクリックしてください"],
+regSkip:["건너뛰기","Skip","スキップ"],regCancel:["등록 취소","Cancel","登録を中止"],
+regPickTitle:["색상값을 등록할 도료 고르기","Choose the paint to update","色値を登録する塗料を選ぶ"],
+regBatchTitle:["연속으로 찍을 도료 고르기 (찍을 순서대로)","Choose paints to pick (in picking order)","連続で取る塗料を選ぶ（取る順に）"],
+regSelNone:["찍을 순서대로 도료를 누르세요. 한 번 더 누르면 빠집니다.","Click paints in the order you'll pick them. Click again to remove.","取る順に塗料を押してください。もう一度押すと外れます。"],
+regStart:["{0}개 찍기 시작","Start ({0})","{0}件 取り始める"],
+regNow:["지금","Current","現在"],regNew:["새 값","New","新しい値"],
+regCondWb_white:["기준 흰색으로 보정함","White reference applied","基準の白で補正済み"],regCondWb_gray:["기준 회색으로 보정함","Gray reference applied","基準のグレーで補正済み"],
+regWarnNoWb:["기준 흰색(회색) 보정을 하지 않았습니다. 조명 색이 섞였을 수 있습니다.","No white (gray) reference correction: the lighting color may be mixed in.","基準の白（グレー）で補正していません。照明の色が混ざっている可能性があります。"],
+regCondSize:["측정 범위 {0} 평균","{0} average","測定範囲 {0} 平均"],
+regWarnSize:["1×1 측정입니다. 질감·잡음에 흔들리기 쉬우니 5×5 이상을 권합니다.","Single-pixel sample: easily thrown off by texture or noise; 5×5 or larger is recommended.","1×1測定です。質感・ノイズでぶれやすいので5×5以上をおすすめします。"],
+regCondSpread:["측정 편차 ΔE {0}","Sample spread ΔE {0}","測定のばらつき ΔE {0}"],
+regWarnSpread:["측정 편차가 큽니다 (ΔE {0}). 반사광·질감·경계가 섞였을 수 있습니다.","Large sample spread (ΔE {0}): glare, texture or an edge may be mixed in.","測定のばらつきが大きいです (ΔE {0})。反射光・質感・境界が混ざっている可能性があります。"],
+regWarnClip:["하얗게 날아간 하이라이트가 섞여 있습니다.","A blown-out highlight is mixed in.","白飛びしたハイライトが混ざっています。"],
+regWarnNotPhoto:["사진에서 바로 찍은 값이 아니라 측정 조건을 알 수 없습니다.","Not picked directly from a photo, so the conditions are unknown.","写真から直接取った値ではないため測定条件が分かりません。"],
+regNote:["메모 (바탕·도포 횟수·마감 등)","Note (base, coats, finish…)","メモ（下地・塗り回数・仕上げなど）"],
+regNotePh:["예: 흰 서페이서 위 3회, 유광 클리어 코트","e.g. 3 coats over white surfacer, gloss clear coat","例: 白サフの上に3回、光沢クリアー"],
+regOk:["등록","Register","登録"],regAgain:["다시 찍기","Pick again","取り直す"],
+regDone:["{0}개 도료의 색상값을 사진에서 등록했습니다.","Updated {0} paint colors from the photo.","{0}件の塗料の色値を写真から登録しました。"],
+regBadge:["실측 {0}","Measured {0}","実測 {0}"],
+regRevertPrev:["이전 값으로","Previous value","前の値に戻す"],regRevertDef:["기본값으로","Default value","初期値に戻す"],
+recentTitle:["최근 추가한 색","Recently added","最近追加した色"],
+// 펠리카 드레스 사례 반영 (R1·R2·R3·R9, 측정 편차 경고)
+mixDt:["도료 배합비","Paint mix","塗料配合比"],printDt:["인쇄 CMYK","Print CMYK","印刷CMYK"],
+mixDtNote:["도료 배합비는 인쇄 CMYK가 아니라, 팔레트 탭에서 고른 기준 원색 C·M·Y·K를 흰색(W)에 섞는 부피 비율(%)입니다. C·M·Y의 공통분은 사실상 회색 성분이라 따로 나눠 보여 줍니다. 인쇄 CMYK는 참고값입니다.","The paint mix is not print CMYK: it is the volume ratio (%) of the C·M·Y·K primaries chosen on the Palette tab mixed into white (W). The part common to C, M and Y is effectively gray, so it is shown separately. Print CMYK is for reference only.","塗料配合比は印刷CMYKではなく、パレットタブで選んだ基準原色C・M・Y・Kを白(W)に混ぜる体積比(%)です。C・M・Yの共通分は実質的にグレー成分なので分けて表示します。印刷CMYKは参考値です。"],
+mixSplit:["회색 {0} + 색 {1}","gray {0} + color {1}","グレー {0} + 色 {1}"],mixNoColor:["색 성분 없음","no color component","色成分なし"],
+satLow:["저채도: 회색에 가까운 색 (S {0}%)","Low saturation: close to gray (S {0}%)","低彩度: グレーに近い色 (S {0}%)"],
+satUnstable:["채도 {0}%: 색상각이 불안정합니다. 색 방향은 참고만 하세요","Saturation {0}%: hue is unstable, treat the hue as a hint only","彩度 {0}%: 色相角が不安定です。色の方向は参考程度に"],
+spreadWarn:["측정 범위 안의 색이 고르지 않습니다 (ΔE {0}). 반사광·질감·경계를 피해 찍어 보세요.", "Uneven color in the sample area (ΔE {0}); avoid glare, texture and edges.", "測定範囲内の色が不均一です (ΔE {0})。反射光・質感・境界を避けてください。"],
+opacityLabel:["투명도","Opacity","透明度"],op_none:["투명도 미측정","Opacity not measured","透明度 未測定"],op_transparent:["투명","Transparent","透明"],op_semi:["반투명","Semi-transparent","半透明"],op_opaque:["불투명","Opaque","不透明"],
+tintLabel:["착색력","Tinting strength","着色力"],measEdit:["측정값 편집 (투명도·착색력)","Edit measurements (opacity, tinting)","測定値を編集（透明度・着色力）"],unmeasured:["미측정","not measured","未測定"],
+hueLabel:["색상각","Hue","色相角"],hueFromHex:["색상값 기준","from color value","色値基準"],hueMeasured:["측정값","measured","測定値"],
+zoom:["확대·축소","Zoom","拡大・縮小"],zoomIn:["확대","Zoom in","拡大"],zoomOut:["축소","Zoom out","縮小"],zoomFit:["맞춤","Fit","全体表示"],
+zoomHelp:["사진 위에서 마우스 휠로 확대·축소하고, 확대한 상태에서는 끌어서 옮길 수 있습니다.","Use the mouse wheel over the photo to zoom; when zoomed in, drag to move around.","写真の上でマウスホイールを回すと拡大・縮小し、拡大中はドラッグで移動できます。"],
+saveAs:["다른 이름으로 저장","Save as…","名前を付けて保存"],backupLoadData:["백업 데이터 불러오기","Load backup data","バックアップデータを読み込む"],
+noteSave:["저장: 도료 목록과 라이브러리를 프로그램과 같은 폴더의 colormix_data.json에 저장합니다. 언어, 정렬, 측정 범위 같은 화면 설정도 함께 저장되어 다음에 열 때 그대로 시작합니다. 머리글의 저장 버튼이나 Ctrl+S와 같습니다.","Save: saves your paint list and library to colormix_data.json in the same folder as the program. Display settings such as language, sort and sample size are saved too, so the program opens the way you left it. Same as the Save button in the header or Ctrl+S.","保存: 塗料リストとライブラリをプログラムと同じフォルダのcolormix_data.jsonに保存します。言語、並べ替え、測定範囲などの表示設定も一緒に保存され、次に開くときにそのまま始まります。ヘッダーの保存ボタンやCtrl+Sと同じです。"],
+noteSaveAs:["다른 이름으로 저장: 도료 목록과 라이브러리를 원하는 위치에 사본으로 저장합니다. 화면 설정은 담지 않습니다. 백업이나 다른 PC, Claude 페이지로 옮길 때 씁니다. 프로그램이 여는 파일은 계속 colormix_data.json입니다.","Save as: saves a copy of your paint list and library (without display settings) wherever you choose, for backups or moving to another PC or the Claude page. The program keeps opening colormix_data.json.","名前を付けて保存: 塗料リストとライブラリを好きな場所にコピーとして保存します。表示設定は含みません。バックアップや別のPC、Claudeページへの移行に使います。プログラムが開くファイルは引き続きcolormix_data.jsonです。"],
+noteLoad:["백업 데이터 불러오기: 도료 목록은 파일 내용으로 바뀌고, 라이브러리는 지금 없는 기록만 더해집니다. 언어 같은 화면 설정은 바뀌지 않습니다. 불러온 뒤 저장해야 colormix_data.json에 반영됩니다.","Load backup data: the paint list is replaced with the file's contents, and only library records you don't have yet are added. Display settings such as language stay as they are. Save afterwards to write them to colormix_data.json.","バックアップデータを読み込む: 塗料リストはファイルの内容に置き換わり、ライブラリはまだない記録だけ追加されます。言語などの表示設定は変わりません。読み込んだ後に保存すると colormix_data.json に反映されます。"]
+};
+// 기본 도료의 색 이름
+const PN={
+"tamiya|X-2":["화이트","White","ホワイト"],"tamiya|X-1":["블랙","Black","ブラック"],"tamiya|X-7":["레드","Red","レッド"],"tamiya|X-8":["레몬 옐로","Lemon Yellow","レモンイエロー"],"tamiya|X-4":["블루","Blue","ブルー"],"tamiya|X-5":["그린","Green","グリーン"],
+"mr|C1":["화이트","White","ホワイト"],"mr|C2":["블랙","Black","ブラック"],"mr|C3":["레드","Red","レッド"],"mr|C4":["옐로","Yellow","イエロー"],"mr|C5":["블루","Blue","ブルー"],"mr|C6":["그린","Green","グリーン"],
+"mr|CR1":["색의 근원 시안","Iro-no-Moto Cyan","色ノ源 シアン"],"mr|CR2":["색의 근원 마젠타","Iro-no-Moto Magenta","色ノ源 マゼンタ"],"mr|CR3":["색의 근원 옐로","Iro-no-Moto Yellow","色ノ源 イエロー"],
+"gaia|001":["퓨어 화이트","Pure White","ピュアホワイト"],"gaia|002":["퓨어 블랙","Pure Black","ピュアブラック"],"gaia|003":["브라이트 레드","Bright Red","ブライトレッド"],"gaia|004":["울트라 블루","Ultra Blue","ウルトラブルー"],"gaia|005":["선샤인 옐로","Sunshine Yellow","サンシャインイエロー"],"gaia|006":["플랫 베이스","Flat Base","フラットベース"],
+"gaia|007":["클리어","Clear","クリアー"],"gaia|008":["플랫 클리어","Flat Clear","フラットクリアー"],"gaia|009":["브라이트 실버","Bright Silver","ブライトシルバー"],"gaia|010":["브라이트 골드","Bright Gold","ブライトゴールド"],"gaia|011":["플랫 화이트","Flat White","フラットホワイト"],"gaia|012":["플랫 블랙","Flat Black","フラットブラック"],
+"gaia|013":["비리디언 그린","Viridian Green","ビリジアングリーン"],"gaia|014":["내추럴 브라운","Natural Brown","ナチュラルブラウン"],"gaia|015":["퓨어 오렌지","Pure Orange","ピュアオレンジ"],"gaia|016":["브릴리언트 핑크","Brilliant Pink","ブリリアントピンク"],"gaia|017":["퍼플 바이올렛","Purple Violet","パープルヴァイオレット"],"gaia|018":["에메랄드 그린","Emerald Green","エメラルドグリーン"],
+"gaia|019":["라벤더","Lavender","ラベンダー"],"gaia|020":["건메탈","Gunmetal","ガンメタル"],"gaia|021":["세미글로스 화이트","Semi-Gloss White","セミグロスホワイト"],"gaia|022":["세미글로스 블랙","Semi-Gloss Black","セミグロスブラック"],"gaia|023":["스칼렛","Scarlet","スカーレット"],"gaia|024":["코발트 블루","Cobalt Blue","コバルトブルー"],
+"gaia|025":["등황색","Orange Yellow (Tokoshoku)","橙黄色"],"gaia|026":["라이트 그린","Light Green","ライトグリーン"],"gaia|027":["다크 그린","Dark Green","ダークグリーン"],"gaia|028":["스톤 그린","Stone Green","ストーングリーン"],"gaia|030":["세미글로스 클리어","Semi-Gloss Clear","セミグロスクリアー"],"gaia|031":["얼티밋 화이트","Ultimate White","アルティメットホワイト"],
+"gaia|032":["얼티밋 블랙","Ultimate Black","アルティメットブラック"],"gaia|033":["순색 시안","Pure Cyan","純色シアン"],"gaia|034":["순색 마젠타","Pure Magenta","純色マゼンタ"],"gaia|035":["순색 옐로","Pure Yellow","純色イエロー"],"gaia|036":["순색 그린","Pure Green","純色グリーン"],"gaia|037":["순색 바이올렛","Pure Violet","純色バイオレット"],
+"gaia|038":["프라이머리 메탈릭 레드","Primary Metallic Red","プライマリーメタリックレッド"],"gaia|039":["프라이머리 메탈릭 블루","Primary Metallic Blue","プライマリーメタリックブルー"],"gaia|040":["프라이머리 메탈릭 옐로","Primary Metallic Yellow","プライマリーメタリックイエロー"],"gaia|041":["클리어 레드","Clear Red","クリアーレッド"],"gaia|042":["클리어 오렌지","Clear Orange","クリアーオレンジ"],"gaia|043":["클리어 블랙","Clear Black","クリアーブラック"],
+"gaia|044":["클리어 블루","Clear Blue","クリアーブルー"],"gaia|045":["클리어 옐로","Clear Yellow","クリアーイエロー"],"gaia|046":["클리어 브라운","Clear Brown","クリアーブラウン"],"gaia|047":["클리어 퍼플","Clear Purple","クリアーパープル"],"gaia|048":["클리어 그린","Clear Green","クリアーグリーン"],"gaia|049":["클리어 핑크","Clear Pink","クリアーピンク"],
+"gaia|050":["클리어 화이트","Clear White","クリアーホワイト"],"gaia|051":["노츠 플레시","Notes Flesh","ノーツフレッシュ"],"gaia|052":["노츠 플레시 화이트","Notes Flesh White","ノーツフレッシュ ホワイト"],"gaia|053":["노츠 플레시 핑크","Notes Flesh Pink","ノーツフレッシュ ピンク"],"gaia|054":["노츠 플레시 오렌지","Notes Flesh Orange","ノーツフレッシュ オレンジ"],"gaia|059":["서페이서리스 플레시 핑크","Surfacerless Flesh Pink","サフレスフレッシュピンク"],
+"gaia|060":["서페이서리스 플레시 오렌지","Surfacerless Flesh Orange","サフレスフレッシュオレンジ"],"gaia|061":["미드나이트 블루","Midnight Blue","ミッドナイトブルー"],"gaia|062":["미디엄 블루","Medium Blue","ミディアムブルー"],"gaia|063":["블루 그레이","Blue Gray","ブルーグレー"],"gaia|071":["뉴트럴 그레이 I","Neutral Gray I","ニュートラルグレーI"],"gaia|072":["뉴트럴 그레이 II","Neutral Gray II","ニュートラルグレーII"],
+"gaia|073":["뉴트럴 그레이 III","Neutral Gray III","ニュートラルグレーIII"],"gaia|074":["뉴트럴 그레이 IV","Neutral Gray IV","ニュートラルグレーIV"],"gaia|075":["뉴트럴 그레이 V","Neutral Gray V","ニュートラルグレーV"],"gaia|101":["형광 블루","Fluorescent Blue","蛍光ブルー"],"gaia|102":["형광 핑크","Fluorescent Pink","蛍光ピンク"],"gaia|103":["형광 레드","Fluorescent Red","蛍光レッド"],
+"gaia|104":["형광 그린","Fluorescent Green","蛍光グリーン"],"gaia|105":["형광 옐로","Fluorescent Yellow","蛍光イエロー"],"gaia|106":["형광 오렌지","Fluorescent Orange","蛍光オレンジ"],"gaia|107":["형광 옐로 그린","Fluorescent Yellow Green","蛍光イエローグリーン"],"gaia|108":["형광 블루 그린","Fluorescent Blue Green","蛍光ブルーグリーン"],"gaia|110":["형광 클리어","Fluorescent Clear","蛍光クリアー"],
+"gaia|121":["스타브라이트 실버","Starbright Silver","スターブライトシルバー"],"gaia|122":["스타브라이트 골드","Starbright Gold","スターブライトゴールド"],"gaia|123":["스타브라이트 듀랄루민","Starbright Duralumin","スターブライトジュラルミン"],"gaia|124":["스타브라이트 브라스","Starbright Brass","スターブライトブラス"],"gaia|125":["스타브라이트 아이언","Starbright Iron","スターブライトアイアン"],"gaia|126":["스타브라이트 샴페인 골드","Starbright Champagne Gold","スターブライト シャンパンゴールド"],
+"gaia|131":["펄 실버","Pearl Silver","パールシルバー"],"gaia|132":["펄 골드","Pearl Gold","パールゴールド"],"gaia|133":["펄 코퍼","Pearl Copper","パールカッパー"],"gaia|134":["프리즘 퍼플 그린","Prism Purple Green","プリズム パープルグリーン"],"gaia|135":["프리즘 블루 그린","Prism Blue Green","プリズム ブルーグリーン"],"gaia|136":["프리즘 마젠타 골드","Prism Magenta Gold","プリズム マゼンタゴールド"],
+"gaia|137":["프리즘 파스텔 터콰이즈 블루 옐로","Prism Pastel Turquoise Blue Yellow","プリズム パステル ターコイズブルーイエロー"],"gaia|138":["프리즘 파스텔 체리 핑크 블루","Prism Pastel Cherry Pink Blue","プリズム パステル チェリーピンクブルー"],"gaia|139":["프리즘 파스텔 민트 그린 블루","Prism Pastel Mint Green Blue","プリズム パステル ミントグリーンブルー"],"gaia|201":["다크 옐로 1 (둥켈겔프 1)","Dark Yellow 1 (Dunkelgelb 1)","ダークイエロー1 (ドゥンケルゲルプ1)"],"gaia|202":["올리브 그린 (올리프그륀)","Olive Green (Olivgrün)","オリーブグリーン (オリーフグリュン)"],"gaia|203":["레드 브라운 (로트브라운)","Red Brown (Rotbraun)","レッドブラウン (ロートブラウン)"],
+"gaia|204":["다크 옐로 2 (둥켈겔프 2)","Dark Yellow 2 (Dunkelgelb 2)","ダークイエロー2 (ドゥンケルゲルプ2)"],"gaia|205":["겔프브라운 (옐로 브라운)","Gelbbraun (Yellow Brown)","ゲルプブラウン (イエローブラウン)"],"gaia|206":["그라우그륀 (그레이 그린)","Graugrün (Gray Green)","グラウグリュン (グレーグリーン)"],"gaia|207":["브라운","Brown","ブラウン"],"gaia|208":["그라우 (그레이)","Grau (Gray)","グラウ (グレー)"],"gaia|211":["회록색","Gray Green (Hairyokushoku)","灰緑色"],
+"gaia|212":["녹색","Green (Midori-iro)","緑色"],"gaia|213":["회록색","Gray Green (Hairyokushoku)","灰緑色"],"gaia|214":["암록색","Dark Green (Anryokushoku)","暗緑色"],"gaia|215":["FS34079 다크 그린","FS34079 Dark Green","FS34079 ダークグリーン"],"gaia|216":["FS34102 그린","FS34102 Green","FS34102 グリーン"],"gaia|217":["FS30219 탄","FS30219 Tan","FS30219 タン"],
+"gaia|218":["FS36622 그레이","FS36622 Gray","FS36622 グレー"],"gaia|219":["FS36440 라이트 걸 그레이","FS36440 Light Gull Gray","FS36440 ライトガルグレー"],"gaia|221":["저먼 그레이 (둥켈그라우)","German Gray (Dunkelgrau)","ジャーマングレー (ドゥンケルグラウ)"],"gaia|222":["옥사이드 레드","Oxide Red","オキサイドレッド"],"gaia|223":["인테리어 컬러 (전차 내부색)","Interior Color (tank interior)","インテリアカラー (戦車車内色)"],"gaia|TL-001":["NATO 그린","NATO Green","NATOグリーン"],
+"gaia|TL-002":["NATO 브라운","NATO Brown","NATOブラウン"],"gaia|TL-003":["NATO 블랙","NATO Black","NATOブラック"],"gaia|TL-004":["라이트 그레이 FS36251","Light Gray FS36251","ライトグレーFS36251"],"gaia|TL-005":["다크 그레이 FS36176","Dark Gray FS36176","ダークグレーFS36176"],"gaia|1000":["스테인리스 실버","Stainless Silver","ステンレスシルバー"],"gaia|1001":["라이트 스테인리스 실버","Light Stainless Silver","ライトステンレスシルバー"],
+"gaia|1002":["다크 스테인리스 실버","Dark Stainless Silver","ダークステンレスシルバー"],"gaia|1003":["청15호","Blue No.15","青15号"],"gaia|1004":["포도색 2호","Grape No.2","ぶどう色2号"],"gaia|1005":["쥐색 1호","Mouse Gray No.1","ねずみ色1号"],"gaia|1006":["회색 9호","Gray No.9","灰色9号"],"gaia|1007":["다크 그레이","Dark Gray","ダークグレー"],
+"gaia|1008":["크림 1호","Cream No.1","クリーム1号"],"gaia|1009":["로즈 핑크","Rose Pink","ローズピンク"],"gaia|1010":["포도색 1호","Grape No.1","ぶどう色1号"],"gaia|1011":["검정","Black","黒"],"gaia|1012":["붉은 녹","Red Rust","赤サビ"],"gaia|1013":["누런 녹","Yellow Rust","黄サビ"],
+"gaia|1021":["컨테이너 블루","Container Blue","コンテナブルー"],"gaia|1022":["컨테이너 레드","Container Red","コンテナレッド"],"gaia|1023":["메이테츠 스칼렛","Meitetsu Scarlet","名鉄スカーレット"],"gaia|1024":["세이부 101계 옐로","Seibu 101 Series Yellow","西武101系イエロー"],"gaia|1025":["세이부 2000계 옐로","Seibu 2000 Series Yellow","西武2000系イエロー"],"gaia|1026":["세이부 베이지","Seibu Beige","西武ベージュ"],
+"gaia|1027":["세이부 레드","Seibu Red","西武レッド"],"gaia|Ex-01":["Ex-화이트","Ex-White","Ex-ホワイト"],"gaia|Ex-02":["Ex-블랙","Ex-Black","Ex-ブラック"],"gaia|Ex-03":["Ex-클리어","Ex-Clear","Ex-クリアー"],"gaia|Ex-04":["Ex-플랫 클리어","Ex-Flat Clear","Ex-フラットクリアー"],"gaia|Ex-05":["Ex-플랫 화이트","Ex-Flat White","Ex-フラットホワイト"],
+"gaia|Ex-06":["Ex-플랫 블랙","Ex-Flat Black","Ex-フラットブラック"],"gaia|Ex-07":["Ex-실버","Ex-Silver","Ex-シルバー"],"gaia|Ex-08":["Ex-골드","Ex-Gold","Ex-ゴールド"],"gaia|Ex-09":["Ex-세미글로스 클리어 프리미엄","Ex-Semi-Gloss Clear Premium","Ex-セミグロスクリアー プレミアム"],"gaia|Ex-10":["Ex-플랫 클리어 프리미엄","Ex-Flat Clear Premium","Ex-フラットクリアー プレミアム"],"gaia|GP-01":["울트라마린 블루","Ultramarine Blue","ウルトラマリンブルー"],
+"gaia|GP-02":["프리미엄 레드","Premium Red","プレミアムレッド"],"gaia|GP-03":["울트라마린 블루 2","Ultramarine Blue 2","ウルトラマリンブルー2"],"gaia|GP-04":["프리미엄 글라스 펄","Premium Glass Pearl","プレミアムガラスパール"],"gaia|GP-05":["울트라마린 블루","Ultramarine Blue","ウルトラマリンブルー"],"gaia|GP-06":["클리어 울트라마린 블루","Clear Ultramarine Blue","クリアーウルトラマリンブルー"],"gaia|GP-07":["프리미엄 도금 실버","Premium Plating Silver","プレミアムメッキシルバー"],
+"gaia|GP-08":["프리미엄 미러 크롬","Premium Mirror Chrome","プレミアムミラークローム"],"gaia|GP-09":["프리즘 블루 블랙","Prism Blue Black","プリズムブルーブラック"],
+"mr|GX122":["GX 클리어 피콕 그린","GX Clear Peacock Green","GXクリアピーコックグリーン"],"mr|GX209":["GX 레드 골드","GX Red Gold","GXレッドゴールド"],"mr|CL200":["골드 펄 베이스 (첨가제)","Gold Pearl Base (additive)","ゴールドパールベース（添加剤）"],"mr|CL201":["스타킹 블랙","Stocking Black","ストッキングブラック"],"mr|CL202":["스타킹 브라운","Stocking Brown","ストッキングブラウン"],"mr|CL203":["스타킹 화이트","Stocking White","ストッキングホワイト"],"gaia|EV-02":["에바 그린","Eva Green","エヴァグリーン"],"gaia|VO-33":["마일드 오렌지","Mild Orange","マイルドオレンジ"],"gaia|FG-01":["플라스틱 플레시","Plastic Flesh","プラスチックフレッシュ"],"gaia|FG-02":["베이스 플레시","Base Flesh","ベースフレッシュ"],"tamiya|X-15":["라이트 그린","Light Green","ライトグリーン"],"tamiya|X-19":["스모크","Smoke","スモーク"],"tamiya|X-27":["클리어 레드","Clear Red","クリヤーレッド"],"tamiya|XF-1":["플랫 블랙","Flat Black","フラットブラック"],"aq|HLP103":["스텔라 터콰이즈 (펄)","Stella Turquoise (pearl)","ステラターコイズ"],"aq|HGQ01":["GQuuuuuuX 화이트","GQuuuuuuX White","GQuuuuuuXホワイト"],"aq|HGQ03":["GQuuuuuuX 옐로","GQuuuuuuX Yellow","GQuuuuuuXイエロー"],"aq|HSM02":["슈퍼 파인 골드","Super Fine Gold","スーパーファインゴールド"],
+"fin|Foundation White":["파운데이션 화이트","Foundation White","ファンデーションホワイト"],"fin|Baby Clear":["베이비 클리어","Baby Clear","ベイビークリアー"],
+"fin|Fluorescent Pink":["형광 핑크","Fluorescent Pink","蛍光ピンク"],"fin|Baby Natural":["베이비 내추럴","Baby Natural","ベイビーナチュラル"]
+};
+let LI=0;
+function t(k,...a){const v=T[k];let s=v?v[LI]:k;a.forEach((x,i)=>{s=s.replace("{"+i+"}",x)});return s}
+const pname=p=>{const n=PN[p.brand+"|"+p.no];return n&&!p.custom&&!p.renamed?n[LI]:p.name};
+const bname=b=>t("brand_"+b);
+// 번호 칸에 영어 이름이 들어간 도료(Finisher's 등): 영어 화면에서는 한 번만, 한/일 화면에서는 "영어 이름 (현지 이름)"으로 보여 준다
+const noIsName=p=>{const en=(PN[p.brand+"|"+p.no]||[])[1];return en?en.toLowerCase()==p.no.toLowerCase():/\s/.test(p.no)&&!/\d/.test(p.no)};
+const plabel=p=>{const n=pname(p);if(n.toLowerCase()==p.no.toLowerCase())return p.no;return noIsName(p)?p.no+" ("+n+")":p.no+" "+n};
+const MSG={filemsg:null,exitmsg:null,lmsg:null,resetmsg:null,hint:["hintSample"],corrmsg:["corrNone"],clipwarn:null,addmsg:null,exmsg:null,savemsg:null,satbadge:null,spreadwarn:null,regmsg:null};
+const HIDE_EMPTY=["clipwarn","satbadge","spreadwarn"];
+function setMsg(id,k,...a){MSG[id]=k?[k,...a]:null;const e=document.getElementById(id);e.textContent=k?t(k,...a):"";if(HIDE_EMPTY.includes(id))e.hidden=!k}
+const BRANDS={tamiya:1,tamiya_lp:1,mr:1,gaia:1,fin:1,mk:1,aq:1};
+// aq: 수성 도료 (exe 버전에서 추가. 락카·에나멜과 섞지 않는다)
+const BORDER=["tamiya","tamiya_lp","mr","gaia","fin","mk","aq"];
+// 배합 제안의 "브랜드 혼합": 락카 계열끼리는 브랜드가 달라도 섞는다. 에나멜(tamiya)·수성(aq)은 섞지 않는다
+const LACQUER=["tamiya_lp","mr","gaia","fin","mk"],BSHORT={tamiya:"X",tamiya_lp:"LP",mr:"Mr",gaia:"Gaia",fin:"Fin",mk:"MK",aq:"Aq"};
+const brandPool=b=>b=="mix"?LACQUER:[b];
+let NOMETAL=true,SETOPEN=false;
+const mixPaints=()=>PAINTS.filter(p=>brandPool(brand).includes(p.brand)&&p.own&&!isClear(p)&&!(NOMETAL&&p.type=="metallic"));
+// 브랜드 혼합: 전체 후보 계산에 브랜드별 계산을 더해 ΔE 순으로 고른다. 후보를 줄이는 단계에서 한 브랜드 안의 좋은 조합이 빠지지 않게 한다
+function bestMixes(target,P){if(brand!="mix")return recipes(target,P);const all=recipes(target,P);
+  for(const b of LACQUER){const ix=P.map((p,i)=>p.brand==b?i:-1).filter(i=>i>=0);if(ix.length)for(const r of recipes(target,ix.map(i=>P[i])))all.push(Object.assign({},r,{idx:r.idx.map(j=>ix[j])}))}
+  all.sort((x,y)=>x.de-y.de);const res=[],seen=new Set();
+  for(const r of all){const k=r.idx.slice().sort((a,b)=>a-b).join();if(seen.has(k))continue;seen.add(k);res.push(r);if(res.length==3)break}
+  return res}
+const recLabel=p=>(brand=="mix"?"["+BSHORT[p.brand]+"] ":"")+plabel(p);
+// 기본 도료. hex는 임시 근사값이며 제조사 공식 수치가 아니다.
+const DEFAULTS=[
+  ["tamiya","X-2","화이트","#f2f2ef"],["tamiya","X-1","블랙","#1a1a1a"],["tamiya","X-7","레드","#c8202a"],["tamiya","X-8","레몬 옐로","#f2d21f"],["tamiya","X-4","블루","#1f3f93"],["tamiya","X-5","그린","#1d7a45"],
+  // Mr.컬러: GSI Creos 공식 컬러리스트(Mr.HOBBY CATALOGUE 2024-2025)의 인쇄 견본 CMYK를 FOGRA39 프로파일로 sRGB 변환한 값
+  ["mr","C1","White","#ffffff",1,"normal",0,"gloss"],["mr","C2","Black","#2b2b2a",1,"normal",0,"gloss"],["mr","C3","Red","#e41e25",1,"normal",0,"gloss"],["mr","C4","Yellow","#ffdd00",1,"normal",0,"gloss"],["mr","C5","Blue","#0455a0",1,"normal",0,"gloss"],["mr","C6","Green","#00683a",1,"normal",0,"gloss"],["mr","C7","Brown","#c83e34",0,"normal",0,"gloss"],["mr","C8","Silver","#dadada",0,"normal",0,"gloss"],["mr","C9","Gold","#e1b228",0,"normal",0,"gloss"],["mr","C10","Copper","#ce7037",0,"normal",0,"gloss"],["mr","C11","Light Gull Gray","#c0c4c7",0,"normal",0,"semi"],["mr","C12","Olive Drab 1","#6f5c39",0,"normal",0,"semi"],["mr","C13","Neutral Gray","#78868d",0,"normal",0,"semi"],["mr","C14","Navy Blue","#2e4b56",0,"normal",0,"semi"],["mr","C15","IJN Green Nakajima","#1c412e",0,"normal",0,"semi"],["mr","C16","IJA Green","#2e503e",0,"normal",0,"semi"],["mr","C17","RLM71 Dark Green","#5f6056",0,"normal",0,"semi"],["mr","C18","RLM70 Black Green","#3a4555",0,"normal",0,"semi"],["mr","C19","Sandy Brown","#a28140",0,"normal",0,"semi"],["mr","C20","Light Blue","#59bba4",0,"normal",0,"semi"],["mr","C21","Middle Stone","#b4904c",0,"normal",0,"semi"],["mr","C22","Dark Earth","#5d4e42",0,"normal",0,"semi"],["mr","C23","Dark Green 2","#52604e",0,"normal",0,"semi"],["mr","C25","Dark Seagray","#767b64",0,"normal",0,"semi"],["mr","C26","Duck Egg Green","#d9dfaf",0,"normal",0,"semi"],["mr","C27","Interior Green","#b9a529",0,"normal",0,"semi"],["mr","C28","Steel","#2b2b2a",0,"normal",0,"gloss"],["mr","C29","Hull Red","#60383a",0,"normal",0,"semi"],["mr","C30","Flat Base","#ffffff",0,"clear",1,"matte"],["mr","C31","Dark Gray 1","#929898",0,"normal",0,"semi"],["mr","C32","Dark Gray 2","#4c595f",0,"normal",0,"semi"],["mr","C33","Flat Black","#2b2b2a",0,"normal",0,"matte"],["mr","C34","Sky Blue","#008dd3",0,"normal",0,"gloss"],["mr","C35","IJN Gray Mitsubishi","#a7bbc6",0,"normal",0,"semi"],["mr","C36","RLM74 Gray Green","#304444",0,"normal",0,"semi"],["mr","C37","RLM75 Gray Violet","#56605c",0,"normal",0,"semi"],["mr","C38","Olive Drab 2","#474c3c",0,"normal",0,"matte"],["mr","C39","Dark Yellow Sandy Yellow","#c29c62",0,"normal",0,"matte"],["mr","C40","German Gray","#364245",0,"normal",0,"matte"],["mr","C41","Red Brown","#563938",0,"normal",0,"matte"],["mr","C42","Mahogany","#4d3a38",0,"normal",0,"semi"],["mr","C43","Wood Brown","#714f38",0,"normal",0,"semi"],["mr","C44","Tan","#cba86d",0,"normal",0,"semi"],["mr","C45","Sail Color","#c3b686",0,"normal",0,"semi"],["mr","C46","Clear","#ffffff",0,"clear",1,"gloss"],["mr","C47","Clear Red","#e41e25",0,"clear",0,"gloss"],["mr","C48","Clear Yellow","#ffd500",0,"clear",0,"gloss"],["mr","C49","Clear Orange","#eb5f22",0,"clear",0,"gloss"],["mr","C50","Clear Blue","#00a1e4",0,"clear",0,"gloss"],["mr","C51","Flesh","#e7b280",0,"normal",0,"semi"],["mr","C52","Field Gray 2","#44524e",0,"normal",0,"matte"],["mr","C54","Khaki Green","#3f473f",0,"normal",0,"matte"],["mr","C55","Khaki","#5b543b",0,"normal",0,"matte"],["mr","C56","IJN Gray Green Nakajima","#76a29e",0,"normal",0,"semi"],["mr","C57","Metallic Blue Green","#00756d",0,"normal",0,"gloss"],["mr","C58","Orange Yellow","#ef741e",0,"normal",0,"semi"],["mr","C59","Orange","#e63b24",0,"normal",0,"gloss"],["mr","C60","RLM02 Gray","#9e9c8b",0,"normal",0,"semi"],["mr","C61","Burnt Iron","#5a5457",0,"normal",0,"gloss"],["mr","C62","Flat White","#ffffff",0,"normal",0,"matte"],["mr","C63","Pink","#ee7199",0,"normal",0,"gloss"],["mr","C64","Yellow Green","#2da240",0,"normal",0,"gloss"],["mr","C65","Bright Blue","#234896",0,"normal",0,"gloss"],["mr","C66","Bright Green","#009847",0,"normal",0,"gloss"],["mr","C67","Purple","#4c337e",0,"normal",0,"gloss"],["mr","C68","Madder Red","#d52427",0,"normal",0,"gloss"],["mr","C69","Off White","#f8f6f3",0,"normal",0,"gloss"],["mr","C70","Dark Green","#3f473f",0,"normal",0,"matte"],["mr","C71","Midnight Blue","#3e474b",0,"normal",0,"gloss"],["mr","C72","Intermediate Blue","#36515d",0,"normal",0,"semi"],["mr","C73","Aircraft Gray","#789c9b",0,"normal",0,"gloss"],["mr","C74","Air Superiority Blue","#1d707c",0,"normal",0,"gloss"],["mr","C75","Metallic Red","#af2e2d",0,"normal",0,"gloss"],["mr","C76","Metallic Blue","#0455a0",0,"normal",0,"gloss"],["mr","C77","Metallic Green","#008751",0,"normal",0,"gloss"],["mr","C78","Metal Black","#2b2b2a",0,"normal",0,"gloss"],["mr","C79","Shine Red","#e41e25",0,"normal",0,"gloss"],["mr","C80","Cobalt Blue","#383286",0,"normal",0,"semi"],["mr","C81","Russet","#7a3638",0,"normal",0,"gloss"],["mr","C90","Shine Silver","#d1d1d1",0,"normal",0,"gloss"],["mr","C92","Semi Gloss Black","#2b2b2a",0,"normal",0,"semi"],["mr","C97","Light Gray","#b5beb6",0,"normal",0,"gloss"],["mr","C100","Wine Red","#af2e39",0,"normal",0,"gloss"],["mr","C101","Smoke Gray","#483c2f",0,"normal",0,"gloss"],["mr","C104","Gun Chrome","#b4c0c6",0,"normal",0,"matte"],["mr","C107","Character White","#f4f5f3",0,"normal",0,"semi"],["mr","C108","Character Red","#c6292a",0,"normal",0,"semi"],["mr","C109","Character Yellow","#f07f1c",0,"normal",0,"semi"],["mr","C110","Character Blue","#234896",0,"normal",0,"semi"],["mr","C111","Character Flesh 1","#fde3d8",0,"normal",0,"semi"],["mr","C112","Character Flesh 2","#f7bdbc",0,"normal",0,"semi"],["mr","C113","RLM04 Yellow","#f8a70a",0,"normal",0,"semi"],["mr","C114","RLM23 Red","#c82745",0,"normal",0,"semi"],["mr","C115","RLM65 Light Blue","#799ba9",0,"normal",0,"semi"],["mr","C116","RLM66 Black Gray","#444343",0,"normal",0,"semi"],["mr","C117","RLM76 Light Blue","#bfd3d2",0,"normal",0,"semi"],["mr","C118","RLM78 Light Blue","#83a7b6",0,"normal",0,"semi"],["mr","C119","RLM79 Sand Yellow","#97715c",0,"normal",0,"semi"],["mr","C120","RLM80 Olive Green","#2d4636",0,"normal",0,"semi"],["mr","C121","RLM81 Brown Violet","#5f6056",0,"normal",0,"semi"],["mr","C122","RLM82 Light Green","#678457",0,"normal",0,"semi"],["mr","C123","RLM83 Dark Green","#415750",0,"normal",0,"semi"],["mr","C124","Dark Green Mitsubishi","#20532f",0,"normal",0,"semi"],["mr","C125","Cowling Color","#03222c",0,"normal",0,"semi"],["mr","C126","Cockpit Color Mitsubishi","#566647",0,"normal",0,"semi"],["mr","C127","Cockpit Color Nakajima","#adb57e",0,"normal",0,"semi"],["mr","C128","Gray Green","#b3b5aa",0,"normal",0,"semi"],["mr","C129","Dark Green Nakajima","#556652",0,"normal",0,"semi"],["mr","C130","Dark Green Kawasaki","#585f46",0,"normal",0,"semi"],["mr","C131","Red Brown","#553226",0,"normal",0,"semi"],["mr","C132","Earth Green","#6f5c39",0,"normal",0,"matte"],["mr","C135","Russian Green 1","#3b944e",0,"normal",0,"matte"],["mr","C136","Russian Green 2","#3e5d47",0,"normal",0,"matte"],["mr","C137","Tire Black","#2b2b2a",0,"normal",0,"matte"],["mr","C138","Clear Green","#009847",0,"clear",0,"gloss"],["mr","C151","White Pearl","#ffffff",0,"normal",0,"gloss"],["mr","C156","Super White Ⅳ","#ffffff",0,"normal",0,"gloss"],["mr","C158","Super Italian Red","#d52427",0,"normal",0,"gloss"],["mr","C159","Super Silver","#dadada",0,"normal",0,"gloss"],["mr","C171","Fluorescent Red","#e41e25",0,"normal",0,"semi"],["mr","C172","Fluorescent Yellow","#ffed00",0,"normal",0,"semi"],["mr","C173","Fluorescent Orange","#e52e25",0,"normal",0,"semi"],["mr","C174","Fluorescent Pink","#e6146c",0,"normal",0,"semi"],["mr","C175","Fluorescent Green","#009847",0,"normal",0,"semi"],["mr","C181","Semi-Gloss Super Clear","#ffffff",0,"clear",1,"semi"],["mr","C182","Flat Clear","#ffffff",0,"clear",1,"matte"],["mr","C183","Super Clear Gray Tone","#f4f5f6",0,"clear",0,"semi"],["mr","C188","Flat Base Rough","#ffffff",0,"clear",1,"matte"],["mr","C189","Flat Base Smooth","#ffffff",0,"clear",1,"matte"],["mr","C301","Gray FS36081","#404249",0,"normal",0,"semi"],["mr","C302","Green FS34092","#405855",0,"normal",0,"semi"],["mr","C303","Green FS34102","#576056",0,"normal",0,"semi"],["mr","C304","Olive Drab FS34087","#4a423a",0,"normal",0,"semi"],["mr","C305","Gray FS36118","#506e6d",0,"normal",0,"semi"],["mr","C306","Gray FS36270","#6e8a8c",0,"normal",0,"semi"],["mr","C307","Gray FS36320","#6e8b93",0,"normal",0,"semi"],["mr","C308","Gray FS36375","#86a0a3",0,"normal",0,"semi"],["mr","C309","Green FS34079","#405855",0,"normal",0,"semi"],["mr","C310","Brown FS30219","#786455",0,"normal",0,"semi"],["mr","C311","Gray FS36622","#ebebd6",0,"normal",0,"semi"],["mr","C312","Green FS34227","#448561",0,"normal",0,"semi"],["mr","C313","Yellow FS33531","#e9c58f",0,"normal",0,"semi"],["mr","C314","Blue FS35622","#ebf4ec",0,"normal",0,"semi"],["mr","C315","Gray FS16440","#9eaea8",0,"normal",0,"gloss"],["mr","C316","White FS17875","#ffffff",0,"normal",0,"gloss"],["mr","C317","Gray FS36231","#747b6f",0,"normal",0,"matte"],["mr","C318","Radome","#fed493",0,"normal",0,"semi"],["mr","C319","Light Green","#2b6e5c",0,"normal",0,"semi"],["mr","C320","Dark Green","#4e594a",0,"normal",0,"semi"],["mr","C321","Light Brown","#b69271",0,"normal",0,"semi"],["mr","C322","Phthalo Cyanne Blue","#373d54",0,"normal",0,"gloss"],["mr","C323","Light Blue","#00b2eb",0,"normal",0,"gloss"],["mr","C324","Light Gray","#91aaa8",0,"normal",0,"matte"],["mr","C325","Gray FS26440","#aab2a9",0,"normal",0,"semi"],["mr","C326","Blue FS15044","#3a394a",0,"normal",0,"gloss"],["mr","C327","Red FS11136","#9e3130",0,"normal",0,"gloss"],["mr","C328","Blue FS15050","#373d54",0,"normal",0,"gloss"],["mr","C329","Yellow FS13538","#f69d11",0,"normal",0,"gloss"],["mr","C330","Dark Green BS381C/641","#464c4c",0,"normal",0,"semi"],["mr","C331","Dark Seagray BS381C 638","#585a5f",0,"normal",0,"semi"],["mr","C332","Light Aircraft Gray BS381C 627","#9ca299",0,"normal",0,"semi"],["mr","C333","Extra Dark Seagray BS381C 640","#3b4c56",0,"normal",0,"semi"],["mr","C334","Barley Gray BS4800/18B21","#889898",0,"normal",0,"semi"],["mr","C335","Medium Seagray BS381C 637","#67797d",0,"normal",0,"semi"],["mr","C336","Hemp BS4800/10B21","#6f8f70",0,"normal",0,"semi"],["mr","C337","Grayish Blue FS35237","#4b747d",0,"normal",0,"semi"],["mr","C338","Light Gray FS36495","#c0c4c7",0,"normal",0,"semi"],["mr","C339","Engine Gray FS16081","#3b4c56",0,"normal",0,"gloss"],["mr","C340","Field Green FS34097","#425742",0,"normal",0,"semi"],["mr","C351","Zinc-Chromate Type FS34151","#7d794d",0,"normal",0,"matte"],["mr","C352","Chromate Yellow Primer FS33481","#bda028",0,"normal",0,"matte"],["mr","C361","Dark Green BS641","#48473f",0,"normal",0,"matte"],["mr","C362","Ocean Gray","#646b6f",0,"normal",0,"matte"],["mr","C363","Medium Seagray BS637","#83949c",0,"normal",0,"matte"],["mr","C364","Aircraft Gray Green BS283","#6f8363",0,"normal",0,"matte"],["mr","C365","Gloss Seablue FS151042","#1d1f2e",0,"normal",0,"gloss"],["mr","C366","Intermediate Blue FS35164","#627b8d",0,"normal",0,"matte"],["mr","C367","Blue Gray FS35189","#74939b",0,"normal",0,"matte"],["mr","C368","Sky BS381C/210","#aebc9c",0,"normal",0,"matte"],["mr","C369","Dark Earth BS381C/450","#65563f",0,"normal",0,"matte"],["mr","C370","Azure Blue","#5d88b3",0,"normal",0,"matte"],["mr","C374","JASDF Shallow Ocean Blue","#5784ab",0,"normal",0,"semi"],["mr","C375","JASDF Deep Ocean Blue","#393a4b",0,"normal",0,"semi"],["mr","C376","JASDF Radome Gray","#c0c9c7",0,"normal",0,"semi"],["mr","C383","Dark Green Kawanishi","#314b40",0,"normal",0,"semi"],["mr","C384","Cockpit Color Kawanishi","#817f45",0,"normal",0,"semi"],["mr","C385","Red IJN Aircraft Marking","#b02224",0,"normal",0,"semi"],["mr","C391","Interior Turquoise Green Soviet","#00a28a",0,"normal",0,"semi"],["mr","C392","Interior Blue Soviet","#229ebe",0,"normal",0,"semi"],["mr","C393","Russian Aircraft Blue","#271c22",0,"normal",0,"semi"],["mr","C511","Russian Green \"4Bo\"","#545f37",0,"normal",0,"matte"],["mr","C512","Russian Green \"4Bo\" 1947-","#636238",0,"normal",0,"matte"],["mr","C513","Dark Gray \"Dunkel Grau\"","#495763",0,"normal",0,"matte"],["mr","C514","Gray \"Grau\"","#557582",0,"normal",0,"matte"],["mr","C515","Faded Gray \"Blassgrau\"","#607f89",0,"normal",0,"matte"],["mr","C516","Dark Green 3414","#485043",0,"normal",0,"matte"],["mr","C517","Brown 3606","#554539",0,"normal",0,"matte"],["mr","C518","Olive Drab 2314","#463f2e",0,"normal",0,"semi"],["mr","C519","Bronzegrun","#4c5241",0,"normal",0,"matte"],["mr","C520","Lederbraun","#5b4431",0,"normal",0,"matte"],["mr","C521","Teer Schwarz","#373837",0,"normal",0,"matte"],["mr","C522","Ground Color","#5a4c4b",0,"normal",0,"matte"],["mr","C523","Grass Color","#5b5f4c",0,"normal",0,"matte"],["mr","C524","Hay Color","#8b7943",0,"normal",0,"matte"],["mr","C525","Green","#3c4d3d",0,"normal",0,"matte"],["mr","C526","Brown","#8a6653",0,"normal",0,"matte"],["mr","C527","Khaki","#a47f56",0,"normal",0,"matte"],["mr","C528","IDF Gray1 -1981 Sinai","#ccb38a",0,"normal",0,"matte"],["mr","C529","IDF Gray2 -1981 Golan","#8c806f",0,"normal",0,"matte"],["mr","C530","IDF Gray3 Modern","#81755f",0,"normal",0,"matte"],["mr","C601","IJN Hull Color/Kure","#8f9097",0,"normal",0,"matte"],["mr","C602","IJN Hull Color/Sasebo","#747373",0,"normal",0,"matte"],["mr","C603","IJN Hull Color/Maizuru","#a2a5b0",0,"normal",0,"matte"],["mr","C604","IJN Type21 Camoflage Color","#5a7e49",0,"normal",0,"matte"],["mr","C605","IJN Type22 Camoflage Color","#88ad71",0,"normal",0,"matte"],["mr","C606","IJN Linoleum Deck Color","#72524a",0,"normal",0,"matte"],["mr","C607","JMSDF 2704 Gray","#7d8386",0,"normal",0,"semi"],["mr","C608","JMSDF 2705 Dark Gray","#5d6162",0,"normal",0,"matte"],["mr","C609","JMSDF Cleated Deck Color","#4a4d4e",0,"normal",0,"matte"],["mr","CR1","Cyan","#00a1e4",0,"normal",0,"gloss"],["mr","CR2","Magenta","#e60c80",0,"normal",0,"gloss"],["mr","CR3","Yellow","#ffed00",0,"normal",0,"gloss"],["mr","GX1","Cool White","#ffffff",0,"normal",0,"gloss"],["mr","GX2","Ueno Black","#2b2b2a",0,"normal",0,"gloss"],["mr","GX3","Harmann Red","#e41e25",0,"normal",0,"gloss"],["mr","GX4","Chiara Yellow","#ffdd00",0,"normal",0,"gloss"],["mr","GX5","Susie Blue","#0455a0",0,"normal",0,"gloss"],["mr","GX6","Morrie Green","#00683a",0,"normal",0,"gloss"],["mr","GX100","Super Clear Ⅲ","#ffffff",0,"clear",1,"gloss"],["mr","GX112","Super Clear Ⅲ UV Cut Gloss","#dadada",0,"clear",1,"gloss"],["mr","GX113","Super Clear Ⅲ UV Cut Matt","#dadada",0,"clear",1,"matte"],["mr","GX114","Super Smooth Clear Matt","#dadada",0,"clear",1,"matte"],["mr","LG1","White","#ffffff",0,"normal",0,"gloss"],["mr","LG2","Black","#2b2b2a",0,"normal",0,"gloss"],["mr","LG112","Clear Cut Gross","#ffffff",0,"clear",1,"gloss"],["mr","LG113","Clear Cut Matt","#ffffff",0,"clear",1,"matte"],["mr","CL01","White Peach","#fcd6c1",0,"normal",0,"gloss"],["mr","CL02","Cocoa Milk","#ab8178",0,"normal",0,"gloss"],["mr","CL03","Clear Pale Red","#facdc7",0,"clear",0,"gloss"],["mr","CL04","Clear Pale Orange","#fccc9d",0,"clear",0,"gloss"],["mr","CL05","Clear Pale Brown","#f4996c",0,"clear",0,"gloss"],["mr","CL06","Clear White","#ffffff",0,"clear",0,"gloss"],["mr","CL07","Rosy Peach","#f8bdb7",0,"normal",0,"gloss"],["mr","CL08","Nuts White","#fffcf7",0,"normal",0,"gloss"],["mr","CL09","Smooth Pearl Coat","#ffffff",0,"clear",1,"gloss"],["mr","CL101","Blonde","#f7f09d",0,"normal",0,"gloss"],["mr","CL102","Copper Brown","#c45336",0,"normal",0,"gloss"],["mr","CL103","Black Hair","#4a4646",0,"normal",0,"gloss"],["mr","CL104","Pink Purple","#e99cc3",0,"normal",0,"gloss"],["mr","CL105","Lilac","#caa4cc",0,"normal",0,"gloss"],["mr","CL106","Icy White","#ffffff",0,"normal",0,"gloss"],["mr","CL107","Flaxen","#aea796",0,"normal",0,"gloss"],["mr","CL108","Pale Blue-Green","#009eac",0,"normal",0,"gloss"],["mr","CL109","Lime Green","#a2c966",0,"normal",0,"gloss"],["mr","CL110","Scarlet","#e83567",0,"normal",0,"gloss"],["mr","CL111","Azure","#75c5ef",0,"normal",0,"gloss"],["mr","LAC101","Alumite Black","#2b2b2a",0,"normal",0,"semi"],["mr","LAC102","Parker Gun Metallic","#5e524e",0,"normal",0,"gloss"],["mr","LAC103","Stainless Silver","#b3b3b4",0,"normal",0,"gloss"],["mr","LAC105","Flat Dark Earth 1","#94824b",0,"normal",0,"matte"],["mr","LAC106","Flat Dark Earth 2","#8e7158",0,"normal",0,"matte"],["mr","XGC01","Brunhild White","#e8e8e6",0,"normal",0,"gloss"],["mr","XGC02","Hyperion Green","#44828d",0,"normal",0,"semi"],["mr","XGC03","Free Planets Alliance Standard Battleship Green","#8ea276",0,"normal",0,"semi"],["mr","CA01","Glay Tone 1","#474444",0,"normal",0,"gloss"],["mr","CA02","Glay Tone 2","#737073",0,"normal",0,"gloss"],["mr","CA03","Glay Tone 3","#acaaac",0,"normal",0,"gloss"],["mr","CA04","Glay Tone 4","#e5e5e6",0,"normal",0,"gloss"],["mr","CA05","Carbon Glay","#625655",0,"normal",0,"semi"],["mr","CRE01","Cranberry Red Pearl","#773a39",0,"normal",0,"gloss"],["mr","CRE02","Cerulean Blue","#35b8be",0,"normal",0,"gloss"],["mr","CRE03","British Green","#445045",0,"normal",0,"gloss"],["mr","UM01","Ultra Silver","#a3a3a4",0,"normal",0,"gloss"],["mr","UM02","Ultra Gold","#daab1b",0,"normal",0,"gloss"],["mr","SM201","Super Fine Silver 2","#d1d1d1",0,"normal",0,"gloss"],["mr","SM202","Super Gold 2","#cba86d",0,"normal",0,"gloss"],["mr","SM203","Super Iron 2","#b9baba",0,"normal",0,"gloss"],["mr","SM204","Super Stainless 2","#c3c3c3",0,"normal",0,"gloss"],["mr","SM205","Super Titanium 2","#dad6d8",0,"normal",0,"gloss"],["mr","SM206","Super Chrome Silver 2","#d1d1d1",0,"normal",0,"gloss"],["mr","SM207","Super Rich Gold","#e1b228",0,"normal",0,"gloss"],["mr","SM208","Super Duralumin","#dadada",0,"normal",0,"gloss"],["mr","SM209","Super Copper","#ca6653",0,"normal",0,"gloss"],["mr","SM210","Super Pink Gold","#da9b9f",0,"normal",0,"gloss"],["mr","SM211","Super Red Gold","#dc942d",0,"normal",0,"gloss"],["mr","SM212","Super Matt Aluminum","#dadada",0,"normal",0,"gloss"],
+  // 가이아노츠 락카: 공식 컬러 차트(gaianotes.com/products/gaia-color_chart.html)의 대표색. 종류·광택은 시리즈별 상세 페이지 표기
+  ["gaia","001","퓨어 화이트","#ffffff",1,"normal",0,"gloss"],["gaia","002","퓨어 블랙","#000000",1,"normal",0,"gloss"],["gaia","003","브라이트 레드","#ff0000",1,"normal",0,"gloss"],["gaia","004","울트라 블루","#144ea2",1,"normal",0,"gloss"],["gaia","005","선샤인 옐로","#ffff00",1,"normal",0,"gloss"],["gaia","006","플랫 베이스","#ffffff",0,"clear",1,"matte"],["gaia","007","클리어","#ffffff",0,"clear",1,"gloss"],["gaia","008","플랫 클리어","#ffffff",0,"clear",1,"matte"],["gaia","009","브라이트 실버","#727a7d",0,"normal",0,"gloss"],["gaia","010","브라이트 골드","#905c20",0,"normal",0,"gloss"],
+  ["gaia","011","플랫 화이트","#ffffff",0,"normal",0,"matte"],["gaia","012","플랫 블랙","#000000",0,"normal",0,"matte"],["gaia","013","비리디언 그린","#007a65",0,"normal",0,"gloss"],["gaia","014","내추럴 브라운","#9e1f0c",0,"normal",0,"gloss"],["gaia","015","퓨어 오렌지","#ff3300",0,"normal",0,"gloss"],["gaia","016","브릴리언트 핑크","#f75f86",0,"normal",0,"gloss"],["gaia","017","퍼플 바이올렛","#4b45bf",0,"normal",0,"gloss"],["gaia","018","에메랄드 그린","#69e795",0,"normal",0,"gloss"],["gaia","019","라벤더","#d8ccf4",0,"normal",0,"gloss"],["gaia","020","건메탈","#0c0c0c",0,"normal",0,"gloss"],
+  ["gaia","021","세미글로스 화이트","#ffffff",0,"normal",0,"semi"],["gaia","022","세미글로스 블랙","#4e4d52",0,"normal",0,"semi"],["gaia","023","스칼렛","#eb3729",0,"normal",0,"gloss"],["gaia","024","코발트 블루","#356bf1",0,"normal",0,"gloss"],["gaia","025","등황색","#fe8a01",0,"normal",0,"gloss"],["gaia","026","라이트 그린","#93a267",0,"normal",0,"semi"],["gaia","027","다크 그린","#202a1f",0,"normal",0,"semi"],["gaia","028","스톤 그린","#01b6ad",0,"normal",0,"semi"],["gaia","030","세미글로스 클리어","#ffffff",0,"clear",1,"semi"],["gaia","031","얼티밋 화이트","#ffffff",0,"normal",0,"gloss"],
+  ["gaia","032","얼티밋 블랙","#000000",0,"normal",0,"gloss"],["gaia","033","순색 시안","#0a4197",0,"normal",0,"gloss"],["gaia","034","순색 마젠타","#cb1384",0,"normal",0,"gloss"],["gaia","035","순색 옐로","#f5c700",0,"normal",0,"gloss"],["gaia","036","순색 그린","#00796f",0,"normal",0,"gloss"],["gaia","037","순색 바이올렛","#4a308f",0,"normal",0,"gloss"],["gaia","038","프라이머리 메탈릭 레드","#a41c1a",0,"normal",0,"gloss"],["gaia","039","프라이머리 메탈릭 블루","#004dac",0,"normal",0,"gloss"],["gaia","040","프라이머리 메탈릭 옐로","#b79901",0,"normal",0,"gloss"],["gaia","041","클리어 레드","#be2531",0,"clear",0,"gloss"],
+  ["gaia","042","클리어 오렌지","#d12f12",0,"clear",0,"gloss"],["gaia","043","클리어 블랙","#3d403b",0,"clear",0,"gloss"],["gaia","044","클리어 블루","#0243c3",0,"clear",0,"gloss"],["gaia","045","클리어 옐로","#fff003",0,"clear",0,"gloss"],["gaia","046","클리어 브라운","#6c2a2b",0,"clear",0,"gloss"],["gaia","047","클리어 퍼플","#6d2edd",0,"clear",0,"gloss"],["gaia","048","클리어 그린","#00b60a",0,"clear",0,"gloss"],["gaia","049","클리어 핑크","#ff329c",0,"clear",0,"gloss"],["gaia","050","클리어 화이트","#f3f3f3",0,"clear",0,"gloss"],["gaia","051","노츠 플레시","#f7e5cf",0,"normal",0,"gloss"],
+  ["gaia","052","노츠 플레시 화이트","#eaded2",0,"normal",0,"gloss"],["gaia","053","노츠 플레시 핑크","#f3a69c",0,"normal",0,"gloss"],["gaia","054","노츠 플레시 오렌지","#e7b78f",0,"normal",0,"gloss"],["gaia","059","서페이서리스 플레시 핑크","#fea29c",0,"clear",0,"gloss"],["gaia","060","서페이서리스 플레시 오렌지","#ffe879",0,"clear",0,"gloss"],["gaia","061","미드나이트 블루","#222129",0,"normal",0,"gloss"],["gaia","062","미디엄 블루","#41637f",0,"normal",0,"semi"],["gaia","063","블루 그레이","#446a6d",0,"normal",0,"semi"],["gaia","071","뉴트럴 그레이 I","#cecece",0,"normal",0,"gloss"],["gaia","072","뉴트럴 그레이 II","#b4b4b4",0,"normal",0,"gloss"],
+  ["gaia","073","뉴트럴 그레이 III","#8e8e8e",0,"normal",0,"gloss"],["gaia","074","뉴트럴 그레이 IV","#6c6c6c",0,"normal",0,"gloss"],["gaia","075","뉴트럴 그레이 V","#4e4e4e",0,"normal",0,"gloss"],["gaia","101","형광 블루","#002ac9",0,"normal",0,"gloss"],["gaia","102","형광 핑크","#fd0154",0,"normal",0,"gloss"],["gaia","103","형광 레드","#fd0c15",0,"normal",0,"gloss"],["gaia","104","형광 그린","#00d34d",0,"normal",0,"gloss"],["gaia","105","형광 옐로","#ebff24",0,"normal",0,"gloss"],["gaia","106","형광 오렌지","#fe2f07",0,"normal",0,"gloss"],["gaia","107","형광 옐로 그린","#00fe07",0,"normal",0,"gloss"],
+  ["gaia","108","형광 블루 그린","#04afb7",0,"normal",0,"gloss"],["gaia","110","형광 클리어","#ffffff",0,"clear",1,"gloss"],["gaia","121","스타브라이트 실버","#bbbbbb",0,"normal",0,"gloss"],["gaia","122","스타브라이트 골드","#b48334",0,"normal",0,"gloss"],["gaia","123","스타브라이트 듀랄루민","#67675f",0,"normal",0,"gloss"],["gaia","124","스타브라이트 브라스","#a5850a",0,"normal",0,"gloss"],["gaia","125","스타브라이트 아이언","#5f5f5f",0,"normal",0,"gloss"],["gaia","126","스타브라이트 샴페인 골드","#ffffff",0,"normal",0,"gloss"],["gaia","131","펄 실버","#e2dfda",0,"normal",0,"gloss"],["gaia","132","펄 골드","#c47c34",0,"normal",0,"gloss"],
+  ["gaia","133","펄 코퍼","#be6f44",0,"normal",0,"gloss"],["gaia","134","프리즘 퍼플 그린","#b0c09c",0,"normal",0,"gloss"],["gaia","135","프리즘 블루 그린","#c4d9d4",0,"normal",0,"gloss"],["gaia","136","프리즘 마젠타 골드","#cd541b",0,"normal",0,"gloss"],["gaia","137","프리즘 파스텔 터콰이즈 블루 옐로","#00b1c5",0,"normal",0,"gloss"],["gaia","138","프리즘 파스텔 체리 핑크 블루","#db519d",0,"normal",0,"gloss"],["gaia","139","프리즘 파스텔 민트 그린 블루","#02c0b3",0,"normal",0,"gloss"],["gaia","201","다크 옐로 1 (둥켈겔프 1)","#b69d4c",0,"normal",0,"semi"],["gaia","202","올리브 그린 (올리프그륀)","#485f42",0,"normal",0,"semi"],["gaia","203","레드 브라운 (로트브라운)","#3a2123",0,"normal",0,"semi"],
+  ["gaia","204","다크 옐로 2 (둥켈겔프 2)","#c1ac7a",0,"normal",0,"semi"],["gaia","205","겔프브라운 (옐로 브라운)","#ac8642",0,"normal",0,"semi"],["gaia","206","그라우그륀 (그레이 그린)","#8b693b",0,"normal",0,"semi"],["gaia","207","브라운","#cd9d69",0,"normal",0,"semi"],["gaia","208","그라우 (그레이)","#cab793",0,"normal",0,"semi"],["gaia","211","회록색","#c4c392",0,"normal",0,"semi"],["gaia","212","녹색","#324134",0,"normal",0,"semi"],["gaia","213","회록색","#cdcfb4",0,"normal",0,"semi"],["gaia","214","암록색","#1f5539",0,"normal",0,"semi"],["gaia","215","FS34079 다크 그린","#3e3d21",0,"normal",0,"semi"],
+  ["gaia","216","FS34102 그린","#484e10",0,"normal",0,"semi"],["gaia","217","FS30219 탄","#876d48",0,"normal",0,"semi"],["gaia","218","FS36622 그레이","#bebb9c",0,"normal",0,"semi"],["gaia","219","FS36440 라이트 걸 그레이","#999884",0,"normal",0,"semi"],["gaia","221","저먼 그레이 (둥켈그라우)","#29282c",0,"normal",0,"semi"],["gaia","222","옥사이드 레드","#9a3e31",0,"normal",0,"semi"],["gaia","223","인테리어 컬러 (전차 내부색)","#ecdebd",0,"normal",0,"semi"],["gaia","TL-001","NATO 그린","#45543e",0,"normal",0,"semi"],["gaia","TL-002","NATO 브라운","#544437",0,"normal",0,"semi"],["gaia","TL-003","NATO 블랙","#2f3335",0,"normal",0,"semi"],
+  ["gaia","TL-004","라이트 그레이 FS36251","#838882",0,"normal",0,"semi"],["gaia","TL-005","다크 그레이 FS36176","#7a8894",0,"normal",0,"semi"],["gaia","1000","스테인리스 실버","#dddbd7",0,"normal",0,"gloss"],["gaia","1001","라이트 스테인리스 실버","#c5c5c5",0,"normal",0,"gloss"],["gaia","1002","다크 스테인리스 실버","#9e9da2",0,"normal",0,"gloss"],["gaia","1003","청15호","#3a4559",0,"normal",0,"semi"],["gaia","1004","포도색 2호","#362825",0,"normal",0,"semi"],["gaia","1005","쥐색 1호","#9e9b92",0,"normal",0,"semi"],["gaia","1006","회색 9호","#bebbaf",0,"normal",0,"semi"],["gaia","1007","다크 그레이","#595a55",0,"normal",0,"semi"],
+  ["gaia","1008","크림 1호","#fffcd8",0,"normal",0,"semi"],["gaia","1009","로즈 핑크","#c02823",0,"normal",0,"semi"],["gaia","1010","포도색 1호","#0d0d0b",0,"normal",0,"semi"],["gaia","1011","검정","#000000",0,"normal",0,"semi"],["gaia","1012","붉은 녹","#9c4b47",0,"normal",0,"semi"],["gaia","1013","누런 녹","#f26434",0,"normal",0,"semi"],["gaia","1021","컨테이너 블루","#3a96ab",0,"normal",0,"semi"],["gaia","1022","컨테이너 레드","#4c0b21",0,"normal",0,"semi"],["gaia","1023","메이테츠 스칼렛","#930710",0,"normal",0,"semi"],["gaia","1024","세이부 101계 옐로","#e4b559",0,"normal",0,"semi"],
+  ["gaia","1025","세이부 2000계 옐로","#e8b542",0,"normal",0,"semi"],["gaia","1026","세이부 베이지","#bfa276",0,"normal",0,"semi"],["gaia","1027","세이부 레드","#932a31",0,"normal",0,"semi"],["gaia","Ex-01","Ex-화이트","#ffffff",0,"normal",0,"gloss"],["gaia","Ex-02","Ex-블랙","#000000",0,"normal",0,"gloss"],["gaia","Ex-03","Ex-클리어","#ffffff",0,"clear",1,"gloss"],["gaia","Ex-04","Ex-플랫 클리어","#ffffff",0,"clear",1,"matte"],["gaia","Ex-05","Ex-플랫 화이트","#ffffff",0,"normal",0,"matte"],["gaia","Ex-06","Ex-플랫 블랙","#000000",0,"normal",0,"matte"],["gaia","Ex-07","Ex-실버","#cccccc",0,"normal",0,"gloss"],
+  ["gaia","Ex-08","Ex-골드","#e3ab47",0,"normal",0,"gloss"],["gaia","Ex-09","Ex-세미글로스 클리어 프리미엄","#ffffff",0,"clear",1,"semi"],["gaia","Ex-10","Ex-플랫 클리어 프리미엄","#ffffff",0,"clear",1,"matte"],["gaia","GP-01","울트라마린 블루","#1844d5",0,"normal",0,"gloss"],["gaia","GP-02","프리미엄 레드","#f50100",0,"clear",0,"gloss"],["gaia","GP-03","울트라마린 블루 2","#055dd9",0,"normal",0,"gloss"],["gaia","GP-04","프리미엄 글라스 펄","#f4fbfb",0,"normal",0,"gloss"],["gaia","GP-05","울트라마린 블루","#016ad3",0,"normal",0,"gloss"],["gaia","GP-06","클리어 울트라마린 블루","#0031ec",0,"clear",0,"gloss"],["gaia","GP-07","프리미엄 도금 실버","#bab9c1",0,"normal",0,"gloss"],
+  ["gaia","GP-08","프리미엄 미러 크롬","#bab9c1",0,"normal",0,"gloss"],["gaia","GP-09","프리즘 블루 블랙","#23375a",0,"normal",0,"gloss"],
+  // 보유 도료 정리 때 추가 (2026-10-17). 공식 색 정보를 찾지 못해 색상값은 임시 근사값이다
+  ["mr","GX122","GX 클리어 피콕 그린","#006b5e",0,"clear",0,"gloss"],["mr","GX209","GX 레드 골드","#b5733c",0,"normal",0,"gloss"],["mr","CL200","골드 펄 베이스 (첨가제)","#ffffff",0,"clear",1,"gloss"],["mr","CL201","스타킹 블랙","#1d1b1d",0,"clear",0,"gloss"],["mr","CL202","스타킹 브라운","#3b2b25",0,"clear",0,"gloss"],["mr","CL203","스타킹 화이트","#f1efeb",0,"clear",0,"gloss"],
+  ["gaia","EV-02","에바 그린","#6cb33f",0,"normal",0,"matte"],["gaia","VO-33","마일드 오렌지","#f2c29a",0,"normal",0,"gloss"],["gaia","FG-01","플라스틱 플레시","#f2dccb",0,"normal",0,"semi"],["gaia","FG-02","베이스 플레시","#eccfbd",0,"normal",0,"semi"],["tamiya","X-15","라이트 그린","#62a83b",0,"normal",0,"gloss"],["tamiya","X-19","스모크","#3b3632",0,"clear",0,"gloss"],["tamiya","X-27","클리어 레드","#b3192b",0,"clear",0,"gloss"],["tamiya","XF-1","플랫 블랙","#1f1f1f",0,"normal",0,"matte"],
+  ["aq","HLP103","스텔라 터콰이즈 (펄)","#3cc2bd",0,"normal",0,"gloss"],["aq","HGQ01","GQuuuuuuX 화이트","#f4f4f1",0,"normal",0,"semi"],["aq","HGQ03","GQuuuuuuX 옐로","#f4a91f",0,"normal",0,"semi"],["aq","HSM02","슈퍼 파인 골드","#c8a04c",0,"normal",0,"gloss"],
+  // Finisher's: 공식 쇼핑몰(finishers.shop-pro.jp) 상품 페이지의 프라판 도색 견본 사진에서 잰 색 (가운데 40%, 선형 RGB 평균). 번호 칸은 영어 이름
+  ["fin","Foundation White","파운데이션 화이트","#fbfdfa",1,"normal",0,"gloss"],["fin","Baby Clear","베이비 클리어","#f6d6c4",1,"clear",0,"gloss"],
+  ["fin","Fluorescent Pink","형광 핑크","#ed1d42",1,"normal",0,"gloss"],["fin","Baby Natural","베이비 내추럴","#e5c1b5",1,"normal",0,"gloss"]
+].map(p=>({brand:p[0],no:p[1],name:p[2],hex:p[3],own:p[4]!==0,type:p[5]||"normal",colorless:!!p[6],finish:p[7]||"gloss",custom:false}));
+// 메탈릭·펄 (배합 제안에서 "펄·메탈릭 제외"로 뺄 수 있다). 이름·시리즈로 분류했다
+const METALLIC=new Set(["mr|C8", "mr|C9", "mr|C10", "mr|C28", "mr|C57", "mr|C61", "mr|C75", "mr|C76", "mr|C77", "mr|C78", "mr|C79", "mr|C90", "mr|C104", "mr|C151", "mr|C159", "mr|CRE01", "mr|LAC102", "mr|LAC103", "mr|UM01", "mr|UM02", "mr|SM201", "mr|SM202", "mr|SM203", "mr|SM204", "mr|SM205", "mr|SM206", "mr|SM207", "mr|SM208", "mr|SM209", "mr|SM210", "mr|SM211", "mr|SM212", "mr|GX209", "gaia|009", "gaia|010", "gaia|020", "gaia|038", "gaia|039", "gaia|040", "gaia|121", "gaia|122", "gaia|123", "gaia|124", "gaia|125", "gaia|126", "gaia|131", "gaia|132", "gaia|133", "gaia|134", "gaia|135", "gaia|136", "gaia|137", "gaia|138", "gaia|139", "gaia|1000", "gaia|1001", "gaia|1002", "gaia|Ex-07", "gaia|Ex-08", "gaia|GP-04", "gaia|GP-07", "gaia|GP-08", "gaia|GP-09", "aq|HLP103", "aq|HSM02"]);
+for(const d of DEFAULTS)if(METALLIC.has(d.brand+"|"+d.no))d.type="metallic";
+let PAINTS=JSON.parse(JSON.stringify(DEFAULTS));
+// 도료 종류: normal 일반, clear 클리어(colorless면 무색). 광택: gloss 유광, semi 반광, matte 무광
+const TYPES=["normal","clear","metallic"],FINISHES=["gloss","semi","matte"],OPACITIES=["transparent","semi","opaque"];
+const OLDTYPES={opaque:["normal",0],semi:["normal",0],tclear:["clear",0],clear_gloss:["clear",1,"gloss"],clear_semi:["clear",1,"semi"],clear_matte:["clear",1,"matte"]};
+const isClear=p=>p.type=="clear"&&p.colorless;
+const validPaints=s=>Array.isArray(s)&&s.length>0&&s.length<=2000&&s.every(p=>p&&BRANDS[p.brand]===1&&typeof p.no=="string"&&typeof p.name=="string"&&/^#[0-9a-f]{6}$/i.test(p.hex)&&(p.type==null||TYPES.includes(p.type)||p.type in OLDTYPES));
+const norm=l=>l.map(p=>{const o=OLDTYPES[p.type]||[TYPES.includes(p.type)?p.type:"normal",p.colorless?1:0];
+  const type=o[0],colorless=type=="clear"&&!!o[1],finish=o[2]||(FINISHES.includes(p.finish)?p.finish:"gloss");
+  // opacity·tinting_strength·hue_deg: 측정해서 넣는 값. 없으면 null(미측정)
+  const num=(v,lo,hi)=>typeof v=="number"&&isFinite(v)&&v>=lo&&v<=hi?v:null;
+  return {brand:p.brand,no:p.no.slice(0,40),name:p.name.slice(0,80),hex:colorless?"#ffffff":p.hex.toLowerCase(),type,colorless,finish,own:!!p.own,custom:!!p.custom,renamed:!!p.renamed,
+    opacity:OPACITIES.includes(p.opacity)?p.opacity:null,tinting_strength:num(p.tinting_strength,0.01,1000),hue_deg:num(p.hue_deg,0,360),
+    // 사진에서 등록한 마지막 측정의 조건과, 되돌리기용 이전 색상값
+    measured:normMeas(p.measured,num),hex_prev:/^#[0-9a-f]{6}$/i.test(p.hex_prev)?p.hex_prev.toLowerCase():null}});
+function normMeas(m,num){if(!m||typeof m!="object"||!/^\d{4}-\d{2}-\d{2}$/.test(m.date))return null;
+  return {date:m.date,wb:["white","gray"].includes(m.wb)?m.wb:null,size:[1,5,11].includes(m.size)?m.size:null,spread:num(m.spread,0,1000),clip:!!m.clip,note:String(m.note==null?"":m.note).slice(0,120)}}
+const canon=l=>JSON.stringify(norm(l));
+PAINTS=norm(PAINTS);
+// 저장된 목록에 없는 기본 도료(나중에 추가된 것)를 덧붙인다
+// 예전 버전의 근사값을 사용자가 바꾸지 않았다면 새 기본값(카탈로그 값)으로 바꾼다
+const OLDHEX={"mr|C1":"#f3f3f0","mr|C2":"#181818","mr|C3":"#c5242b","mr|C4":"#f0c419","mr|C5":"#1c4a9c","mr|C6":"#1f7d4a","mr|CR1":"#0094d4","mr|CR2":"#d2007c","mr|CR3":"#f5da00",
+  "gaia|001":"#f5f5f3","gaia|002":"#151515","gaia|003":"#d42027","gaia|004":"#1b3fa0","gaia|005":"#f5cf12",  // 순색 033~037: 처음 임시값 → 공식 차트 대표색(병 색에 가까워 너무 어둡다) → 공식 순색 페이지의 칠한 뚜껑 견본(prim_6.jpg)
+  "gaia|033":["#009ad8","#0411ad"],"gaia|034":["#d5006f","#4d0c10"],"gaia|035":["#f7d800","#f9b605"],"gaia|036":["#009955","#2e5c58"],"gaia|037":["#5a2c98","#403960"]};
+function mergeDefaults(l){const D=new Map(norm(DEFAULTS).map(d=>[d.brand+"|"+d.no,d])),have=new Set();
+  for(const p of l){const k=p.brand+"|"+p.no;have.add(k);const d=D.get(k);if(d&&!p.custom&&OLDHEX[k]&&[].concat(OLDHEX[k]).includes(p.hex))p.hex=d.hex;
+    if(d&&!p.custom&&d.type=="metallic"&&p.type=="normal")p.type="metallic"}
+  // 기본 목록에서 빠진 항목은 보유 체크가 없고 직접 추가한 것이 아니면 정리한다
+  l=l.filter(p=>p.custom||p.own||D.has(p.brand+"|"+p.no));
+  return l.concat([...D.values()].filter(d=>!have.has(d.brand+"|"+d.no)))}
+// exe 버전: 데이터는 브라우저 저장소가 아니라 exe 옆의 colormix_data.json에 둔다. 바뀌면 "저장 안 됨"으로 표시하고, 저장 버튼·Ctrl+S·종료 창에서 파일에 쓴다.
+function save(){markDirty()}
+
+const $=id=>document.getElementById(id);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const cv=$("cv"),ctx=cv.getContext("2d",{willReadFrequently:true});
+let brand="tamiya",picked=null;
+
+// ---- 색 변환 ----
+const hex2rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const rgb2hex=c=>"#"+c.map(v=>Math.round(v).toString(16).padStart(2,"0")).join("").toUpperCase();
+const toLin=v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)};
+const toS=v=>255*(v<=.0031308?v*12.92:1.055*Math.pow(v,1/2.4)-.055);
+function lin2lab(l){
+  const X=(.4124*l[0]+.3576*l[1]+.1805*l[2])/.95047,Y=.2126*l[0]+.7152*l[1]+.0722*l[2],Z=(.0193*l[0]+.1192*l[1]+.9505*l[2])/1.08883;
+  const f=t=>t>.008856?Math.cbrt(t):7.787*t+16/116;const fx=f(X),fy=f(Y),fz=f(Z);
+  return [116*fy-16,500*(fx-fy),200*(fy-fz)];
+}
+const hex2lab=h=>lin2lab(hex2rgb(h).map(toLin));
+function rgb2cmyk(c){const r=c[0]/255,g=c[1]/255,b=c[2]/255,k=1-Math.max(r,g,b);if(k>=1)return[0,0,0,100];return[(1-r-k)/(1-k),(1-g-k)/(1-k),(1-b-k)/(1-k),k].map(v=>Math.round(v*100))}
+
+// ---- 혼합 모델: 채널별 Kubelka-Munk 근사 ----
+const ks=r=>{r=Math.min(.98,Math.max(.02,r));return (1-r)*(1-r)/(2*r)};
+const refl=k=>1+k-Math.sqrt(k*k+2*k);
+function mix(K,parts){const t=parts.reduce((a,b)=>a+b,0);return [0,1,2].map(ch=>refl(K.reduce((s,p,i)=>s+p[ch]*parts[i],0)/t))}
+function gcd(a,b){return b?gcd(b,a%b):a}
+function recipes(target,P0){
+  // 보유 도료가 많으면 목표색에 가까운 12가지 + 가장 밝은/어두운 도료만 후보로 써서 계산량을 줄인다
+  const tl=lin2lab(target.map(toLin));let cand=P0.map((p,i)=>i);
+  if(P0.length>14){const L=P0.map(p=>hex2lab(p.hex)),d=L.map(l=>Math.hypot(l[0]-tl[0],l[1]-tl[1],l[2]-tl[2]));
+    const near=cand.slice().sort((a,b)=>d[a]-d[b]).slice(0,12),light=cand.reduce((a,b)=>L[b][0]>L[a][0]?b:a),dark=cand.reduce((a,b)=>L[b][0]<L[a][0]?b:a);
+    cand=[...new Set([...near,light,dark])]}
+  const P=cand.map(i=>P0[i]);
+  const K=P.map(p=>hex2rgb(p.hex).map(toLin).map(ks)),out=[],N=10,n=P.length;
+  const test=(idx,parts)=>{const l=mix(idx.map(i=>K[i]),parts),lab=lin2lab(l);out.push({idx,parts,rgb:l.map(toS),de:Math.hypot(lab[0]-tl[0],lab[1]-tl[1],lab[2]-tl[2])})};
+  for(let a=0;a<n;a++){test([a],[1]);
+    for(let b=a+1;b<n;b++){for(let i=1;i<N;i++)test([a,b],[i,N-i]);
+      for(let c=b+1;c<n;c++)for(let i=1;i<N-1;i++)for(let j=1;i+j<N;j++)test([a,b,c],[i,j,N-i-j]);}}
+  out.sort((x,y)=>x.de-y.de);
+  const res=[],seen=new Set();
+  for(const r of out){const key=r.idx.join(",");if(seen.has(key))continue;seen.add(key);res.push(r);if(res.length==3)break}
+  res.forEach(r=>r.idx=r.idx.map(i=>cand[i]));return res;
+}
+
+// ---- 정렬 ----
+const byNo=(a,b)=>a.no.localeCompare(b.no,undefined,{numeric:true,sensitivity:"base"});
+const byBrand=(a,b)=>BORDER.indexOf(a.brand)-BORDER.indexOf(b.brand);
+function colorKey(p){if(isClear(p))return[2,FINISHES.indexOf(p.finish),0];const l=hex2lab(p.hex),c=Math.hypot(l[1],l[2]);return c<8?[0,-l[0],0]:[1,(Math.atan2(l[2],l[1])*180/Math.PI+360)%360,-l[0]]}
+const SORTS={
+  brand:(a,b)=>byBrand(a,b)||byNo(a,b),
+  no:(a,b)=>byNo(a,b)||byBrand(a,b),
+  color:(a,b)=>{const x=colorKey(a),y=colorKey(b);return x[0]-y[0]||x[1]-y[1]||x[2]-y[2]}
+};
+
+// ---- 스포이드 화면 ----
+// HSV (H 도, S·V %)
+function rgb2hsv(c){const [r,g,b]=c.map(v=>v/255),mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;let h=0;
+  if(d){h=mx==r?((g-b)/d)%6:mx==g?(b-r)/d+2:(r-g)/d+4;h=(h*60+360)%360}
+  return [h,mx?d/mx*100:0,mx*100]}
+const fmtN=v=>String(Math.round(v*10)/10);
+// 도료 배합비 C·M·Y·K·W 와, C·M·Y 공통분(회색 성분)과 나머지(색 성분)로 나눈 설명
+const mixText=m=>PRIM.map((q,j)=>q[0]+fmtN(m[j])).join(" ");
+function mixSplitText(m){const g=Math.min(m[0],m[1],m[2]),col=["C","M","Y"].map((q,j)=>m[j]-g>0.05?q+fmtN(m[j]-g):"").filter(Boolean).join(" ");
+  if(!col&&!g)return t("mixNoColor");return g>0.05?t("mixSplit",fmtN(g),col||"0"):""}
+function render(){
+  if(!picked)return;const c=picked;
+  $("big").style.background=rgb2hex(c);$("hex").textContent=rgb2hex(c);
+  $("rgb").textContent=c.map(Math.round).join(", ");
+  const hsv=rgb2hsv(c);$("hsv").textContent=`H ${Math.round(hsv[0])}°  S ${hsv[1].toFixed(1)}%  V ${hsv[2].toFixed(1)}%`;
+  setMsg("satbadge",hsv[1]<3?"satUnstable":hsv[1]<10?"satLow":null,hsv[1].toFixed(1));
+  const mx=mixOf(c),ms=mixSplitText(mx),mr=$("mixr");mr.textContent=mixText(mx);if(ms)mr.append(el("span","mixsub",ms));mr.title=t("basis_"+BASIS);
+  const k=rgb2cmyk(c);$("cmyk").textContent=`C ${k[0]}%  M ${k[1]}%  Y ${k[2]}%  K ${k[3]}%`;
+  $("lab").textContent=lin2lab(c.map(toLin)).map(v=>v.toFixed(1)).join(", ");
+  const P=mixPaints(),box=$("recs");box.textContent="";
+  const clearTail=PAINTS.some(p=>p.own&&isClear(p))?" "+t("clearMixNote"):"";
+  if(!P.length){box.append(el("p","note",t("noOwned")));$("mixnote").textContent=clearTail.trim();return}
+  const lum=x=>(.3*x[0]+.59*x[1]+.11*x[2])>140?"#000":"#fff";
+  for(const r of bestMixes(c,P)){
+    const g=r.parts.reduce(gcd),d=el("div","rec"),pair=el("div","pair");
+    [[t("target"),c],[t("predicted"),r.rgb]].forEach(([t,x])=>{const s=el("span","",t);s.style.background=rgb2hex(x);s.style.color=lum(x);pair.append(s)});
+    const right=el("div"),ul=el("ul");
+    r.idx.forEach((pi,i)=>{const li=el("li"),ch=el("span","chip");paintSwatch(ch,P[pi]);li.append(ch,el("span","",recLabel(P[pi])),...(P[pi].measured?[measBadge(P[pi])]:[]),el("span","parts",r.parts[i]/g));ul.append(li)});
+    right.append(ul,el("div","de",`${t("ratio",r.parts.map(p=>p/g).join(" : "))}  ·  ΔE ${r.de.toFixed(1)} (${t(r.de<3?"de0":r.de<8?"de1":"de2")})`));
+    d.append(pair,right);box.append(d);
+  }
+  const nm=NOMETAL?PAINTS.filter(p=>brandPool(brand).includes(p.brand)&&p.own&&p.type=="metallic").length:0;
+  $("mixnote").textContent=t("note_"+brand)+" "+t("mixWarn")+(nm?" "+t("noMetalNote",nm):"");
+}
+function seg(){const s=$("seg");s.textContent="";for(const b of [...BORDER,"mix"]){const bt=el("button","",bname(b));bt.type="button";bt.setAttribute("aria-pressed",b==brand);bt.onclick=()=>{brand=b;seg();render()};s.append(bt)}}
+
+// 견본 칸 칠하기: 무색 클리어는 체크무늬, 색 있는 클리어는 체크무늬 위에 반투명 색
+function paintSwatch(e,p){e.classList.remove("checker");e.style.background="";
+  if(isClear(p)){e.classList.add("checker");return}
+  if(p.type=="clear"){const c=hex2rgb(p.hex);e.classList.add("checker");e.style.backgroundImage=`linear-gradient(rgba(${c},.78),rgba(${c},.78)),repeating-conic-gradient(var(--line) 0 25%,var(--panel) 0 50%)`;e.style.backgroundSize="auto,10px 10px";return}
+  e.style.background=p.hex}
+const typeName=p=>(isClear(p)?t("clearColorless"):t("type_"+p.type))+" · "+t("fin_"+p.finish)+(p.opacity?" · "+t("op_"+p.opacity):"");
+// 색상각: 측정값(hue_deg)이 있으면 그것, 없으면 색상값에서 계산. 무색 클리어는 없음
+const hueText=p=>isClear(p)?"—":p.hue_deg!=null?`${Math.round(p.hue_deg)}° (${t("hueMeasured")})`:`${Math.round(rgb2hsv(hex2rgb(p.hex))[0])}° (${t("hueFromHex")})`;
+const opt=(sel,keys,pre)=>{sel.textContent="";for(const k of keys){const o=el("option","",t(pre+k));o.value=k;sel.append(o)}};
+// ---- 보유 도료 화면 ----
+function renderOwned(){
+  const f=$("tfilter").value,ff=$("ffilter").value,owned=PAINTS.filter(p=>p.own),g=$("ownedgrid");g.textContent="";
+  const list=owned.filter(p=>(f=="all"||(f=="colorless"?isClear(p):f=="clear"?p.type=="clear"&&!isClear(p):p.type==f))&&(ff=="all"||p.finish==ff)).sort(SORTS[$("sort").value]);
+  $("ownedcount").textContent=t("ownedCount",owned.length,PAINTS.length);
+  for(const p of list){const c=el("div","card"),sw=el("div","sw"),tx=el("div","t");paintSwatch(sw,p);
+    const nm=pname(p),same=nm.toLowerCase()==p.no.toLowerCase();
+    tx.append(el("b","",p.no),el("span","",same?"":noIsName(p)?"("+nm+")":nm),el("span","mono",bname(p.brand)),el("span","badge",typeName(p)),...(p.measured?[measBadge(p)]:[]),el("span","mono",isClear(p)?t("colorless"):p.hex.toUpperCase()+" · "+hueText(p).split(" ")[0]),
+      el("span","mono",t("tintLabel")+" "+(p.tinting_strength==null?t("unmeasured"):fmtN(p.tinting_strength))));c.append(sw,tx);g.append(c)}
+  if(!list.length)g.append(el("p","note",t("ownedNone")));
+}
+$("tfilter").onchange=renderOwned;$("ffilter").onchange=renderOwned;
+$("sort").onchange=()=>{markDirty();renderOwned()};
+
+// ---- 보정 화면 ----
+// 브랜드 탭: 고른 브랜드만 보여 준다(처음에는 배합 제안의 브랜드). 검색어가 있으면 탭과 상관없이 전체 브랜드에서 찾는다
+let PBRAND=null;
+function paintTabs(q,oo){const s=$("pbrand");s.textContent="";const cur=PBRAND||(brand=="mix"?"mr":brand);
+  for(const b of BORDER){const n=PAINTS.filter(p=>p.brand==b&&(!oo||p.own)).length,bt=el("button","",bname(b));bt.type="button";bt.append(el("span","cnt",n));
+    bt.setAttribute("aria-pressed",!q&&b==cur);bt.onclick=()=>{PBRAND=b;$("psearch").value="";renderPaints();toListTop()};s.append(bt)}}
+// 탭을 바꿨을 때 목록이 고정된 도구 줄 아래에서 시작하게 한다
+function toListTop(){const r=$("rows").getBoundingClientRect().top,h=$("ptool").getBoundingClientRect().height;if(r<h)scrollBy(0,r-h-8)}
+function renderPaints(){
+  const box=$("rows");box.textContent="";
+  const q=$("psearch").value.trim().toLowerCase(),oo=$("ponly").checked;paintTabs(q,oo);
+  for(const b of q?BORDER:[PBRAND||(brand=="mix"?"mr":brand)]){
+    // 검색은 화면 언어와 상관없이 한/영/일 이름 모두에서 찾는다
+    const list=PAINTS.filter(p=>p.brand==b&&(!oo||p.own)&&paintMatch(p,q)).sort(byNo);
+    if(q&&!list.length)continue;
+    box.append(el("p","grp",t("grp",bname(b),list.length)));
+    const rows=el("div","rows");
+    for(const p of list){
+      const id=(b+"-"+p.no).replace(/[^\w-]/g,"_"),row=el("div","row"),own=el("input"),col=el("input"),nm=el("label","nm",plabel(p)),hx=el("span","mono",isClear(p)?t("colorless"):p.hex.toUpperCase()),ty=el("select"),fi=el("select");
+      own.type="checkbox";own.id="own-"+id;own.checked=p.own;own.title=t("own");own.setAttribute("aria-label",p.no+" "+t("own"));nm.htmlFor=own.id;
+      own.onchange=()=>{p.own=own.checked;save();render()};
+      col.type="color";col.id="hex-"+id;col.value=p.hex;col.setAttribute("aria-label",p.no+" "+t("color"));
+      col.oninput=()=>{p.hex=col.value;hx.textContent=col.value.toUpperCase();save();render()};
+      ty.id="type-"+id;ty.setAttribute("aria-label",p.no+" "+t("typeLabel"));opt(ty,TYPES,"type_");ty.value=p.type;
+      ty.onchange=()=>{p.type=ty.value;if(p.type!="clear")p.colorless=false;save();renderPaints();render()};
+      fi.id="finish-"+id;fi.setAttribute("aria-label",p.no+" "+t("finishLabel"));opt(fi,FINISHES,"fin_");fi.value=p.finish;
+      fi.onchange=()=>{p.finish=fi.value;save();renderOwned()};
+      let sw=col;if(isClear(p)){sw=el("span","nocolor");paintSwatch(sw,p);sw.title=t("colorless")}
+      row.append(own,sw);if(!isClear(p))row.append(eyeBtn(p));row.append(nm);const mb=measBadge(p);if(mb)row.append(mb);row.append(ty);
+      if(p.type=="clear"){const lb=el("label"),cb=el("input");cb.type="checkbox";cb.id="cl-"+id;cb.checked=p.colorless;
+        cb.onchange=()=>{p.colorless=cb.checked;if(p.colorless)p.hex="#ffffff";save();renderPaints();render()};lb.append(cb," "+t("colorless"));row.append(lb)}
+      row.append(fi,hx);
+      // 투명도·착색력(측정값, 없으면 미측정)과 색상각(측정값 또는 색상값 기준). "측정값 편집"을 켰을 때만 입력칸을 보여 목록을 한 줄로 유지한다
+      if(!$("pmeas").checked){const s=[p.opacity&&t("op_"+p.opacity),p.tinting_strength!=null&&t("tintLabel")+" "+fmtN(p.tinting_strength)].filter(Boolean).join(" · ");
+        if(s)row.append(el("span","mono",s));if(p.custom)row.append(delBtn(p));rows.append(row);continue}
+      const op=el("select");op.id="op-"+id;op.setAttribute("aria-label",p.no+" "+t("opacityLabel"));
+      for(const k of ["",...OPACITIES]){const o=el("option","",k?t("op_"+k):t("op_none"));o.value=k;op.append(o)}op.value=p.opacity||"";
+      op.onchange=()=>{p.opacity=op.value||null;save();renderOwned()};
+      const ts=el("input","tint");ts.type="number";ts.min="0.01";ts.step="0.1";ts.id="ts-"+id;ts.placeholder=t("tintLabel")+" "+t("unmeasured");ts.title=t("tintLabel");
+      ts.setAttribute("aria-label",p.no+" "+t("tintLabel"));ts.value=p.tinting_strength==null?"":p.tinting_strength;
+      ts.onchange=()=>{const v=parseFloat(ts.value);p.tinting_strength=isFinite(v)&&v>0?v:null;if(p.tinting_strength==null)ts.value="";save();renderOwned()};
+      row.append(op,ts,el("span","mono hue",hueText(p)),...revertBtns(p));
+      if(p.custom)row.append(delBtn(p));
+      rows.append(row);
+    }
+    box.append(rows);
+  }
+}
+const delBtn=p=>{const del=el("button","",t("del"));del.type="button";del.onclick=()=>{PAINTS.splice(PAINTS.indexOf(p),1);save();renderPaints();render()};return del};
+$("psearch").oninput=renderPaints;$("ponly").onchange=renderPaints;$("pmeas").onchange=renderPaints;
+function brandOptions(){const sel=$("add-brand"),v=sel.value;sel.textContent="";for(const b of BORDER){const o=el("option","",bname(b));o.value=b;sel.append(o)}if(v)sel.value=v;addFormSync()}
+function addFormSync(){const c=$("add-type").value=="clear";$("add-cl-wrap").hidden=!c;if(!c)$("add-colorless").checked=false;$("add-hex").hidden=c&&$("add-colorless").checked}
+$("add-type").onchange=addFormSync;$("add-colorless").onchange=addFormSync;
+$("add").addEventListener("submit",e=>{e.preventDefault();
+  const no=$("add-no").value.trim(),name=$("add-name").value.trim(),b=$("add-brand").value;if(!no||!name)return;
+  const dup=PAINTS.find(p=>p.brand==b&&p.no.toLowerCase()==no.toLowerCase());
+  const type=$("add-type").value,colorless=type=="clear"&&$("add-colorless").checked,finish=$("add-finish").value,hex=colorless?"#ffffff":$("add-hex").value;
+  if(dup)Object.assign(dup,{name,renamed:true,hex,type,colorless,finish,own:true});else PAINTS.push({brand:b,no,name,hex,type,colorless,finish,own:true,custom:true});
+  save();$("add-no").value="";$("add-name").value="";renderPaints();render()});
+let resetArmed=null;
+$("reset").onclick=()=>{if(!resetArmed){setMsg("resetmsg","resetSure");resetArmed=setTimeout(()=>{resetArmed=null;setMsg("resetmsg")},5000);return}
+  clearTimeout(resetArmed);resetArmed=null;PAINTS=norm(DEFAULTS);save();renderPaints();render();setMsg("resetmsg","resetDone")};
+
+// ---- 메뉴 ----
+const TABS=["main","palette","library","owned","paints","data"];
+function show(t){if(!TABS.includes(t))t="main";
+  TABS.forEach(x=>{$("tab-"+x).hidden=x!=t});
+  document.querySelectorAll("#nav button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tab==t));
+  if(t=="owned")renderOwned();if(t=="paints")renderPaints();if(t=="main"){applyZoom();render();fitSide()}if(t=="palette")renderPalette();if(t=="library")renderLibrary();
+}
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>show(b.dataset.tab));
+
+// ---- 팔레트 ----
+// 원색 값은 임시 근사값이다.
+// C·M·Y·K·W 비율의 기준 원색. generic은 가상의 원색, 나머지는 도료 관리에 있는 실제 제품의 색상값을 쓴다
+const PRIM=[["C","#00a0dc"],["M","#d6007a"],["Y","#fae100"],["K","#141414"],["W","#f7f7f7"]];
+const BASES={generic:null,mr:[["mr","CR1"],["mr","CR2"],["mr","CR3"],["mr","C2"],["mr","C1"]],gaia:[["gaia","033"],["gaia","034"],["gaia","035"],["gaia","002"],["gaia","001"]]};
+let BASIS="generic";
+function primHexes(){const B=BASES[BASIS];return PRIM.map((q,i)=>{if(!B)return q[1];const p=PAINTS.find(x=>x.brand==B[i][0]&&x.no==B[i][1]);return p?p.hex:q[1]})}
+let PK=null;const MIXCACHE=new Map();
+const mixOf=rgb=>{const hs=primHexes(),key=hs.join()+"|"+rgb.map(Math.round).join();if(!MIXCACHE.has(key)){PK=hs.map(h=>hex2rgb(h).map(toLin).map(ks));MIXCACHE.set(key,cmykw(rgb))}return MIXCACHE.get(key)};
+const basisMap=()=>{const B=BASES[BASIS];return B?PRIM.map((q,i)=>q[0]+"="+B[i][1]).join("  "):""};
+function cmykw(rgb){if(!PK)PK=primHexes().map(h=>hex2rgb(h).map(toLin).map(ks));const tl=lin2lab(rgb.map(toLin)),N=20;let best=null,bd=1e9;
+  const err=parts=>{const lab=lin2lab(mix(PK,parts));return Math.hypot(lab[0]-tl[0],lab[1]-tl[1],lab[2]-tl[2])};
+  for(let a=0;a<=N;a++)for(let b=0;a+b<=N;b++)for(let c=0;a+b+c<=N;c++)for(let d=0;a+b+c+d<=N;d++){
+    const parts=[a,b,c,d,N-a-b-c-d],de=err(parts);if(de<bd){bd=de;best=parts}}
+  // 5% 단위 결과에서 시작해 1%, 0.5% 단위로 두 성분 사이를 옮기며 더 가까운 비율을 찾는다 (옅은 색은 미량 차이가 크다)
+  let x=best.map(v=>v*5);
+  for(const step of [1,.5]){let improved=true,guard=0;
+    while(improved&&guard++<400){improved=false;
+      for(let i=0;i<5;i++)for(let j=0;j<5;j++){if(i==j||x[j]<step)continue;const y=x.slice();y[i]+=step;y[j]-=step;const de=err(y);if(de<bd-1e-6){bd=de;x=y;improved=true}}}}
+  return x.map(v=>Math.round(v*10)/10)}
+let PAL=[];
+function palChanged(){$("navpal").textContent=PAL.length?t("palN",PAL.length):t("tabPal");if(!$("tab-palette").hidden)renderPalette();renderRecent()}
+// 최근 추가한 색: 팔레트의 색을 추가한 순서의 역순(최근 것부터)으로 작은 칸에 보여 준다. 누르면 그 색을 다시 찍은 색으로 올린다
+let ADDSEQ=0;
+function renderRecent(){const box=$("recentsw");box.textContent="";$("recent").hidden=!PAL.length;
+  for(const p of PAL.slice().sort((a,b)=>(b.seq||0)-(a.seq||0))){const b=el("button");b.type="button";b.style.background=p.hex;
+    b.title=p.hex+(palLabel(p)?" · "+palLabel(p):"");b.setAttribute("aria-label",b.title);
+    b.onclick=()=>{picked=p.rgb.slice();$("mark").hidden=true;setMsg("clipwarn");setMsg("spreadwarn");LASTPICK=null;render()};box.append(b)}}
+$("addpal").onclick=()=>{if(!picked)return;const hex=rgb2hex(picked);
+  if(PAL.some(p=>p.hex==hex)){setMsg("addmsg","dupPal",hex);return}
+  PAL.push({rgb:picked.map(Math.round),hex,mix:mixOf(picked),seq:++ADDSEQ});setMsg("addmsg","added",hex,PAL.length);palChanged()};
+$("palclear").onclick=()=>{PAL=[];palChanged()};
+function renderPalette(){
+  const pc=$("pal"),g=pc.getContext("2d"),W=1600,M=24,SH=420,n=PAL.length,per=Math.min(6,Math.max(n,1)),rows=Math.ceil(n/per);
+  const ph=Math.round(W*cv.height/cv.width),sw=(W-(per-1)*M)/per;
+  pc.width=W;pc.height=ph+rows*(SH+M);g.fillStyle="#fff";g.fillRect(0,0,pc.width,pc.height);g.drawImage(cv,0,0,W,ph);
+  const fs=per>4?26:30;
+  PAL.forEach((p,i)=>{const x=(i%per)*(sw+M),y=ph+M+Math.floor(i/per)*(SH+M);g.fillStyle=p.hex;g.fillRect(x,y,sw,SH);
+    g.fillStyle=(.3*p.rgb[0]+.59*p.rgb[1]+.11*p.rgb[2])>140?"#111":"#fff";
+    g.font=`500 ${fs}px "IBM Plex Mono",Menlo,Consolas,monospace`;g.textBaseline="alphabetic";
+    g.textAlign="left";g.fillText(p.hex,x+18,y+18+fs);
+    const lb=palLabel(p);if(lb){g.font=`500 ${Math.round(fs*.8)}px "IBM Plex Sans KR","IBM Plex Sans JP",system-ui,sans-serif`;g.fillText(lb,x+18,y+18+fs+Math.round(fs*1.2));g.font=`500 ${fs}px "IBM Plex Mono",Menlo,Consolas,monospace`}
+    const mx=mixOf(p.rgb);g.textAlign="right";PRIM.forEach((q,j)=>g.fillText(`${q[0]} ${String(mx[j]).padStart(3," ")}%`,x+sw-18,y+SH-18-(4-j)*(fs+8)))});
+  const box=$("pallist");box.textContent="";
+  if(!n)box.append(el("p","note",t("palEmpty")));
+  PAL.forEach((p,i)=>{const r=el("div","prow"),ch=el("span","chip");ch.style.background=p.hex;
+    const mk=(t,lab,fn,dis)=>{const b=el("button","",t);b.type="button";b.setAttribute("aria-label",p.hex+" "+lab);b.disabled=!!dis;b.onclick=fn;return b};
+    const mv=d=>()=>{PAL.splice(i+d,0,PAL.splice(i,1)[0]);palChanged()};
+    r.append(ch,el("span","mono",(palLabel(p)?palLabel(p)+" · ":"")+`${p.hex} · `+(m=>mixText(m)+(mixSplitText(m)?" · "+mixSplitText(m):""))(mixOf(p.rgb))),mk(t("viewMix"),t("viewMix"),()=>{picked=p.rgb.slice();$("mark").hidden=true;setMsg("clipwarn");setMsg("spreadwarn");LASTPICK=null;show("main");window.scrollTo(0,0)}),mk("◀",t("fwd"),mv(-1),i==0),mk("▶",t("back"),mv(1),i==n-1),mk(t("del"),t("del"),()=>{PAL.splice(i,1);palChanged()}));box.append(r)});
+}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if(!$("tab-palette").hidden)renderPalette()});
+$("expng").disabled=$("expdf").disabled=false;
+// exe 버전: Python 쪽 저장 대화상자로 저장한다. 취소하면 {code:"declined"}를 던져 원래 문구("저장을 취소했습니다")가 나오게 한다.
+const toB64=data=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(",")[1]||"");r.onerror=()=>no(r.error);r.readAsDataURL(data instanceof Blob?data:new Blob([data]))});
+async function saveFile(filename,data){
+  const path=await API().save_file_dialog(filename,await toB64(data));
+  if(!path)throw {code:"declined"}}
+async function exportAs(kind){
+  if(!PAL.length){setMsg("exmsg","exEmpty");return}
+  renderPalette();const pc=$("pal");let data;
+  try{
+    if(kind=="png")data=await new Promise((ok,no)=>pc.toBlob(b=>b?ok(b):no(new Error("png")),"image/png"));
+    else{if(!window.jspdf)throw new Error("pdf");const w=pc.width/2,h=pc.height/2,doc=new window.jspdf.jsPDF({unit:"pt",format:[w,h],orientation:w>h?"l":"p"});
+      doc.addImage(pc.toDataURL("image/jpeg",.95),"JPEG",0,0,w,h);data=doc.output("arraybuffer")}
+  }catch(e){setMsg("exmsg",kind=="pdf"?"exPdfFail":"exImgFail");return}
+  try{await saveFile("color-palette."+kind,data);setMsg("exmsg","exSaved",kind.toUpperCase())}
+  catch(e){setMsg("exmsg",e&&e.code=="declined"?"exDeclined":e&&e.code=="rate_limited"?"exBusy":"exFail")}
+}
+$("expng").onclick=()=>exportAs("png");$("expdf").onclick=()=>exportAs("pdf");
+
+// ---- 라이브러리 (저장된 기록) ----
+// 기록 하나 = 사진 한 장에서 뽑은 색들 + 출처 정보. 계정 저장소의 palettes 컬렉션(없으면 이 브라우저)에 둔다.
+let SAVED=[],OPEN_ID=null,LVIEW="entry";
+const HEXRE=/^#[0-9A-Fa-f]{6}$/,PKEY="josaek-palettes-v1",META=["event","date","sculptor","link","memo"];
+const str=(v,n)=>String(v==null?"":v).slice(0,n);
+// 라이브러리 사진 축소본: 긴 변 최대 px, JPEG 품질, base64 길이 상한 (HTML 버전은 640px · 0.75 · 17만 자)
+const THUMB_MAX=2400,THUMB_Q=.9,THUMB_LIMIT=1500000;
+const cleanPal=(x,id)=>{x=x||{};return{id,name:str(x.name,60),created:Number(x.created)||0,
+  event:str(x.event,80),date:/^\d{4}-\d{2}-\d{2}$/.test(x.date)?x.date:"",sculptor:str(x.sculptor,80),link:/^https?:\/\//i.test(x.link)?str(x.link,300):"",memo:str(x.memo,500),
+  thumb:typeof x.thumb=="string"&&x.thumb.startsWith("data:image/jpeg;base64,")&&x.thumb.length<THUMB_LIMIT*1.4?x.thumb:"",
+  colors:(Array.isArray(x.colors)?x.colors:[]).filter(c=>c&&HEXRE.test(c.hex)&&Array.isArray(c.rgb)&&c.rgb.length==3&&Array.isArray(c.mix)&&c.mix.length==5).slice(0,60).map(c=>{const o={hex:c.hex.toUpperCase(),rgb:c.rgb.map(Number),mix:c.mix.map(Number)};if(PARTS.includes(c.part)&&TONES.includes(c.tone)){o.part=c.part;o.tone=c.tone}return o})}};
+const palBody=s=>({name:s.name,created:s.created,event:s.event||"",date:s.date||"",sculptor:s.sculptor||"",link:s.link||"",memo:s.memo||"",colors:s.colors,thumb:s.thumb});
+// exe 버전: 라이브러리는 메모리에 두고 데이터 파일 저장 때 함께 쓴다
+function saveLocalPal(){markDirty()}
+async function addPalette(body){
+  const item=cleanPal(body,"l"+Date.now()+Math.random().toString(36).slice(2,6));SAVED.unshift(item);
+  saveLocalPal();renderLibrary()}
+async function updatePalette(s,patch){
+  const body=palBody(Object.assign({},s,patch));
+  const i=SAVED.indexOf(s);SAVED[i]=cleanPal(body,s.id);
+  saveLocalPal();renderLibrary()}
+async function deletePalette(s){SAVED=SAVED.filter(x=>x!==s);saveLocalPal();renderLibrary()}
+
+// 색 목록을 명암 세트로 묶는다: 같은 부위가 이어지고 같은 명암이 반복되지 않는 동안 한 세트
+function groupSets(colors){const out=[];let cur=null;
+  for(const c of colors){
+    if(!c.part){out.push({part:null,tones:{base:c}});cur=null;continue}
+    if(!cur||cur.part!=c.part||cur.tones[c.tone]){cur={part:c.part,tones:{}};out.push(cur)}
+    cur.tones[c.tone]=c}
+  return out}
+const sortedSaved=()=>SAVED.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")||b.created-a.created);
+function libFilter(){const q=$("lq").value.trim().toLowerCase(),part=$("lpart").value,ev=$("levent").value;
+  return sortedSaved().filter(s=>(!q||[s.name,s.event,s.sculptor,s.memo].some(v=>v.toLowerCase().includes(q)))&&(ev=="all"||s.event==ev)&&(part=="all"||s.colors.some(c=>c.part==part)))}
+const setsOf=(s,part)=>groupSets(s.colors).filter(g=>part=="all"||g.part==part);
+
+function libSelects(){
+  const lp=$("lpart"),pv=lp.value||"all";lp.textContent="";
+  for(const k of ["all",...PARTS]){const o=el("option","",k=="all"?t("allParts"):t("part_"+k));o.value=k;lp.append(o)}lp.value=pv;
+  const le=$("levent"),ev=le.value||"all",evs=[...new Set(SAVED.map(s=>s.event).filter(Boolean))].sort();le.textContent="";
+  const o0=el("option","",t("allEvents"));o0.value="all";le.append(o0);for(const e of evs){const o=el("option","",e);o.value=e;le.append(o)}
+  le.value=evs.includes(ev)?ev:"all";
+  for(const [id,key] of [["dl-event","event"],["dl-sculptor","sculptor"]]){const dl=$(id);dl.textContent="";for(const v of [...new Set(SAVED.map(s=>s[key]).filter(Boolean))].sort()){const o=el("option");o.value=v;dl.append(o)}}
+  document.querySelectorAll("#lview button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v==LVIEW));
+  $("lprintnote").textContent=t("libPrintNote",bname(brand));
+}
+function metaLine(s){const m=el("div","lmeta");const parts=[s.event,s.date,s.sculptor].filter(Boolean);m.append(parts.join(" · "));
+  if(s.link){if(parts.length)m.append(" · ");const a=el("a","",s.link.replace(/^https?:\/\//,"").slice(0,40));a.href=s.link;a.target="_blank";a.rel="noopener noreferrer";m.append(a)}
+  return m}
+function swatchSmall(c,label){const w=el("div","lsw"),a=el("span"),b=el("span","",label?label:c.hex);a.style.background=c.hex;a.title=c.hex;w.append(a,b);return w}
+function renderLibrary(){
+  libSelects();const body=$("libbody");body.textContent="";
+  if(!SAVED.length){$("lcount").textContent="";body.append(el("p","note",t("libNone")));return}
+  const part=$("lpart").value,list=libFilter();
+  $("lcount").textContent=t("libCount",list.length,list.reduce((n,s)=>n+setsOf(s,part).reduce((m,g)=>m+Object.keys(g.tones).length,0),0));
+  if(!list.length){body.append(el("p","note",t("libEmpty")));return}
+  if(LVIEW=="part"){
+    for(const s of list)for(const g of setsOf(s,part)){
+      const r=el("div","lrow");
+      for(const k of TONES){const c=g.tones[k],d=el("div","big2");if(c){d.style.background=c.hex;d.style.color=(.3*c.rgb[0]+.59*c.rgb[1]+.11*c.rgb[2])>140?"#111":"#fff";d.textContent=(g.part?t("tone_"+k)+" ":"")+c.hex}else d.classList.add("checker");r.append(d)}
+      const src=el("div","lsrc linfo");src.append(el("span","plabel",g.part?t("part_"+g.part):t("single")),el("b","",s.name||"—"),metaLine(s));r.append(src);body.append(r)}
+    return}
+  for(const s of list){
+    const card=el("div","lcard"),info=el("div","linfo");
+    if(s.thumb){const im=el("img");im.alt="";im.src=s.thumb;card.append(im)}else card.append(el("span"));
+    info.append(el("b","",s.name||"—"),metaLine(s));
+    if(s.memo)info.append(el("div","lmeta",s.memo));
+    // 묶음(명암 세트)은 가로로 나열하고, 이어지는 단색은 "단색" 묶음 하나로 모은다
+    const sets=el("div","lsets");let single=null;
+    for(const g of setsOf(s,part)){
+      if(!g.part){if(!single){single=el("div","lset");single.append(el("span","plabel",t("single")));sets.append(single)}single.append(swatchSmall(g.tones.base,""));continue}
+      single=null;const row=el("div","lset");row.append(el("span","plabel",t("part_"+g.part)));
+      for(const k of TONES)if(g.tones[k])row.append(swatchSmall(g.tones[k],t("tone_"+k)));sets.append(row)}
+    info.append(sets);
+    const act=el("div","lactions"),op=el("button","",t("open")),ed=el("button","",t("edit")),del=el("button","",t("del"));
+    op.type=ed.type=del.type="button";
+    op.onclick=()=>openSaved(s);
+    ed.onclick=()=>editForm(s,info,act);
+    let armed=false;del.onclick=async()=>{if(!armed){armed=true;del.textContent=t("sure");setTimeout(()=>{armed=false;del.textContent=t("del")},4000);return}
+      try{await deletePalette(s);if(OPEN_ID==s.id)setOpenRecord(null)}catch(e){setMsg("lmsg","saveFail")}};
+    act.append(op,ed,del);info.append(act);card.append(info);body.append(card)}
+}
+function editForm(s,info,act){
+  act.hidden=true;const f=el("div","form2");const inp={};
+  for(const [k,lab,type,max] of [["name","f_name","text",60],["event","f_event","text",80],["date","f_date","date",0],["sculptor","f_sculptor","text",80],["link","f_link","url",300],["memo","f_memo","textarea",500]]){
+    const l=el("label",k=="name"||k=="memo"?"full":""),i=el(type=="textarea"?"textarea":"input");if(type!="textarea")i.type=type;if(max)i.maxLength=max;i.value=s[k]||"";
+    if(k=="event")i.setAttribute("list","dl-event");if(k=="sculptor")i.setAttribute("list","dl-sculptor");
+    l.append(el("span","",t(lab)),i);f.append(l);inp[k]=i}
+  const bar=el("div","lactions"),ok=el("button","primary",t("saveBtn")),no=el("button","",t("cancel"));ok.type=no.type="button";
+  no.onclick=()=>{f.remove();bar.remove();act.hidden=false};
+  ok.onclick=async()=>{const patch={};for(const k in inp)patch[k]=inp[k].value.trim();const c=cleanPal(Object.assign({},s,patch),s.id);
+    try{await updatePalette(s,c);setMsg("lmsg","updatedOk",c.name||"—")}catch(e){setMsg("lmsg","saveFail")}};
+  bar.append(ok,no);info.append(f,bar)}
+document.querySelectorAll("#lview button").forEach(b=>b.onclick=()=>{LVIEW=b.dataset.v;renderLibrary()});
+$("lq").oninput=renderLibrary;$("lpart").onchange=renderLibrary;$("levent").onchange=renderLibrary;
+
+// 기록 열기: 사진 축소본과 색을 팔레트로 불러오고, 저장 양식에 출처 정보를 채운다
+function setOpenRecord(s){OPEN_ID=s?s.id:null;$("ow-wrap").hidden=!s;$("m-overwrite").checked=!!s;owText()}
+function owText(){const s=SAVED.find(x=>x.id==OPEN_ID);$("ow-text").textContent=s?t("overwrite",s.name||"—"):""}
+function fillMeta(s){$("m-name").value=s?s.name:"";for(const k of META)$("m-"+k).value=s?s[k]||"":"";if(!s)$("m-date").value=localDate()}
+const localDate=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+function openSaved(s){
+  const apply=()=>{PAL=s.colors.map(c=>Object.assign({hex:c.hex,rgb:c.rgb.slice(),mix:c.mix.slice()},c.part?{part:c.part,tone:c.tone}:{}));$("mark").hidden=true;setMsg("hint","hintLoaded",s.name);
+    fillMeta(s);setOpenRecord(s);palChanged();show("palette");window.scrollTo(0,0)};
+  if(s.thumb){const img=new Image();img.onload=()=>{cv.width=img.width;cv.height=img.height;ctx.drawImage(img,0,0);captureOrig();apply()};img.onerror=apply;img.src=s.thumb}else apply();
+}
+fillMeta(null);
+$("palsave").onclick=async()=>{
+  if(!PAL.length){setMsg("savemsg","exEmpty");return}
+  const meta={name:$("m-name").value.trim()||t("tabPal")+" "+localDate()};for(const k of META)meta[k]=$("m-"+k).value.trim();
+  // exe 버전: 파일에 저장하므로 불러온 해상도(최대 2400px) 그대로, 품질 90%로 둔다. 너무 크면(base64 150만 자 초과) 0.75배씩 줄인다
+  const tc=document.createElement("canvas");let w=THUMB_MAX,url;
+  do{tc.width=Math.min(w,cv.width);tc.height=Math.max(1,Math.round(tc.width*cv.height/cv.width));tc.getContext("2d").drawImage(cv,0,0,tc.width,tc.height);url=tc.toDataURL("image/jpeg",THUMB_Q);w=Math.round(w*.75)}while(url.length>THUMB_LIMIT&&w>100);
+  const colors=PAL.map(p=>Object.assign({hex:p.hex,rgb:p.rgb,mix:mixOf(p.rgb)},p.part?{part:p.part,tone:p.tone}:{}));
+  const target=OPEN_ID&&$("m-overwrite").checked?SAVED.find(x=>x.id==OPEN_ID):null;
+  $("palsave").disabled=true;
+  try{
+    if(target){await updatePalette(target,cleanPal(Object.assign({},target,meta,{colors,thumb:url}),target.id));setMsg("savemsg","updatedOk",meta.name)}
+    else{await addPalette(cleanPal(Object.assign({},meta,{created:Date.now(),colors,thumb:url}),""));setMsg("savemsg","savedOk",meta.name);for(const k of ["name","sculptor","link","memo"])$("m-"+k).value=""}
+  }catch(e){setMsg("savemsg","saveFail")}
+  $("palsave").disabled=false};
+
+// ---- 인쇄용 A4 PDF ---- 150dpi 캔버스에 그려 페이지 이미지로 넣는다 (한글·일본어 글꼴 문제 없이 인쇄되도록)
+function bestRecipe(rgb){const P=mixPaints();if(!P.length)return "";const r=bestMixes(rgb,P)[0];if(!r)return "";const g=r.parts.reduce(gcd);
+  return r.idx.map((pi,i)=>(brand=="mix"?BSHORT[P[pi].brand]+" ":"")+P[pi].no+" "+r.parts[i]/g).join(" : ")}
+const loadImg=src=>new Promise(ok=>{if(!src)return ok(null);const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src});
+async function buildLibraryPages(list,part,photo){
+  const W=1240,H=1754,M=64,rows=[];
+  for(const s of list)for(const g of setsOf(s,part))rows.push({s,g});
+  const imgs=new Map();if(photo)for(const s of list)imgs.set(s.id,await loadImg(s.thumb));
+  const RH=330,HEAD=180,FOOT=60,per=Math.max(1,Math.floor((H-HEAD-FOOT)/RH)),pages=[],total=Math.ceil(rows.length/per);
+  const sans='"IBM Plex Sans KR","IBM Plex Sans JP",system-ui,sans-serif',mono='"IBM Plex Mono",Menlo,Consolas,monospace';
+  for(let pi=0;pi<total;pi++){
+    const c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);g.fillStyle="#111";g.textBaseline="alphabetic";
+    g.font=`600 34px ${sans}`;g.fillText(t("pdfTitle"),M,M+30);
+    g.font=`400 18px ${sans}`;g.fillStyle="#555";
+    const ev=$("levent").value,pt=$("lpart").value;
+    g.fillText([localDate(),pt=="all"?t("allParts"):t("part_"+pt),ev=="all"?t("allEvents"):ev,bname(brand),"CMYKW: "+t("basis_"+BASIS)].join("  ·  "),M,M+64);
+    g.fillRect(M,HEAD-36,W-2*M,2);
+    rows.slice(pi*per,pi*per+per).forEach(({s,g:set},ri)=>{
+      const y=HEAD+ri*RH;let x=M;
+      g.fillStyle="#111";g.font=`600 22px ${sans}`;
+      const title=[set.part?t("part_"+set.part):t("single"),s.name||"—"].join("  ·  ");g.fillText(title,M,y+4);
+      g.font=`400 16px ${sans}`;g.fillStyle="#555";g.fillText([s.event,s.date,s.sculptor].filter(Boolean).join("  ·  "),M,y+28);
+      const top=y+44,SH2=250;
+      const im=imgs.get(s.id);
+      if(photo){const bw=200;if(im){const sc=Math.max(bw/im.width,SH2/im.height),sw2=bw/sc,sh2=SH2/sc;g.drawImage(im,(im.width-sw2)/2,(im.height-sh2)/2,sw2,sh2,x,top,bw,SH2)}else{g.strokeStyle="#ccc";g.strokeRect(x,top,bw,SH2)}x+=bw+16}
+      const keys=TONES.filter(k=>set.tones[k]),sw=Math.floor((W-M-x-(keys.length-1)*16)/Math.max(keys.length,3));
+      keys.forEach((k,i)=>{const cc=set.tones[k],sx=x+i*(sw+16);g.fillStyle=cc.hex;g.fillRect(sx,top,sw,SH2);g.strokeStyle="#ddd";g.strokeRect(sx+.5,top+.5,sw-1,SH2-1);
+        const light=(.3*cc.rgb[0]+.59*cc.rgb[1]+.11*cc.rgb[2])>140;g.fillStyle=light?"#111":"#fff";
+        g.font=`600 18px ${sans}`;g.fillText(set.part?t("tone_"+k):"",sx+12,top+28);
+        g.font=`500 17px ${mono}`;g.fillText(cc.hex,sx+12,top+SH2-62);
+        g.fillText((m=>PRIM.map((q,j)=>q[0]+m[j]).join(" "))(mixOf(cc.rgb)),sx+12,top+SH2-38);
+        const rc=bestRecipe(cc.rgb);if(rc){g.font=`500 15px ${mono}`;g.fillText(rc,sx+12,top+SH2-14,sw-24)}});
+      g.fillStyle="#e2e2e2";g.fillRect(M,y+RH-22,W-2*M,1)});
+    g.fillStyle="#777";g.font=`400 16px ${sans}`;g.textAlign="right";g.fillText((pi+1)+" / "+total,W-M,H-30);g.textAlign="left";
+    pages.push(c)}
+  return pages}
+$("lpdf").onclick=async()=>{
+  const list=libFilter(),part=$("lpart").value;if(!list.some(s=>setsOf(s,part).length)){setMsg("lmsg","libPdfEmpty");return}
+  if(!window.jspdf){setMsg("lmsg","exPdfFail");return}
+  setMsg("lmsg","libPdfBusy");$("lpdf").disabled=true;
+  try{const pages=await buildLibraryPages(list,part,$("lphoto").checked),doc=new window.jspdf.jsPDF({unit:"mm",format:"a4",orientation:"p"});
+    pages.forEach((c,i)=>{if(i)doc.addPage("a4","p");doc.addImage(c.toDataURL("image/jpeg",.92),"JPEG",0,0,210,297)});
+    await saveFile("colormix_library_"+localDate()+".pdf",doc.output("arraybuffer"));setMsg("lmsg","exSaved","PDF")}
+  catch(e){setMsg("lmsg",e&&e.code=="declined"?"exDeclined":"exFail")}
+  $("lpdf").disabled=false};
+// ---- 다른 이름으로 저장 / 백업 데이터 불러오기 ----
+// 다른 이름으로 저장은 사본만 만든다. 프로그램이 여는 파일(colormix_data.json)과 "저장 안 됨" 상태는 그대로 둔다.
+// 사본에는 도료 목록과 라이브러리만 담고, 화면 설정은 넣지 않는다
+$("backsave").onclick=async()=>{
+  const d=buildData();delete d.settings;const data=JSON.stringify(d,null,1);
+  try{await saveFile("colormix_preset_"+localDate()+".json",data);setMsg("filemsg","backupSaved")}
+  catch(e){setMsg("filemsg",e&&e.code=="declined"?"exDeclined":"exFail")}};
+// 불러오기: 도료 목록은 파일 내용으로 바꾸고, 라이브러리는 없는 기록만 더한다. 설정은 지금 상태를 유지한다
+$("backfile").onclick=async()=>{let f;try{f=await API().open_json_dialog()}catch(x){setMsg("filemsg","backupBad");return}
+  if(!f)return;
+  let o;try{o=JSON.parse(f.text)}catch(x){setMsg("filemsg","backupBad");return}
+  try{const n=await applyData(o,false);markDirty();setMsg("filemsg","backupOk",PAINTS.length,n)}catch(x){setMsg("filemsg","backupBad")}};
+
+// ---- 데이터 파일 (exe 버전) ----
+// exe와 같은 폴더의 colormix_data.json에 저장한다. 파일 형식은 내보내기 파일과 같다. 읽고 쓰기는 Python API(window.pywebview.api)가 맡는다.
+const API=()=>window.pywebview.api;
+const DATANAME="colormix_data.json";
+var FILE_EXISTS=false,DIRTY=false,LASTSAVE="",LOADING=false;
+// 창 닫기(X)를 가로챌지 Python이 판단할 수 있도록 바뀔 때마다 알린다
+function setDirty(v){DIRTY=v;try{if(window.pywebview&&window.pywebview.api)API().set_dirty(v)}catch(e){}}
+function markDirty(){if(LOADING)return;if(!DIRTY)setDirty(true);fileStatus()}
+function buildData(){return {app:"josaek-spoid",version:3,paints:norm(PAINTS),settings:{lang:LANGS[LI],sort:$("sort").value,size:$("size").value,brand,basis:BASIS,nometal:NOMETAL,setopen:SETOPEN},palettes:SAVED.map(palBody)}}
+async function applyData(o,replace){
+  const l=Array.isArray(o)?o:o&&o.paints;if(!validPaints(l))throw new Error("bad");
+  LOADING=true;
+  try{
+    PAINTS=mergeDefaults(norm(l));save();
+    // 설정(언어·정렬·측정 범위·브랜드·기준 원색)은 시작할 때 colormix_data.json에서만 읽는다. 백업 불러오기는 데이터만 가져온다
+    const st=replace&&o.settings||{};
+    if(LANGS.includes(st.lang))LI=LANGS.indexOf(st.lang);
+    if(SORTS[st.sort])$("sort").value=st.sort;
+    if(["0","2","5"].includes(st.size))$("size").value=st.size;
+    if(BRANDS[st.brand]===1||st.brand=="mix")brand=st.brand;
+    if(st.basis in BASES)BASIS=st.basis;
+    if(typeof st.nometal=="boolean"){NOMETAL=st.nometal;$("nometal").checked=NOMETAL}
+    if(typeof st.setopen=="boolean"){SETOPEN=st.setopen;$("setbox").open=SETOPEN}
+    let n=0;const pals=Array.isArray(o.palettes)?o.palettes:[];
+    if(replace){SAVED=pals.slice(0,2000).map((x,i)=>cleanPal(x,"f"+i)).filter(x=>x.colors.length);n=SAVED.length}
+    else{const have=new Set(SAVED.map(x=>x.name+"|"+x.created));
+      for(const raw of pals.slice(0,500)){const c=cleanPal(raw,"");if(!c.colors.length||have.has(c.name+"|"+c.created))continue;
+        try{await addPalette(palBody(c));have.add(c.name+"|"+c.created);n++}catch(x){break}}}
+    applyLang();return n
+  }finally{LOADING=false}}
+async function saveToFile(){
+  try{LASTSAVE=await API().save_data(JSON.stringify(buildData()));FILE_EXISTS=true;setDirty(false);fileStatus();setMsg("filemsg","fsSavedAt",LASTSAVE);return true}
+  catch(e){setMsg("filemsg","fsError");return false}}
+function fileStatus(){
+  const st=$("filestat");
+  st.textContent=FILE_EXISTS||DIRTY?t(DIRTY?"fsDirty":"fsSaved",DATANAME):t("fsNone");
+  st.classList.toggle("dirty",DIRTY)}
+// 종료 확인 창. 창의 X 버튼은 Python이 가로채 showExitDialog()를 부른다.
+const dlg=$("exitdlg");
+function showExitDialog(){$("exitbody").textContent=t(DIRTY?"exitBody":"exitBodyClean");setMsg("exitmsg");dlg.hidden=false;$("exsave").focus()}
+const closeDlg=()=>{dlg.hidden=true;$("fexit").focus()};
+$("fexit").onclick=showExitDialog;
+$("excancel").onclick=closeDlg;
+document.addEventListener("keydown",e=>{if(e.key=="Escape"&&!dlg.hidden)closeDlg()});
+$("exsave").onclick=async()=>{if(await saveToFile())API().exit_app(true);else setMsg("exitmsg","fsError")};
+$("exnosave").onclick=()=>API().exit_app(false);
+$("fsave").onclick=$("fsave2").onclick=()=>saveToFile();
+document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=="s"){e.preventDefault();saveToFile()}});
+fileStatus();
+// 시작: 데이터 파일이 있으면 읽어 들인다. 없으면 기본 상태로 시작하고 첫 저장 때 만든다.
+async function boot(){
+  try{$("filepath").textContent=await API().data_path()}catch(e){}
+  let txt=null;try{txt=await API().load_data()}catch(e){setMsg("filemsg","fsReadError")}
+  if(txt!=null){FILE_EXISTS=true;
+    if(txt.trim())try{const n=await applyData(JSON.parse(txt),true);setMsg("filemsg","fsLoaded",DATANAME,PAINTS.length,n)}catch(e){setMsg("filemsg","fsReadError")}}
+  setDirty(false);fileStatus()}
+if(window.pywebview&&window.pywebview.api&&window.pywebview.api.load_data)boot();else window.addEventListener("pywebviewready",boot,{once:true});
+
+// ---- 스포이드 ----
+function pos(e){const r=cv.getBoundingClientRect();return [Math.min(cv.width-1,Math.max(0,Math.floor((e.clientX-r.left)*cv.width/r.width))),Math.min(cv.height-1,Math.max(0,Math.floor((e.clientY-r.top)*cv.height/r.height)))]}
+function sample(x,y,k){const x0=Math.max(0,x-k),y0=Math.max(0,y-k),w=Math.min(cv.width,x+k+1)-x0,h=Math.min(cv.height,y+k+1)-y0,d=ctx.getImageData(x0,y0,w,h).data,s=[0,0,0];
+  for(let i=0;i<d.length;i+=4){s[0]+=d[i];s[1]+=d[i+1];s[2]+=d[i+2]}return s.map(v=>v/(d.length/4))}
+// 측정 범위 안의 색 편차: 각 픽셀의 Lab이 평균 Lab에서 떨어진 거리(ΔE76)의 평균. 반사광·질감·경계가 섞이면 커진다
+function sampleSpread(x,y,k){if(!k)return 0;const x0=Math.max(0,x-k),y0=Math.max(0,y-k),w=Math.min(cv.width,x+k+1)-x0,h=Math.min(cv.height,y+k+1)-y0,d=ctx.getImageData(x0,y0,w,h).data,L=[];
+  for(let i=0;i<d.length;i+=4)L.push(rgbLab([d[i],d[i+1],d[i+2]]));
+  const m=[0,1,2].map(j=>L.reduce((s,l)=>s+l[j],0)/L.length);return L.reduce((s,l)=>s+Math.hypot(l[0]-m[0],l[1]-m[1],l[2]-m[2]),0)/L.length}
+const SPREAD_WARN=4;
+function pick(x,y){const k=+$("size").value;picked=sample(x,y,k);const m=$("mark");m.hidden=false;m.style.left=(x+.5)/cv.width*100+"%";m.style.top=(y+.5)/cv.height*100+"%";m.dataset.x=x;m.dataset.y=y;
+  const clip=origMax(x,y,k)>=250;setMsg("clipwarn",clip?"clipWarn":null);const sp=sampleSpread(x,y,k);setMsg("spreadwarn",sp>SPREAD_WARN?"spreadWarn":null,sp.toFixed(1));
+  // 도료 색상값 등록 때 보여 줄 측정 조건 (보정 종류, 측정 범위, 편차, 날아감)
+  LASTPICK={wb:CORR&&!$("showorig").checked?CORR.kind:null,size:k*2+1,spread:k?Math.round(sp*10)/10:null,clip};render()}
+
+// ---- 명암 세트 ----
+const PARTS=["skin","hair","eyes","cloth","stocking","other"],TONES=["hl","base","sh"];
+let SET={hl:null,base:null,sh:null},slot=null;
+const rgbLab=c=>lin2lab(c.map(toLin));
+function relWords(a,b){const A=rgbLab(a),B=rgbLab(b),w=[],da=A[1]-B[1],db=A[2]-B[2],dc=Math.hypot(A[1],A[2])-Math.hypot(B[1],B[2]);
+  // 기본색이 이미 붉은/노란 쪽이면 반대 방향 변화는 "덜 붉게/덜 노랗게"로 읽는 편이 자연스럽다
+  if(da>2)w.push(t(B[1]<-2?"relLessGreen":"relRed"));else if(da<-2)w.push(t(B[1]>2?"relLessRed":"relGreen"));
+  if(db>2)w.push(t(B[2]<-2?"relLessBlue":"relYellow"));else if(db<-2)w.push(t(B[2]>2?"relLessYellow":"relBlue"));
+  if(dc>3)w.push(t("relSat"));else if(dc<-3)w.push(t("relDesat"));
+  const dL=Math.round(A[0]-B[0]);return [(dL>0?"+":"")+dL,w.length?w.join(t("sep")):t("relSame")]}
+function renderSet(){
+  for(const k of TONES){const b=$("slot-"+k),c=SET[k],sw=b.querySelector(".ssw");b.setAttribute("aria-pressed",slot==k);
+    sw.style.background=c?rgb2hex(c):"";sw.classList.toggle("on",!!c);b.querySelector(".shx").textContent=c?rgb2hex(c):"—"}
+  const rel=$("rel");rel.textContent="";
+  if(!SET.base){if(SET.hl||SET.sh)rel.append(el("li","note",t("relNeedBase")))}
+  else for(const k of ["hl","sh"])if(SET[k]){const r=relWords(SET[k],SET.base);rel.append(el("li","",t("relLine",t("tone_"+k),r[0],r[1])))}
+}
+function fillSlot(){if(!slot||!picked)return false;SET[slot]=picked.map(Math.round);slot=TONES.find(k=>!SET[k])||null;renderSet();return true}
+TONES.forEach(k=>$("slot-"+k).onclick=()=>{slot=slot==k?null:k;renderSet()});
+$("setclear").onclick=()=>{SET={hl:null,base:null,sh:null};slot="hl";renderSet();setMsg("setmsg")};
+$("setadd").onclick=()=>{const part=$("part").value,ks=TONES.filter(k=>SET[k]);if(!ks.length){setMsg("setmsg","setEmpty");return}
+  const seq=++ADDSEQ;for(const k of ks){const c=SET[k];PAL.push({rgb:c.slice(),hex:rgb2hex(c),mix:mixOf(c),part,tone:k,seq})}
+  setMsg("setmsg","setAdded",ks.length);palChanged()};
+function basisOptions(){const sel=$("basis");sel.textContent="";for(const k in BASES){const o=el("option","",t("basis_"+k));o.value=k;sel.append(o)}sel.value=BASIS;$("basismap").textContent=basisMap()}
+$("basis").onchange=()=>{BASIS=$("basis").value;markDirty();$("basismap").textContent=basisMap();renderPalette()};
+function partOptions(){const sel=$("part"),v=sel.value;sel.textContent="";for(const k of PARTS){const o=el("option","",t("part_"+k));o.value=k;sel.append(o)}sel.value=v||"skin"}
+const palLabel=p=>p.part&&p.tone?t("part_"+p.part)+" · "+t("tone_"+p.tone):"";
+
+// ---- 조명 보정 ----
+// ORIG: 불러온 사진의 원본 픽셀. 보정은 선형 RGB에서 채널별 배율(폰 크리스 방식)로 적용한다.
+let ORIG=null,CORR=null,refMode=null;
+const WHITE_T=toLin(240);   // 흰색 기준을 맞출 목표 밝기 (sRGB 240 ≈ 흰 서페이서)
+function captureOrig(){ORIG=ctx.getImageData(0,0,cv.width,cv.height);CORR=null;setZoom(null);$("showorig").checked=false;$("refmark").hidden=true;$("corroff").disabled=true;setRefMode(null);setMsg("corrmsg","corrNone");setMsg("clipwarn");setMsg("spreadwarn");LASTPICK=null}
+function origMax(x,y,k){if(!ORIG)return 0;let m=0;const W=ORIG.width,d=ORIG.data;
+  for(let j=Math.max(0,y-k);j<=Math.min(ORIG.height-1,y+k);j++)for(let i=Math.max(0,x-k);i<=Math.min(W-1,x+k);i++){const o=(j*W+i)*4;m=Math.max(m,d[o],d[o+1],d[o+2])}return m}
+function origLinAvg(x,y,k){const W=ORIG.width,d=ORIG.data,s=[0,0,0];let n=0;
+  for(let j=Math.max(0,y-k);j<=Math.min(ORIG.height-1,y+k);j++)for(let i=Math.max(0,x-k);i<=Math.min(W-1,x+k);i++){const o=(j*W+i)*4;s[0]+=toLin(d[o]);s[1]+=toLin(d[o+1]);s[2]+=toLin(d[o+2]);n++}
+  return s.map(v=>v/n)}
+function drawImageState(){
+  if(!ORIG)return;
+  if(!CORR||$("showorig").checked){ctx.putImageData(ORIG,0,0)}
+  else{const L=CORR.gains.map(g=>{const a=new Uint8ClampedArray(256);for(let v=0;v<256;v++)a[v]=Math.round(toS(Math.min(1,toLin(v)*g)));return a});
+    const out=new ImageData(new Uint8ClampedArray(ORIG.data),ORIG.width,ORIG.height),d=out.data;
+    for(let i=0;i<d.length;i+=4){d[i]=L[0][d[i]];d[i+1]=L[1][d[i+1]];d[i+2]=L[2][d[i+2]]}
+    ctx.putImageData(out,0,0)}
+  const m=$("mark");if(!m.hidden)pick(+m.dataset.x,+m.dataset.y);
+  corrStatus()}
+function corrStatus(){if(!CORR){setMsg("corrmsg","corrNone");return}
+  if($("showorig").checked){setMsg("corrmsg","corrShowingOrig");return}
+  const g=CORR.gains.map(v=>v.toFixed(2));setMsg("corrmsg",CORR.kind=="white"?"corrWhite":"corrGray",g[0],g[1],g[2])}
+function setRefMode(m){refMode=m;$("refwhite").setAttribute("aria-pressed",m=="white");$("refgray").setAttribute("aria-pressed",m=="gray");$("stage").classList.toggle("picking",!!m);
+  if(m)setMsg("corrmsg",m=="white"?"refPromptWhite":"refPromptGray");else if(ORIG)corrStatus()}
+function setReference(x,y){
+  const kind=refMode;setRefMode(null);
+  if(origMax(x,y,5)>=250){setMsg("corrmsg","refClipped");return}
+  const r=origLinAvg(x,y,5),Y=.2126*r[0]+.7152*r[1]+.0722*r[2];
+  if(Y<.01||Math.min(...r)<.002){setMsg("corrmsg","refDark");return}
+  if(Math.max(...r)/Math.min(...r)>4){setMsg("corrmsg","refColored");return}
+  const target=kind=="white"?WHITE_T:Y;
+  CORR={kind,gains:r.map(c=>Math.min(6,Math.max(.2,target/c))),x,y};
+  const rm=$("refmark");rm.hidden=false;rm.style.left=(x+.5)/cv.width*100+"%";rm.style.top=(y+.5)/cv.height*100+"%";
+  $("corroff").disabled=false;$("showorig").checked=false;drawImageState()}
+$("refwhite").onclick=()=>setRefMode(refMode=="white"?null:"white");
+$("refgray").onclick=()=>setRefMode(refMode=="gray"?null:"gray");
+$("corroff").onclick=()=>{CORR=null;$("refmark").hidden=true;$("corroff").disabled=true;$("showorig").checked=false;drawImageState()};
+$("showorig").onchange=drawImageState;
+document.addEventListener("keydown",e=>{if(e.key=="Escape"&&refMode)setRefMode(null)});
+
+// ---- 확대·축소 ----
+// ZOOM: 사진 픽셀 대비 배율. null이면 창에 맞춤. 휠은 커서 위치를 중심으로 확대하고, 확대한 상태에서 끌면 이동한다(짧게 누르면 색 찍기).
+const vp=$("vp"),ZMAX=16,ZSTEP=1.25;let ZOOM=null;
+function fitScale(){const w=vp.clientWidth||cv.width,h=innerHeight*.72;return Math.min(1,w/cv.width,h/cv.height)}
+const curScale=()=>ZOOM==null?fitScale():ZOOM;
+function applyZoom(){const s=curScale();cv.style.width=Math.floor(cv.width*s)+"px";cv.style.height=Math.floor(cv.height*s)+"px";
+  vp.classList.toggle("px",s>=2);$("zoomval").textContent=Math.round(s*100)+"%";
+  $("zoomout").disabled=ZOOM==null;$("zoomin").disabled=s>=ZMAX-1e-6;$("zoomfit").disabled=ZOOM==null}
+// (cx, cy) 화면 위치에 있던 사진 지점이 확대 뒤에도 같은 자리에 오도록 스크롤한다. 없으면 보이는 영역 가운데 기준
+function setZoom(z,cx,cy){
+  const r0=cv.getBoundingClientRect(),vr=vp.getBoundingClientRect();
+  if(cx==null){cx=vr.left+vr.width/2;cy=vr.top+vr.height/2}
+  const s0=curScale(),fx=(cx-r0.left)/s0,fy=(cy-r0.top)/s0;
+  if(z!=null){z=Math.min(ZMAX,z);if(z<=fitScale()+1e-6)z=null}
+  ZOOM=z;applyZoom();
+  const s=curScale(),r=cv.getBoundingClientRect();
+  vp.scrollLeft+=r.left+fx*s-cx;vp.scrollTop+=r.top+fy*s-cy}
+$("zoomin").onclick=()=>setZoom(curScale()*ZSTEP);
+$("zoomout").onclick=()=>setZoom(curScale()/ZSTEP);
+$("zoomfit").onclick=()=>setZoom(null);
+$("zoom100").onclick=()=>setZoom(1);
+vp.addEventListener("wheel",e=>{e.preventDefault();setZoom(curScale()*(e.deltaY<0?ZSTEP:1/ZSTEP),e.clientX,e.clientY)},{passive:false});
+addEventListener("resize",()=>{if(!$("tab-main").hidden){applyZoom();fitSide()}});
+// 오른쪽 칸 높이: 지금 보이는 위치부터 창 아래까지. 페이지를 내리면 위에 붙고(sticky) 창 높이만큼 늘어난다
+function fitSide(){const s=document.querySelector("#tab-main .side");if(innerWidth<=820||$("tab-main").hidden){s.style.maxHeight="";return}
+  s.style.maxHeight=Math.max(240,innerHeight-Math.max(16,s.getBoundingClientRect().top)-16)+"px"}
+addEventListener("scroll",()=>{if(!$("tab-main").hidden)fitSide()},{passive:true});
+let drag=null,dragged=false;
+cv.addEventListener("pointerdown",e=>{dragged=false;if(e.button>1||(vp.scrollWidth<=vp.clientWidth&&vp.scrollHeight<=vp.clientHeight))return;
+  drag={x:e.clientX,y:e.clientY,sl:vp.scrollLeft,st:vp.scrollTop,id:e.pointerId}});
+cv.addEventListener("mousedown",e=>{if(e.button==1)e.preventDefault()});
+const endDrag=()=>{drag=null;vp.classList.remove("panning")};
+cv.addEventListener("pointerup",endDrag);cv.addEventListener("pointercancel",endDrag);
+
+cv.addEventListener("pointermove",e=>{
+  if(drag){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+    if(!dragged&&Math.hypot(dx,dy)>4){dragged=true;try{cv.setPointerCapture(drag.id)}catch(x){}vp.classList.add("panning")}
+    if(dragged){vp.scrollLeft=drag.sl-dx;vp.scrollTop=drag.st-dy;return}}
+  const[x,y]=pos(e);$("hov").style.background=rgb2hex(sample(x,y,0))});
+cv.addEventListener("click",e=>{if(dragged){dragged=false;return}const[x,y]=pos(e);if(refMode){setReference(x,y);return}pick(x,y);if(REG){regConfirm();return}fillSlot()});
+$("size").onchange=()=>{markDirty();const m=$("mark");if(!m.hidden)pick(+m.dataset.x,+m.dataset.y)};
+
+// ---- 사진 불러오기 ----
+function load(file){if(!file||!file.type.startsWith("image/")){setMsg("hint","errType");return}
+  const url=URL.createObjectURL(file),img=new Image();
+  img.onload=()=>{const s=Math.min(1,2400/Math.max(img.width,img.height));cv.width=Math.round(img.width*s);cv.height=Math.round(img.height*s);ctx.drawImage(img,0,0,cv.width,cv.height);URL.revokeObjectURL(url);
+    $("mark").hidden=true;captureOrig();setOpenRecord(null);const had=PAL.length;PAL=[];palChanged();setMsg("hint",had?"hintLoadedCleared":"hintLoaded",file.name);show("main")};
+  img.onerror=()=>{setMsg("hint","errOpen")};img.src=url}
+$("file").onchange=e=>load(e.target.files[0]);
+const st=$("stage");
+st.addEventListener("dragover",e=>{e.preventDefault();st.classList.add("drag")});
+st.addEventListener("dragleave",()=>st.classList.remove("drag"));
+st.addEventListener("drop",e=>{e.preventDefault();st.classList.remove("drag");load(e.dataTransfer.files[0])});
+window.addEventListener("paste",e=>{const f=[...(e.clipboardData?.files||[])][0];if(f)load(f)});
+
+// ---- 사진에서 도료 색상값 등록 ----
+// 스포이드 화면의 사진·보정·평균·경고를 그대로 써서, 찍은 색을 도료의 색상값으로 등록한다. 마지막 측정의 조건만 도료에 저장한다
+// REG: {list:[도료], i:지금 순서, from:"paints"|"main", immediate:지금 찍힌 색으로 바로 확인, done:등록 수}
+let LASTPICK=null,REG=null,CH=null;
+const pkey=p=>p.brand+"|"+p.no;
+const paintMatch=(p,q)=>!q||[p.no,p.name,pname(p),...(PN[pkey(p)]||[])].join(" ").toLowerCase().includes(q);
+const regCur=()=>REG&&REG.list[REG.i];
+function regBanner(){const b=$("regbar");if(!REG||REG.immediate){b.hidden=true;return}const p=regCur();b.hidden=false;
+  $("regtext").textContent=t("regBanner",REG.i+1,REG.list.length,bname(p.brand)+" · "+plabel(p));$("regskip").hidden=REG.list.length<2}
+function regStart(list,from){if(!list.length)return;REG={list,i:0,from,done:0};setMsg("regmsg");show("main");regBanner()}
+function regEnd(){if(!REG)return;const {from,done}=REG;REG=null;$("regconf").hidden=true;regBanner();
+  if(done)setMsg("regmsg","regDone",done);if(from=="paints")show("paints")}
+function regNext(){REG.i++;REG.immediate=false;$("regconf").hidden=true;if(REG.i>=REG.list.length)regEnd();else regBanner()}
+const condLi=(ok,k,...a)=>{const li=el("li",ok?"ok":"warn",t(k,...a));return li};
+function regConfirm(){const p=regCur();if(!p||!picked)return;const nh=rgb2hex(picked),L=LASTPICK;
+  $("regconftitle").textContent=bname(p.brand)+" · "+plabel(p)+(REG.list.length>1?`  (${REG.i+1}/${REG.list.length})`:"");
+  $("rc-old").style.background=p.hex;$("rc-oldhex").textContent=p.hex.toUpperCase();$("rc-new").style.background=nh;$("rc-newhex").textContent=nh;
+  const de=Math.hypot(...hex2lab(p.hex).map((v,i)=>v-rgbLab(picked)[i]));$("rc-de").textContent=`ΔE ${de.toFixed(1)} (${t(de<3?"de0":de<8?"de1":"de2")})`;
+  const ul=$("rc-cond");ul.textContent="";
+  if(!L)ul.append(condLi(false,"regWarnNotPhoto"));
+  else{ul.append(L.wb?condLi(true,"regCondWb_"+L.wb):condLi(false,"regWarnNoWb"));
+    ul.append(L.size>1?condLi(true,"regCondSize",L.size+"×"+L.size):condLi(false,"regWarnSize"));
+    if(L.spread!=null)ul.append(L.spread>SPREAD_WARN?condLi(false,"regWarnSpread",L.spread.toFixed(1)):condLi(true,"regCondSpread",L.spread.toFixed(1)));
+    if(L.clip)ul.append(condLi(false,"regWarnClip"))}
+  $("rc-note").value=p.measured?p.measured.note:"";$("rc-skip").hidden=REG.list.length<2;
+  $("regconf").hidden=false;$("rc-ok").focus()}
+function regApply(){const p=regCur(),c=picked.map(Math.round),nh=rgb2hex(c).toLowerCase(),hsv=rgb2hsv(c),L=LASTPICK;
+  if(p.hex!=nh)p.hex_prev=p.hex;p.hex=nh;p.hue_deg=hsv[1]>=3?Math.round(hsv[0]):null;
+  p.measured={date:localDate(),wb:L?L.wb:null,size:L?L.size:null,spread:L?L.spread:null,clip:L?L.clip:false,note:$("rc-note").value.trim().slice(0,120)};
+  REG.done++;save();render();regNext()}
+$("nometal").onchange=()=>{NOMETAL=$("nometal").checked;markDirty();render()};
+// 명암 세트 펼침 상태: 화면 상태라 "저장 안 됨"으로 만들지는 않고, 다음 저장 때 함께 기록한다. 펼치면 오른쪽 칸 높이를 다시 맞춘다
+$("setbox").addEventListener("toggle",()=>{SETOPEN=$("setbox").open;fitSide()});
+$("rc-ok").onclick=regApply;
+$("rc-again").onclick=()=>{REG.immediate=false;$("regconf").hidden=true;regBanner();show("main")};
+$("rc-skip").onclick=regNext;$("regskip").onclick=regNext;
+$("rc-cancel").onclick=regEnd;$("regcancel").onclick=regEnd;
+document.addEventListener("keydown",e=>{if(e.key!="Escape")return;if(!$("regconf").hidden)regEnd();else if(!$("regdlg").hidden)closeChooser()});
+// 도료 선택 창: 한 개(스포이드에서 지금 색을 등록) 또는 여러 개(연속 찍기, 누른 순서대로)
+function chooser(multi){CH={multi,sel:[]};$("regq").value="";$("regdlgtitle").textContent=t(multi?"regBatchTitle":"regPickTitle");$("regstart").hidden=!multi;
+  renderChooser();$("regdlg").hidden=false;$("regq").focus()}
+function closeChooser(){$("regdlg").hidden=true;CH=null}
+function renderChooser(){if(!CH)return;const q=$("regq").value.trim().toLowerCase(),box=$("reglist");box.textContent="";
+  const cand=PAINTS.filter(p=>!isClear(p)&&paintMatch(p,q)).sort((a,b)=>(b.own-a.own)||SORTS.brand(a,b)).slice(0,80);
+  for(const p of cand){const b=el("button","regitem"),sw=el("span","chip");b.type="button";paintSwatch(sw,p);
+    b.append(sw,el("span","",plabel(p)),el("span","mono",bname(p.brand)+(p.own?" · "+t("own"):"")));b.setAttribute("aria-pressed",CH.sel.includes(p));
+    b.onclick=()=>{if(!CH.multi){closeChooser();REG={list:[p],i:0,from:"main",immediate:true,done:0};regConfirm();return}
+      const i=CH.sel.indexOf(p);if(i>=0)CH.sel.splice(i,1);else CH.sel.push(p);renderChooser()};box.append(b)}
+  const s=$("regsel");s.textContent="";
+  if(CH.multi){if(!CH.sel.length)s.append(el("span","note",t("regSelNone")));CH.sel.forEach((p,i)=>s.append(el("span","regchip",(i+1)+". "+plabel(p))))}
+  $("regstart").disabled=!CH.sel.length;$("regstart").textContent=t("regStart",CH.sel.length)}
+$("regq").oninput=renderChooser;$("regdlgclose").onclick=closeChooser;
+$("regdlg").addEventListener("click",e=>{if(e.target===$("regdlg"))closeChooser()});
+$("regstart").onclick=()=>{const l=CH.sel.slice();closeChooser();regStart(l,"paints")};
+$("regbatch").onclick=()=>chooser(true);
+$("regpick").onclick=()=>chooser(false);
+// 도료 관리 줄에 붙이는 것: 스포이드 버튼, 실측 배지, 되돌리기
+const EYEDROP='<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M11.3 1.7a2 2 0 0 1 2.9 2.9l-1.6 1.6.8.8-1.3 1.3-.8-.8-5.5 5.5H3.6v-2.2l5.5-5.5-.8-.8 1.3-1.3.8.8z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
+function eyeBtn(p){const b=el("button","eyed");b.type="button";b.innerHTML=EYEDROP;b.title=t("regPhotoBtn");b.setAttribute("aria-label",p.no+" "+t("regPhotoBtn"));
+  b.onclick=()=>regStart([p],"paints");return b}
+function measBadge(p){const m=p.measured;if(!m)return null;const b=el("span","mbadge",t("regBadge",m.date.slice(5).replace("-","/")));
+  b.title=[m.date,m.wb?t("regCondWb_"+m.wb):t("regWarnNoWb"),m.size?t("regCondSize",m.size+"×"+m.size):"",m.spread!=null?t("regCondSpread",m.spread):"",m.note].filter(Boolean).join("\n");return b}
+let DEFHEX=null;
+const defHex=p=>{if(!DEFHEX)DEFHEX=new Map(norm(DEFAULTS).map(d=>[pkey(d),d.hex]));return p.custom?null:DEFHEX.get(pkey(p))||null};
+function revertBtns(p){const out=[],mk=(k,fn)=>{const b=el("button","",t(k));b.type="button";b.onclick=()=>{fn();p.measured=null;p.hue_deg=null;save();renderPaints();render()};out.push(b)};
+  if(p.hex_prev)mk("regRevertPrev",()=>{p.hex=p.hex_prev;p.hex_prev=null});
+  const d=defHex(p);if(d&&d!=p.hex)mk("regRevertDef",()=>{p.hex_prev=p.hex;p.hex=d});
+  return out}
+
+// ---- 도움말 ----
+// 탭마다 (i) 버튼을 두고, 누르면 그 탭의 도움말(할 수 있는 것 / 사용 방법 / 평가 기준 / 팁)을 지금 언어로 보여 준다. **굵게** 표기를 쓴다
+const HELP={
+main:{
+ko:["스포이드 도움말",[
+ ["이 탭에서 할 수 있는 것",["사진에서 원하는 곳의 색을 찍어 HEX·RGB·HSV·L*a*b* 값과 **도료 배합비**를 봅니다.","보유 도료로 그 색을 만드는 **배합 제안**을 봅니다(브랜드별).","찍은 색을 팔레트에 모으거나, 하이라이트·기본·그림자를 **명암 세트**로 묶어 비교합니다.","사진의 조명 색을 흰색·회색 기준으로 **보정**합니다."]],
+ ["사용 방법",["**사진 불러오기** 버튼, 끌어다 놓기, 붙여넣기(Ctrl+V)로 사진을 엽니다. 긴 변 2400px보다 크면 줄여서 엽니다.","사진에 흰 종이·흰 뚜껑 같은 기준이 있으면 **기준 흰색 찍기**(또는 기준 회색 찍기)를 누르고 그곳을 클릭합니다. 조명의 색 치우침이 걷힙니다. '원본 보기'로 보정 전과 비교할 수 있습니다.","**측정 범위**를 고릅니다. 표면 질감이 있으면 11×11 평균이 덜 흔들립니다.","사진을 클릭하면 오른쪽 '찍은 색'에 값이 나옵니다. 마우스 휠로 확대·축소하고, 확대한 상태에서는 끌어서 옮깁니다.","**이 색을 팔레트에 추가**로 모읍니다. 아래 '최근 추가한 색' 칸을 누르면 그 색을 다시 볼 수 있습니다.","명암 세트: 제목(▸)을 눌러 펼친 뒤, 부위를 고르고 칸(하이라이트/기본/그림자)을 누른 뒤 사진을 클릭하면 채워지고 다음 빈칸으로 넘어갑니다.","배합 제안: 위의 브랜드 버튼으로 계산할 브랜드를 고릅니다. 보유로 체크한 도료만 씁니다.","**브랜드 혼합 (락카)**: Mr.컬러·가이아노츠·Finisher's·Model Kasten·타미야 락카 보유 도료를 브랜드 상관없이 섞어 계산합니다. 결과 앞의 [Mr]·[Gaia] 같은 약칭이 브랜드입니다. 에나멜·수성 도료는 넣지 않습니다. 브랜드를 꼭 섞는 것이 아니라, 한 브랜드만 쓴 조합까지 포함해 목표와 가까운 순서로 보여 줍니다.","**펄·메탈릭 제외** 스위치(배합 제안 오른쪽 위): 켜 두면 종류가 '메탈릭·펄'인 도료를 배합 계산에서 뺍니다(기본: 켬). 종류는 도료 관리에서 바꿀 수 있습니다.","**도료 색상값으로 등록**: 지금 찍은 색을 도료의 색상값으로 등록합니다. 도료를 고르면 지금 값과 새 값, ΔE, 측정 조건(기준 흰색 보정, 측정 범위, 편차, 날아감)을 보여 주고, 확인하면 등록합니다."]],
+ ["색을 평가하는 기준",["**ΔE (색차)**: 두 색의 L*a*b* 거리(CIE76)입니다. **3 미만 거의 같음, 8 미만 가까움, 그 이상 차이 큼**으로 판정합니다.","**채도(HSV S)**: 10% 미만이면 '저채도: 회색에 가까운 색', 3% 미만이면 색상각(H)이 흔들려 색 방향을 믿기 어렵다고 알려 줍니다. 눈에는 파래 보여도 실제로는 회색에 가까운 경우가 많습니다.","**측정 편차**: 측정 범위 안 픽셀들의 평균 ΔE가 **4를 넘으면** 반사광·질감·경계가 섞였다고 경고합니다.","**하이라이트 날아감**: 측정 범위에 원본 값 250 이상(하얗게 날아간 부분)이 있으면 실제보다 밝게 측정된다고 경고합니다.","**조명 보정 거부**: 기준으로 찍은 곳이 날아갔거나(250 이상), 너무 어둡거나, 색이 너무 강하면(채널 비 4배 초과) 기준으로 쓰지 않습니다.","**배합 제안 계산**: 도료 색을 채널별 Kubelka-Munk 근사로 섞어, 보유 도료 1~3종을 10등분 비율로 섞은 모든 조합 중 ΔE가 가장 작은 3개를 보여 줍니다. 무색 클리어는 빠집니다. 근사 모델이므로 반드시 소량으로 시험 조색하세요.","**인쇄 CMYK**: ICC 프로파일 없이 단순 공식으로 환산한 참고값입니다.","**도료 배합비**: 인쇄 CMYK가 아니라, 기준 원색 C·M·Y·K를 흰색(W)에 섞는 부피 비율입니다. C·M·Y 공통분은 회색 성분으로 따로 보여 줍니다.","**명암 관계 문장**: 기본색 대비 명도 차(L*), 붉은/초록·노란/푸른 방향(a*·b* 차 2 초과), 채도 차(3 초과)로 씁니다."]],
+ ["팁",["스크린샷보다 **원본 사진 파일**을 쓰세요. 스크린샷은 화면용으로 바뀐 색입니다.","실물 견본을 찍을 때는 **흰 기준을 같이 찍고**, 같은 조명에서, 폰의 HDR·자동 보정을 끄고 찍으면 비교가 정확해집니다.","유광과 무광은 반사 때문에 같은 색도 다르게 찍힙니다. 비교할 견본끼리는 마감을 맞추세요.","찍은 색은 중성 회색 테두리 안에 보여, 주변 색 때문에 달리 보이는 착시를 줄입니다.","보유한 클리어로 희석해도 완전히 덮었을 때의 색은 같고, 얇게 올릴 때만 옅어집니다."]]]],
+en:["Eyedropper help",[
+ ["What you can do here",["Pick a color from a photo and see HEX, RGB, HSV, L*a*b* and the **paint mix**.","See **mix suggestions** made from the paints you own (per brand).","Collect colors into the palette, or group highlight/base/shadow into a **shade set**.","**Correct** the lighting cast using a white or gray reference."]],
+ ["How to use",["Open a photo with **Open photo**, drag and drop, or paste (Ctrl+V). Photos longer than 2400px are scaled down.","If the photo contains a white card or white cap, press **Pick white reference** (or gray) and click it. The color cast is removed; 'Show original' compares before and after.","Choose the **sample size**. 11×11 average is steadier on textured surfaces.","Click the photo to see values under 'Picked color'. Use the mouse wheel to zoom and drag to move when zoomed in.","Use **Add this color to palette**. Click a square in 'Recently added' to see that color again.","Shade set: click its title (▸) to expand, choose a part, press a slot (highlight/base/shadow), then click the photo. It moves to the next empty slot.","Mix suggestions: choose the brand with the buttons above. Only paints marked as owned are used.","**Mixed brands (lacquer)**: mixes owned Mr. Color, Gaianotes, Finisher's, Model Kasten and Tamiya LP paints regardless of brand. Tags such as [Mr] and [Gaia] show the brand. Enamels and water-based paints are left out. Brands are not forced to mix: single-brand mixes are included and everything is ranked by closeness to the target.","**Exclude metallic/pearl** switch (top right of Mix suggestions): when on, paints of type 'Metallic/pearl' are left out of mixing (on by default). Change a paint's type under Manage paints.","**Set as paint color**: register the picked color as a paint's color value. After you choose the paint, the current and new values, ΔE and the measuring conditions (white reference, sample size, spread, blown highlight) are shown for confirmation."]],
+ ["How colors are judged",["**ΔE (color difference)**: L*a*b* distance (CIE76). **Under 3 near match, under 8 close, otherwise far off.**","**Saturation (HSV S)**: under 10% shows 'low saturation: close to gray'; under 3% the hue (H) is unstable. Colors that look blue are often close to gray.","**Sample spread**: if the mean ΔE of pixels in the sample area **exceeds 4**, glare, texture or an edge is likely mixed in.","**Blown highlight**: if the sample area contains original values of 250 or more, the reading is lighter than the real color.","**Reference rejected**: a reference spot that is blown out (250+), too dark, or too strongly colored (channel ratio over 4×) is not used.","**Mix suggestion math**: paint colors are mixed with a per-channel Kubelka-Munk approximation. All mixes of 1–3 owned paints in tenths are tried and the 3 with the smallest ΔE are shown. Colorless clears are excluded. It is an approximation: always test with a small batch.","**Print CMYK**: a reference value converted with a simple formula, without an ICC profile.","**Paint mix**: not print CMYK, but the volume ratio of the C·M·Y·K primaries mixed into white (W). The part common to C, M and Y is shown separately as gray.","**Shade-set sentences**: lightness difference (L*), red/green and yellow/blue direction (a*, b* difference over 2) and saturation difference (over 3) versus the base."]],
+ ["Tips",["Use the **original photo file**, not a screenshot; screenshots carry display-converted colors.","When shooting real swatches, **include a white reference**, keep the same lighting, and turn off HDR/auto adjustments on the phone.","Gloss and matte read differently because of reflections; match the finish of swatches you compare.","The picked color is framed in neutral gray to reduce the illusion caused by surrounding colors.","Diluting with a clear keeps the fully covered color the same; only thin coats get paler."]]]],
+ja:["スポイトのヘルプ",[
+ ["このタブでできること",["写真の好きな場所の色を取り、HEX・RGB・HSV・L*a*b*と**塗料配合比**を確認します。","所有塗料でその色を作る**配合の提案**を確認します（ブランド別）。","取った色をパレットに集めたり、ハイライト・基本色・影を**陰影セット**にまとめて比べます。","写真の照明の色を白・グレー基準で**補正**します。"]],
+ ["使い方",["**写真を開く**、ドラッグ＆ドロップ、貼り付け(Ctrl+V)で写真を開きます。長辺2400pxを超える場合は縮小します。","写真に白い紙や白いキャップなどの基準があれば**基準の白を取る**（または基準のグレー）を押してそこをクリックします。色かぶりが取れます。「元画像を表示」で補正前と比べられます。","**測定範囲**を選びます。質感がある面では11×11平均がぶれにくくなります。","写真をクリックすると右の「取得した色」に値が出ます。マウスホイールで拡大・縮小し、拡大中はドラッグで移動します。","**この色をパレットに追加**で集めます。「最近追加した色」の枠を押すとその色をもう一度見られます。","陰影セット: 見出し(▸)を押して開き、部位を選び、枠（ハイライト/基本色/影）を押してから写真をクリックすると入り、次の空き枠へ進みます。","配合の提案: 上のブランドボタンで計算するブランドを選びます。所有にチェックした塗料だけを使います。","**ブランド混合（ラッカー）**: Mr.カラー・ガイアノーツ・フィニッシャーズ・モデルカステン・タミヤ ラッカーの所有塗料をブランドに関係なく混ぜて計算します。結果の[Mr]・[Gaia]などがブランドです。エナメル・水性塗料は入れません。ブランドを必ず混ぜるわけではなく、1ブランドだけの組み合わせも含めて目標に近い順に表示します。","**パール・メタリック除外**スイッチ（配合の提案の右上）: オンにすると種類が「メタリック・パール」の塗料を配合計算から外します（初期: オン）。種類は塗料管理で変更できます。","**塗料の色値に登録**: 今取った色を塗料の色値として登録します。塗料を選ぶと現在の値と新しい値、ΔE、測定条件（基準の白での補正、測定範囲、ばらつき、白飛び）を表示し、確認すると登録します。"]],
+ ["色を評価する基準",["**ΔE（色差）**: 2色のL*a*b*距離(CIE76)です。**3未満はほぼ同じ、8未満は近い、それ以上は差が大きい**と判定します。","**彩度(HSV S)**: 10%未満で「低彩度: グレーに近い色」、3%未満で色相角(H)が不安定だと知らせます。青く見えても実際はグレーに近いことがよくあります。","**測定のばらつき**: 測定範囲内のピクセルの平均ΔEが**4を超える**と、反射光・質感・境界が混ざっていると警告します。","**白飛び**: 測定範囲に元の値250以上（白飛び）があると、実際より明るく測定されると警告します。","**基準の拒否**: 基準に選んだ場所が白飛び(250以上)、暗すぎる、色が強すぎる（チャンネル比4倍超）場合は基準に使いません。","**配合提案の計算**: 塗料の色をチャンネル別のKubelka-Munk近似で混ぜ、所有塗料1〜3種を10等分の比率で混ぜた全組み合わせのうちΔEが最も小さい3つを表示します。無色クリアーは除外します。近似モデルなので必ず少量で試し調色してください。","**印刷CMYK**: ICCプロファイルを使わず単純な式で換算した参考値です。","**塗料配合比**: 印刷CMYKではなく、基準原色C・M・Y・Kを白(W)に混ぜる体積比です。C・M・Yの共通分はグレー成分として分けて表示します。","**陰影の関係文**: 基本色に対する明度差(L*)、赤/緑・黄/青の方向(a*・b*の差が2超)、彩度差(3超)で書きます。"]],
+ ["ヒント",["スクリーンショットより**元の写真ファイル**を使ってください。スクリーンショットは画面用に変換された色です。","実物の見本を撮るときは**白の基準を一緒に写し**、同じ照明で、スマホのHDR・自動補正を切って撮ると比較が正確になります。","光沢とつや消しは反射のため同じ色でも違って写ります。比べる見本同士は仕上げを揃えてください。","取得した色は中性グレーの枠の中に表示され、周りの色による錯視を減らします。","クリアーで薄めても完全に覆ったときの色は同じで、薄く重ねたときだけ淡くなります。"]]]]},
+palette:{
+ko:["팔레트 도움말",[
+ ["이 탭에서 할 수 있는 것",["스포이드에서 모은 색을 정리하고, 각 색의 **C·M·Y·K·W 배합비**를 봅니다.","사진 위 + 색 칸 아래 구성의 팔레트를 **PNG·PDF**로 저장합니다(인쇄해 실제 도료와 대 보기용).","작품·행사·원형사 등 출처 정보와 함께 **라이브러리에 저장**합니다."]],
+ ["사용 방법",["**비율 기준 원색**을 고릅니다: 기본(가상 원색), Mr.컬러 색의 근원 + C1·C2, 가이아 순색 033~035 + 001·002. 실제로 가진 원색을 고르면 그 도료로 섞는 비율이 됩니다.","목록의 ◀ ▶로 순서를 바꾸고, **배합**을 누르면 그 색을 스포이드 화면에서 다시 봅니다.","**라이브러리에 저장**: 정보를 적고 저장합니다. 라이브러리에서 연 기록이면 '덮어쓰기'를 체크해 같은 기록을 고칠 수 있습니다."]],
+ ["색을 평가하는 기준",["배합비는 기준 원색 5개를 섞어 그 색과 **ΔE가 가장 작아지는** 부피 비율입니다. 5% 단위로 전체를 찾은 뒤 1%, 0.5% 단위로 다듬습니다.","**인쇄 CMYK가 아닙니다.** 착색력이 센 원색을 흰색에 섞는 비율이라 값이 작게 나옵니다.","C·M·Y의 공통분은 사실상 **회색 성분**이라 '회색 0.5 + 색 C1.5 M0.5'처럼 나눠 보여 줍니다.","원색의 색상값이 실제와 다르면 비율도 틀어집니다. 도료 관리에서 원색을 칠해 찍은 값으로 바꾸면 정확해집니다."]],
+ ["팁",["새 사진을 불러오면 팔레트가 비워집니다. 남기려면 먼저 라이브러리에 저장하세요.","라이브러리에 저장한 뒤에도 머리글의 **저장**을 눌러야 파일에 기록됩니다."]]]],
+en:["Palette help",[
+ ["What you can do here",["Organize the colors collected on the Eyedropper screen and see each color's **C·M·Y·K·W paint mix**.","Save a palette (photo on top, swatches below) as **PNG or PDF** to print and hold against real paint.","**Save to library** together with source info such as work, event and sculptor."]],
+ ["How to use",["Choose the **primaries for ratios**: Generic (virtual), Mr. Color Iro-no-Moto + C1·C2, or Gaia Pure 033–035 + 001·002. Choosing primaries you own gives ratios for those paints.","Reorder with ◀ ▶; **Mix** shows that color again on the Eyedropper screen.","**Save to library**: fill in the info and save. For a record opened from the library, tick 'Overwrite' to update it."]],
+ ["How colors are judged",["The ratio is the volume mix of the five primaries that gives the **smallest ΔE** to the color: a full search in 5% steps, refined in 1% and 0.5% steps.","**It is not print CMYK.** Strong primaries mixed into white give small numbers.","The part common to C, M and Y is effectively **gray**, shown separately as e.g. 'gray 0.5 + color C1.5 M0.5'.","If a primary's color value is off, the ratios are off. Replace it under Manage paints with a value picked from a painted swatch."]],
+ ["Tips",["Opening a new photo clears the palette; save to the library first if you want to keep it.","After saving to the library, press **Save** in the header to write it to the file."]]]],
+ja:["パレットのヘルプ",[
+ ["このタブでできること",["スポイトで集めた色を整理し、各色の**C·M·Y·K·W配合比**を確認します。","写真が上・色枠が下のパレットを**PNG・PDF**で保存します（印刷して実際の塗料と比べる用）。","作品・イベント・原型師などの出典情報と一緒に**ライブラリに保存**します。"]],
+ ["使い方",["**比率の基準原色**を選びます: 汎用（仮想原色）、Mr.カラー色ノ源 + C1・C2、ガイア純色033〜035 + 001・002。実際に持っている原色を選ぶと、その塗料で混ぜる比率になります。","◀ ▶で順番を変え、**配合**を押すとその色をスポイト画面で再表示します。","**ライブラリに保存**: 情報を入れて保存します。ライブラリから開いた記録なら「上書き」にチェックして同じ記録を更新できます。"]],
+ ["色を評価する基準",["配合比は基準原色5色を混ぜて、その色との**ΔEが最も小さくなる**体積比です。5%刻みで全体を探した後、1%、0.5%刻みで詰めます。","**印刷CMYKではありません。**着色力の強い原色を白に混ぜる比率なので小さい値になります。","C・M・Yの共通分は実質的に**グレー成分**なので「グレー 0.5 + 色 C1.5 M0.5」のように分けて表示します。","原色の色値が実物と違うと比率もずれます。塗料管理で原色を塗って取った値に置き換えると正確になります。"]],
+ ["ヒント",["新しい写真を開くとパレットは空になります。残したい場合は先にライブラリに保存してください。","ライブラリに保存した後も、ヘッダーの**保存**を押すとファイルに書き込まれます。"]]]]},
+library:{
+ko:["라이브러리 도움말",[
+ ["이 탭에서 할 수 있는 것",["저장한 기록(사진 한 장에서 뽑은 색 + 출처 정보)을 모아 봅니다.","이름·행사·원형사·메모로 **검색**하고, 부위·행사로 **걸러** 봅니다.","**기록별** 또는 **부위별 모아 보기**로 같은 부위의 명암 세트를 나란히 비교합니다.","걸러 본 기록을 **A4 PDF**로 인쇄용 저장합니다."]],
+ ["사용 방법",["**열기**: 사진과 색을 팔레트로 불러와 이어서 작업합니다.","**편집**: 출처 정보만 고칩니다. **삭제**는 한 번 더 눌러야 지워집니다.","A4 PDF: '사진 포함'을 고르고 저장합니다. 각 색 칸에는 C·M·Y·K·W 배합비와, 스포이드 화면에서 고른 브랜드의 보유 도료로 만든 가장 가까운 배합이 들어갑니다."]],
+ ["팁",["사진은 불러온 해상도(긴 변 최대 2400px, JPEG 90%)로 저장되어, 열면 원래 화질로 다시 찍을 수 있습니다.","기록의 색상값은 저장할 때 찍은 값이라 사진 압축의 영향을 받지 않습니다."]]]],
+en:["Library help",[
+ ["What you can do here",["Browse saved records (colors picked from one photo plus source info).","**Search** by name, event, sculptor or memo and **filter** by part and event.","Compare shade sets of the same part side by side with **By record** or **Compare by part**.","Save the filtered records as a printable **A4 PDF**."]],
+ ["How to use",["**Open**: load the photo and colors into the palette to continue.","**Edit**: change source info only. **Delete** needs a second press.","A4 PDF: choose 'Include photos' and save. Each swatch carries its C·M·Y·K·W ratio and the closest mix from owned paints of the brand selected on the Eyedropper screen."]],
+ ["Tips",["Photos are stored at the opened resolution (longest side up to 2400px, JPEG 90%), so you can pick again at full quality.","A record's color values were picked when saved, so photo compression doesn't affect them."]]]],
+ja:["ライブラリのヘルプ",[
+ ["このタブでできること",["保存した記録（写真1枚から取った色 + 出典情報）をまとめて見ます。","名前・イベント・原型師・メモで**検索**し、部位・イベントで**絞り込み**ます。","**記録別**または**部位別に比較**で、同じ部位の陰影セットを並べて比べます。","絞り込んだ記録を**A4 PDF**で印刷用に保存します。"]],
+ ["使い方",["**開く**: 写真と色をパレットに読み込んで作業を続けます。","**編集**: 出典情報だけを直します。**削除**はもう一度押すと消えます。","A4 PDF: 「写真を含める」を選んで保存します。各色枠にはC·M·Y·K·W配合比と、スポイト画面で選んだブランドの所有塗料で作る最も近い配合が入ります。"]],
+ ["ヒント",["写真は開いた解像度（長辺最大2400px、JPEG 90%）で保存されるので、開けば元の画質で取り直せます。","記録の色値は保存時に取った値なので、写真の圧縮の影響を受けません。"]]]]},
+owned:{
+ko:["보유 도료 도움말",[
+ ["이 탭에서 할 수 있는 것",["보유로 체크한 도료를 카드로 한눈에 봅니다(색 견본, 번호, 이름, 브랜드, 종류·광택·투명도, 색상값, 색상각, 착색력).","정렬하고, 종류·광택으로 걸러 봅니다."]],
+ ["사용 방법",["보유 여부는 **도료 관리** 탭에서 바꿉니다.","배합 제안은 여기 있는 도료만으로 계산합니다."]],
+ ["정렬 기준",["**브랜드별**: 브랜드 순서 → 번호 순.","**제품 번호별**: 번호를 숫자 크기대로 비교합니다(C2 < C10).","**색상별**: 무채색(L*a*b* 채도 8 미만)을 먼저 밝은 순으로, 그다음 색상각 순, 같은 색상각이면 밝은 순. 무색 클리어는 맨 뒤입니다."]],
+ ["견본 보는 법",["무색 클리어는 체크무늬, 색 있는 클리어는 체크무늬 위에 반투명 색으로 보여 줍니다.","색상각 옆 '(색상값 기준)'은 도료 색상값에서 계산한 값이고, 측정해 넣은 값은 '(측정값)'으로 표시됩니다."]]]],
+en:["My paints help",[
+ ["What you can do here",["See the paints marked as owned as cards (swatch, number, name, brand, type/finish/opacity, color value, hue, tinting strength).","Sort them and filter by type and finish."]],
+ ["How to use",["Change ownership on the **Manage paints** tab.","Mix suggestions use only the paints shown here."]],
+ ["Sort rules",["**By brand**: brand order, then number.","**By product number**: numbers compared numerically (C2 < C10).","**By color**: neutrals (L*a*b* chroma under 8) first from light to dark, then by hue, then lightness. Colorless clears last."]],
+ ["Reading the swatches",["Colorless clears show a checkerboard; colored clears show a translucent color over it.","'(from color value)' next to the hue is computed from the paint's color value; measured values show '(measured)'."]]]],
+ja:["所有塗料のヘルプ",[
+ ["このタブでできること",["所有にチェックした塗料をカードで一覧します（色見本、番号、名前、ブランド、種類・ツヤ・透明度、色値、色相角、着色力）。","並べ替えたり、種類・ツヤで絞り込みます。"]],
+ ["使い方",["所有の有無は**塗料管理**タブで変更します。","配合の提案はここにある塗料だけで計算します。"]],
+ ["並べ替えの基準",["**ブランド別**: ブランドの順 → 番号順。","**製品番号別**: 番号を数値として比べます(C2 < C10)。","**色別**: 無彩色（L*a*b*彩度8未満）を明るい順に先に、次に色相角順、同じ色相角なら明るい順。無色クリアーは最後です。"]],
+ ["見本の見方",["無色クリアーは市松模様、色付きクリアーは市松模様の上に半透明の色で表示します。","色相角の「(色値基準)」は塗料の色値から計算した値で、測定して入れた値は「(測定値)」と表示されます。"]]]]},
+paints:{
+ko:["도료 관리 도움말",[
+ ["이 탭에서 할 수 있는 것",["도료를 **추가**하고, **보유** 여부를 체크합니다.","도료의 **색상값**, 종류(일반/클리어, 클리어면 무색 여부), 광택을 고칩니다.","'측정값 편집'을 켜서 **투명도·착색력**을 입력합니다."]],
+ ["사용 방법",["위쪽 **브랜드 탭**으로 브랜드를 고릅니다. 검색칸에 글자를 넣으면 전체 브랜드에서 한/영/일 이름과 번호로 찾습니다.","**보유만**을 켜면 보유 도료만 보입니다.","색 칸을 눌러 색상값을 바꿉니다. 실제로 칠해 찍은 색(기준 흰색으로 보정한 값)으로 바꾸면 배합 제안이 정확해집니다.","**스포이드 버튼**(색 칸 옆): 스포이드 화면으로 넘어가 사진 속 그 도료의 견본을 클릭해 색상값을 등록합니다. 흰 기준을 함께 찍고 '기준 흰색 찍기'로 보정한 뒤 찍으면 정확합니다.","**사진에서 연속 찍기**: 찍을 순서대로 도료를 고르면, 한 사진 속 스푼들을 차례로 클릭해 등록합니다. 건너뛰기·등록 취소도 됩니다.","등록한 도료에는 **실측 날짜** 배지가 붙습니다(마우스를 올리면 측정 조건). 측정은 마지막 1회만 저장되고, '측정값 편집'을 켜면 이전 값이나 기본값으로 되돌릴 수 있습니다.","도료 추가: 같은 브랜드·번호가 있으면 덮어씁니다. 직접 추가한 도료만 삭제할 수 있습니다.","**도료 목록 초기화**는 5초 안에 한 번 더 눌러야 실행됩니다."]],
+ ["색상값의 출처와 신뢰도",["**Mr.컬러**: GSI Creos 공식 컬러리스트의 인쇄 견본을 화면용 색으로 바꾼 값(근사값).","**가이아노츠**: 공식 컬러 차트의 대표색. 순색 033~037은 공식 페이지의 칠한 견본 사진에서 잰 값입니다. 투명·형광·메탈릭은 실제와 차이가 클 수 있습니다.","**Finisher's**: 공식 쇼핑몰의 프라판 도색 견본 사진에서 잰 값.","그 밖의 도료(타미야, 스타킹 컬러, GX 일부, 콜라보 시리즈, 수성 등)는 **임시 근사값**입니다."]],
+ ["평가에 쓰이는 값",["**무색 클리어**는 섞어도 완전히 덮었을 때의 색을 바꾸지 않으므로 배합 계산에서 빠집니다.","**투명도·착색력·색상각**은 측정해서 넣는 값이며 비어 있으면 '미측정'입니다. 지금은 기록용이고, 이후 글레이즈(투명 덧칠) 계산에 쓸 예정입니다.","색상각을 측정하지 않았으면 색상값에서 계산한 값을 '(색상값 기준)'으로 보여 줍니다."]]]],
+en:["Manage paints help",[
+ ["What you can do here",["**Add** paints and tick which ones you **own**.","Edit a paint's **color value**, type (standard/clear, and colorless for clears) and finish.","Turn on 'Edit measurements' to enter **opacity and tinting strength**."]],
+ ["How to use",["Choose a brand with the **brand tabs** at the top. Typing in the search box searches all brands by number and Korean/English/Japanese name.","**Owned only** shows only owned paints.","Click a swatch to change the color value. Replacing it with a color picked from a real painted swatch (white-reference corrected) makes suggestions more accurate.","**Eyedropper button** (next to the swatch): goes to the Eyedropper screen; click that paint's swatch in the photo to register its color. Include a white reference and use 'Pick white reference' first for accuracy.","**Pick several from a photo**: choose paints in picking order, then click the spoons in one photo one after another. Skip and cancel are available.","Registered paints get a **Measured date** badge (hover for the conditions). Only the latest measurement is kept; with 'Edit measurements' on you can go back to the previous or default value.","Add a paint: an existing brand + number is overwritten. Only paints you added can be deleted.","**Reset paint list** runs only if pressed again within 5 seconds."]],
+ ["Where color values come from",["**Mr. Color**: printed swatches of GSI Creos's official color list converted to screen colors (approximate).","**Gaianotes**: representative colors from the official chart. Pure colors 033–037 were measured from the painted sample photo on the official page. Clears, fluorescents and metallics may differ a lot.","**Finisher's**: measured from the painted plastic-plate photos in the official shop.","Others (Tamiya, stocking colors, some GX, collaboration series, water-based, etc.) are **provisional approximations**."]],
+ ["Values used in judging",["**Colorless clears** don't change the fully covered color, so they are left out of mix calculations.","**Opacity, tinting strength and hue** are measured values; empty means 'not measured'. They are records for now and will be used for glaze (transparent coat) calculations later.","If the hue isn't measured, the value computed from the color value is shown as '(from color value)'."]]]],
+ja:["塗料管理のヘルプ",[
+ ["このタブでできること",["塗料を**追加**し、**所有**の有無をチェックします。","塗料の**色値**、種類（通常/クリアー、クリアーなら無色かどうか）、ツヤを直します。","「測定値を編集」をオンにして**透明度・着色力**を入力します。"]],
+ ["使い方",["上の**ブランドタブ**でブランドを選びます。検索欄に入力すると全ブランドから日韓英の名前と番号で探します。","**所有のみ**をオンにすると所有塗料だけを表示します。","色枠を押して色値を変えます。実際に塗って取った色（基準の白で補正した値）に置き換えると配合の提案が正確になります。","**スポイトボタン**（色枠の横）: スポイト画面に移り、写真の中のその塗料の見本をクリックして色値を登録します。白の基準を一緒に写し、「基準の白を取る」で補正してから取ると正確です。","**写真から連続で取る**: 取る順に塗料を選ぶと、1枚の写真のスプーンを順にクリックして登録します。スキップ・中止もできます。","登録した塗料には**実測 日付**のバッジが付きます（マウスを乗せると測定条件）。測定は最後の1回だけ保存され、「測定値を編集」をオンにすると前の値や初期値に戻せます。","塗料の追加: 同じブランド・番号があれば上書きします。自分で追加した塗料だけ削除できます。","**塗料リストを初期化**は5秒以内にもう一度押すと実行されます。"]],
+ ["色値の出典と信頼度",["**Mr.カラー**: GSIクレオス公式カラーリストの印刷見本を画面用の色に変換した値（近似値）。","**ガイアノーツ**: 公式カラーチャートの代表色。純色033〜037は公式ページの塗装見本写真から測った値です。透明・蛍光・メタリックは実物と差が大きい場合があります。","**フィニッシャーズ**: 公式ショップのプラ板塗装見本写真から測った値。","その他の塗料（タミヤ、ストッキングカラー、GXの一部、コラボシリーズ、水性など）は**暫定の近似値**です。"]],
+ ["評価に使う値",["**無色クリアー**は混ぜても完全に覆ったときの色を変えないため、配合計算から外れます。","**透明度・着色力・色相角**は測定して入れる値で、空欄は「未測定」です。今は記録用で、今後グレーズ（透明な重ね塗り）の計算に使う予定です。","色相角を測定していない場合は色値から計算した値を「(色値基準)」で表示します。"]]]]},
+data:{
+ko:["데이터 도움말",[
+ ["이 탭에서 할 수 있는 것",["도료 목록, 라이브러리, 화면 설정을 **파일로 저장**하고, 백업을 만들고 불러옵니다."]],
+ ["버튼",["**저장**: 프로그램과 같은 폴더의 colormix_data.json에 저장합니다. 언어·정렬·측정 범위 같은 화면 설정도 함께 저장되어 다음에 그대로 시작합니다. 머리글의 저장, Ctrl+S와 같습니다.","**다른 이름으로 저장**: 도료 목록과 라이브러리를 원하는 위치에 사본으로 저장합니다(백업·이동용). 화면 설정은 담지 않습니다.","**백업 데이터 불러오기**: 도료 목록은 파일 내용으로 바뀌고, 라이브러리는 지금 없는 기록만 더해집니다. 화면 설정은 바뀌지 않습니다. 불러온 뒤 저장해야 반영됩니다."]],
+ ["알아 둘 것",["머리글에 '저장 안 됨'이 보이면 파일에 아직 기록되지 않은 변경이 있습니다.","저장하지 않은 변경이 있을 때 창을 닫으면 '저장하고 나가기 / 저장하지 않고 나가기 / 취소'를 묻습니다.","프로그램을 옮길 때는 exe와 colormix_data.json을 함께 옮기세요."]]]],
+en:["Data help",[
+ ["What you can do here",["**Save** the paint list, library and display settings to a file, and make or load backups."]],
+ ["Buttons",["**Save**: saves to colormix_data.json in the program's folder. Display settings such as language, sort and sample size are saved too, so the program opens the way you left it. Same as Save in the header and Ctrl+S.","**Save as**: saves a copy of the paint list and library wherever you choose (for backups or moving). Display settings are not included.","**Load backup data**: the paint list is replaced with the file's contents and only library records you don't have are added. Display settings stay. Save afterwards to keep it."]],
+ ["Good to know",["'unsaved' in the header means there are changes not yet written to the file.","Closing the window with unsaved changes asks 'Save and exit / Exit without saving / Cancel'.","When moving the program, move the exe together with colormix_data.json."]]]],
+ja:["データのヘルプ",[
+ ["このタブでできること",["塗料リスト、ライブラリ、表示設定を**ファイルに保存**し、バックアップを作成・読み込みます。"]],
+ ["ボタン",["**保存**: プログラムと同じフォルダのcolormix_data.jsonに保存します。言語・並べ替え・測定範囲などの表示設定も一緒に保存され、次回そのまま始まります。ヘッダーの保存、Ctrl+Sと同じです。","**名前を付けて保存**: 塗料リストとライブラリを好きな場所にコピーとして保存します（バックアップ・移行用）。表示設定は含みません。","**バックアップデータを読み込む**: 塗料リストはファイルの内容に置き換わり、ライブラリはまだない記録だけ追加されます。表示設定は変わりません。読み込んだ後に保存すると反映されます。"]],
+ ["知っておくこと",["ヘッダーに「未保存」と出ていれば、まだファイルに書き込まれていない変更があります。","未保存の変更があるままウィンドウを閉じると「保存して終了 / 保存せずに終了 / キャンセル」を確認します。","プログラムを移すときはexeとcolormix_data.jsonを一緒に移してください。"]]]]}
+};
+let HELP_OPEN=null;
+// "**굵게**" 표기를 <b>로 바꿔 넣는다 (내용은 위 고정 문구뿐이라 textContent로 조각을 넣는다)
+function richText(parent,s){s.split("**").forEach((part,i)=>{if(!part)return;parent.append(i%2?el("b","",part):document.createTextNode(part))})}
+function showHelp(tab){HELP_OPEN=tab;const h=HELP[tab][LANGS[LI]]||HELP[tab].ko,body=$("helpbody");$("helptitle").textContent=h[0];body.textContent="";
+  for(const [head,items] of h[1]){body.append(el("h3","",head));const ul=el("ul");for(const it of items){const li=el("li");richText(li,it);ul.append(li)}body.append(ul)}
+  $("helpdlg").hidden=false;$("helpdlg").querySelector(".helpbox").scrollTop=0;$("helpclose").focus()}
+function closeHelp(){if(HELP_OPEN==null)return;const tab=HELP_OPEN;HELP_OPEN=null;$("helpdlg").hidden=true;const b=document.querySelector(`button.help[data-tab="${tab}"]`);if(b)b.focus()}
+$("helpclose").onclick=closeHelp;
+$("helpdlg").addEventListener("click",e=>{if(e.target===$("helpdlg"))closeHelp()});
+document.addEventListener("keydown",e=>{if(e.key=="Escape"&&HELP_OPEN!=null)closeHelp()});
+// 각 탭 첫 줄에 (i) 버튼. 줄(.bar/.lbar) 안에서는 오른쪽 끝, 제목(h2) 앞에서는 오른쪽에 띄운다
+[["main","#tab-main .side section h2"],["palette","#tab-palette .side section h2"],["library","#tab-library .lbar"],["owned","#tab-owned .bar"],["paints","#tab-paints > h2"],["data","#tab-data > h2"]].forEach(([tab,sel])=>{
+  const target=document.querySelector(sel),b=el("button","help","i");b.type="button";b.dataset.tab=tab;b.dataset.i18nAria="help";b.dataset.i18nTitle="help";b.onclick=()=>showHelp(tab);
+  if(target.tagName=="H2"){b.classList.add("fl");target.before(b)}else target.append(b)});
+
+// ---- 언어 전환 ----
+function applyLang(){
+  document.documentElement.lang=LANGS[LI];
+  document.querySelectorAll("[data-i18n]").forEach(e=>{e.textContent=e.dataset.arg?t(e.dataset.i18n,e.dataset.arg):t(e.dataset.i18n)});
+  document.querySelectorAll("[data-i18n-ph]").forEach(e=>{e.placeholder=t(e.dataset.i18nPh)});
+  document.querySelectorAll("[data-i18n-aria]").forEach(e=>{e.setAttribute("aria-label",t(e.dataset.i18nAria))});
+  document.querySelectorAll("[data-i18n-title]").forEach(e=>{e.title=t(e.dataset.i18nTitle)});
+  const lb=$("langbtn");lb.textContent=LANGNAME[LANGS[LI]];lb.lang=LANGS[LI];lb.setAttribute("aria-label",t("lang")+": "+LANGNAME[LANGS[LI]]);
+  for(const id in MSG){const m=MSG[id];$(id).textContent=m?t(...m):""}
+  brandOptions();basisOptions();partOptions();renderSet();seg();render();renderOwned();renderPaints();palChanged();renderLibrary();owText();if(typeof fileStatus=="function")fileStatus();if(HELP_OPEN!=null)showHelp(HELP_OPEN);regBanner();if(CH)renderChooser();if(REG&&!$("regconf").hidden)regConfirm();
+}
+// 언어 버튼 하나: 누를 때마다 English → 한국어 → 日本語 순서로 바뀐다. 버튼에는 지금 언어를 표시한다
+const LANGNAME={ko:"한국어",en:"English",ja:"日本語"},LANGCYCLE=["en","ko","ja"];
+$("langbtn").onclick=()=>{LI=LANGS.indexOf(LANGCYCLE[(LANGCYCLE.indexOf(LANGS[LI])+1)%LANGCYCLE.length]);markDirty();applyLang()};
+
+// ---- 예시 이미지 ---- 따뜻한 조명 아래에서 찍은 것처럼 색을 치우치게 하고, 오른쪽 아래에 흰 설명 카드를 둔다
+(function(){const cols=["#5b6236","#8aa6b8","#8c4a2f","#c9b48a","#3f4447","#a3262c"],w=cv.width/3,h=cv.height/2;
+  cols.forEach((c,i)=>{const x=(i%3)*w,y=Math.floor(i/3)*h;ctx.fillStyle=c;ctx.fillRect(x,y,w,h);
+    const g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,"rgba(255,255,255,.18)");g.addColorStop(1,"rgba(0,0,0,.22)");ctx.fillStyle=g;ctx.fillRect(x,y,w,h)});
+  ctx.fillStyle="#f4f4f2";ctx.fillRect(cv.width-170,cv.height-110,140,80);ctx.fillStyle="#555";ctx.fillRect(cv.width-150,cv.height-90,90,6);ctx.fillRect(cv.width-150,cv.height-74,60,6);
+  const im=ctx.getImageData(0,0,cv.width,cv.height),d=im.data,cast=[1.0,.86,.66];
+  for(let i=0;i<d.length;i+=4)for(let c=0;c<3;c++)d[i+c]=Math.round(toS(toLin(d[i+c])*cast[c]*.92));
+  ctx.putImageData(im,0,0);captureOrig();
+  pick(Math.round(w/2),Math.round(h/2));applyLang();show(location.hash.slice(1));})();
+</script>
+
+</body>
+</html>
