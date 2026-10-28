@@ -8,7 +8,6 @@ if errorlevel 1 goto :fail
 python -m PyInstaller --noconfirm --clean --onefile --windowed ^
   --name ColorMix ^
   --add-data "web;web" ^
-  --add-data "data;data" ^
   app.py
 if errorlevel 1 goto :fail
 

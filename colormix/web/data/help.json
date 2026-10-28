@@ -1,0 +1,683 @@
+{
+ "main": {
+  "ko": [
+   "스포이드 도움말",
+   [
+    [
+     "이 탭에서 할 수 있는 것",
+     [
+      "사진에서 원하는 곳의 색을 찍어 HEX·RGB·HSV·L*a*b* 값과 **도료 배합비**를 봅니다.",
+      "보유 도료로 그 색을 만드는 **배합 제안**을 봅니다(브랜드별).",
+      "찍은 색을 팔레트에 모으거나, 하이라이트·기본·그림자를 **명암 세트**로 묶어 비교합니다.",
+      "사진의 조명 색을 흰색·회색 기준으로 **보정**합니다."
+     ]
+    ],
+    [
+     "사용 방법",
+     [
+      "**사진 불러오기** 버튼, 끌어다 놓기, 붙여넣기(Ctrl+V)로 사진을 엽니다. 긴 변 2400px보다 크면 줄여서 엽니다.",
+      "사진에 흰 종이·흰 뚜껑 같은 기준이 있으면 **기준 흰색 찍기**(또는 기준 회색 찍기)를 누르고 그곳을 클릭합니다. 조명의 색 치우침이 걷힙니다. '원본 보기'로 보정 전과 비교할 수 있습니다.",
+      "**측정 범위**를 고릅니다. 표면 질감이 있으면 11×11 평균이 덜 흔들립니다.",
+      "사진을 클릭하면 오른쪽 '찍은 색'에 값이 나옵니다. 마우스 휠로 확대·축소하고, 확대한 상태에서는 끌어서 옮깁니다.",
+      "**이 색을 팔레트에 추가**로 모읍니다. 아래 '최근 추가한 색' 칸을 누르면 그 색을 다시 볼 수 있습니다.",
+      "명암 세트: 제목(▸)을 눌러 펼친 뒤, 부위를 고르고 칸(하이라이트/기본/그림자)을 누른 뒤 사진을 클릭하면 채워지고 다음 빈칸으로 넘어갑니다.",
+      "배합 제안: 위의 브랜드 버튼으로 계산할 브랜드를 고릅니다. 보유로 체크한 도료만 씁니다.",
+      "**브랜드 혼합 (락카)**: Mr.컬러·가이아노츠·Finisher's·Model Kasten·타미야 락카 보유 도료를 브랜드 상관없이 섞어 계산합니다. 결과 앞의 [Mr]·[Gaia] 같은 약칭이 브랜드입니다. 에나멜·수성 도료는 넣지 않습니다. 브랜드를 꼭 섞는 것이 아니라, 한 브랜드만 쓴 조합까지 포함해 목표와 가까운 순서로 보여 줍니다.",
+      "**펄·메탈릭 제외** 스위치(배합 제안 오른쪽 위): 켜 두면 종류가 '메탈릭·펄'인 도료를 배합 계산에서 뺍니다(기본: 켬). 종류는 도료 관리에서 바꿀 수 있습니다.",
+      "**도료 색상값으로 등록**: 지금 찍은 색을 도료의 색상값으로 등록합니다. 도료를 고르면 지금 값과 새 값, ΔE, 측정 조건(기준 흰색 보정, 측정 범위, 편차, 날아감)을 보여 주고, 확인하면 등록합니다."
+     ]
+    ],
+    [
+     "색을 평가하는 기준",
+     [
+      "**ΔE (색차)**: 두 색의 L*a*b* 거리(CIE76)입니다. **3 미만 거의 같음, 8 미만 가까움, 그 이상 차이 큼**으로 판정합니다.",
+      "**채도(HSV S)**: 10% 미만이면 '저채도: 회색에 가까운 색', 3% 미만이면 색상각(H)이 흔들려 색 방향을 믿기 어렵다고 알려 줍니다. 눈에는 파래 보여도 실제로는 회색에 가까운 경우가 많습니다.",
+      "**측정 편차**: 측정 범위 안 픽셀들의 평균 ΔE가 **4를 넘으면** 반사광·질감·경계가 섞였다고 경고합니다.",
+      "**하이라이트 날아감**: 측정 범위에 원본 값 250 이상(하얗게 날아간 부분)이 있으면 실제보다 밝게 측정된다고 경고합니다.",
+      "**조명 보정 거부**: 기준으로 찍은 곳이 날아갔거나(250 이상), 너무 어둡거나, 색이 너무 강하면(채널 비 4배 초과) 기준으로 쓰지 않습니다.",
+      "**배합 제안 계산**: 도료 색을 채널별 Kubelka-Munk 근사로 섞어, 보유 도료 1~3종을 10등분 비율로 섞은 모든 조합 중 ΔE가 가장 작은 3개를 보여 줍니다. 무색 클리어는 빠집니다. 근사 모델이므로 반드시 소량으로 시험 조색하세요.",
+      "**인쇄 CMYK**: ICC 프로파일 없이 단순 공식으로 환산한 참고값입니다.",
+      "**도료 배합비**: 인쇄 CMYK가 아니라, 기준 원색 C·M·Y·K를 흰색(W)에 섞는 부피 비율입니다. C·M·Y 공통분은 회색 성분으로 따로 보여 줍니다.",
+      "**명암 관계 문장**: 기본색 대비 명도 차(L*), 붉은/초록·노란/푸른 방향(a*·b* 차 2 초과), 채도 차(3 초과)로 씁니다."
+     ]
+    ],
+    [
+     "팁",
+     [
+      "스크린샷보다 **원본 사진 파일**을 쓰세요. 스크린샷은 화면용으로 바뀐 색입니다.",
+      "실물 견본을 찍을 때는 **흰 기준을 같이 찍고**, 같은 조명에서, 폰의 HDR·자동 보정을 끄고 찍으면 비교가 정확해집니다.",
+      "유광과 무광은 반사 때문에 같은 색도 다르게 찍힙니다. 비교할 견본끼리는 마감을 맞추세요.",
+      "찍은 색은 중성 회색 테두리 안에 보여, 주변 색 때문에 달리 보이는 착시를 줄입니다.",
+      "보유한 클리어로 희석해도 완전히 덮었을 때의 색은 같고, 얇게 올릴 때만 옅어집니다."
+     ]
+    ]
+   ]
+  ],
+  "en": [
+   "Eyedropper help",
+   [
+    [
+     "What you can do here",
+     [
+      "Pick a color from a photo and see HEX, RGB, HSV, L*a*b* and the **paint mix**.",
+      "See **mix suggestions** made from the paints you own (per brand).",
+      "Collect colors into the palette, or group highlight/base/shadow into a **shade set**.",
+      "**Correct** the lighting cast using a white or gray reference."
+     ]
+    ],
+    [
+     "How to use",
+     [
+      "Open a photo with **Open photo**, drag and drop, or paste (Ctrl+V). Photos longer than 2400px are scaled down.",
+      "If the photo contains a white card or white cap, press **Pick white reference** (or gray) and click it. The color cast is removed; 'Show original' compares before and after.",
+      "Choose the **sample size**. 11×11 average is steadier on textured surfaces.",
+      "Click the photo to see values under 'Picked color'. Use the mouse wheel to zoom and drag to move when zoomed in.",
+      "Use **Add this color to palette**. Click a square in 'Recently added' to see that color again.",
+      "Shade set: click its title (▸) to expand, choose a part, press a slot (highlight/base/shadow), then click the photo. It moves to the next empty slot.",
+      "Mix suggestions: choose the brand with the buttons above. Only paints marked as owned are used.",
+      "**Mixed brands (lacquer)**: mixes owned Mr. Color, Gaianotes, Finisher's, Model Kasten and Tamiya LP paints regardless of brand. Tags such as [Mr] and [Gaia] show the brand. Enamels and water-based paints are left out. Brands are not forced to mix: single-brand mixes are included and everything is ranked by closeness to the target.",
+      "**Exclude metallic/pearl** switch (top right of Mix suggestions): when on, paints of type 'Metallic/pearl' are left out of mixing (on by default). Change a paint's type under Manage paints.",
+      "**Set as paint color**: register the picked color as a paint's color value. After you choose the paint, the current and new values, ΔE and the measuring conditions (white reference, sample size, spread, blown highlight) are shown for confirmation."
+     ]
+    ],
+    [
+     "How colors are judged",
+     [
+      "**ΔE (color difference)**: L*a*b* distance (CIE76). **Under 3 near match, under 8 close, otherwise far off.**",
+      "**Saturation (HSV S)**: under 10% shows 'low saturation: close to gray'; under 3% the hue (H) is unstable. Colors that look blue are often close to gray.",
+      "**Sample spread**: if the mean ΔE of pixels in the sample area **exceeds 4**, glare, texture or an edge is likely mixed in.",
+      "**Blown highlight**: if the sample area contains original values of 250 or more, the reading is lighter than the real color.",
+      "**Reference rejected**: a reference spot that is blown out (250+), too dark, or too strongly colored (channel ratio over 4×) is not used.",
+      "**Mix suggestion math**: paint colors are mixed with a per-channel Kubelka-Munk approximation. All mixes of 1–3 owned paints in tenths are tried and the 3 with the smallest ΔE are shown. Colorless clears are excluded. It is an approximation: always test with a small batch.",
+      "**Print CMYK**: a reference value converted with a simple formula, without an ICC profile.",
+      "**Paint mix**: not print CMYK, but the volume ratio of the C·M·Y·K primaries mixed into white (W). The part common to C, M and Y is shown separately as gray.",
+      "**Shade-set sentences**: lightness difference (L*), red/green and yellow/blue direction (a*, b* difference over 2) and saturation difference (over 3) versus the base."
+     ]
+    ],
+    [
+     "Tips",
+     [
+      "Use the **original photo file**, not a screenshot; screenshots carry display-converted colors.",
+      "When shooting real swatches, **include a white reference**, keep the same lighting, and turn off HDR/auto adjustments on the phone.",
+      "Gloss and matte read differently because of reflections; match the finish of swatches you compare.",
+      "The picked color is framed in neutral gray to reduce the illusion caused by surrounding colors.",
+      "Diluting with a clear keeps the fully covered color the same; only thin coats get paler."
+     ]
+    ]
+   ]
+  ],
+  "ja": [
+   "スポイトのヘルプ",
+   [
+    [
+     "このタブでできること",
+     [
+      "写真の好きな場所の色を取り、HEX・RGB・HSV・L*a*b*と**塗料配合比**を確認します。",
+      "所有塗料でその色を作る**配合の提案**を確認します（ブランド別）。",
+      "取った色をパレットに集めたり、ハイライト・基本色・影を**陰影セット**にまとめて比べます。",
+      "写真の照明の色を白・グレー基準で**補正**します。"
+     ]
+    ],
+    [
+     "使い方",
+     [
+      "**写真を開く**、ドラッグ＆ドロップ、貼り付け(Ctrl+V)で写真を開きます。長辺2400pxを超える場合は縮小します。",
+      "写真に白い紙や白いキャップなどの基準があれば**基準の白を取る**（または基準のグレー）を押してそこをクリックします。色かぶりが取れます。「元画像を表示」で補正前と比べられます。",
+      "**測定範囲**を選びます。質感がある面では11×11平均がぶれにくくなります。",
+      "写真をクリックすると右の「取得した色」に値が出ます。マウスホイールで拡大・縮小し、拡大中はドラッグで移動します。",
+      "**この色をパレットに追加**で集めます。「最近追加した色」の枠を押すとその色をもう一度見られます。",
+      "陰影セット: 見出し(▸)を押して開き、部位を選び、枠（ハイライト/基本色/影）を押してから写真をクリックすると入り、次の空き枠へ進みます。",
+      "配合の提案: 上のブランドボタンで計算するブランドを選びます。所有にチェックした塗料だけを使います。",
+      "**ブランド混合（ラッカー）**: Mr.カラー・ガイアノーツ・フィニッシャーズ・モデルカステン・タミヤ ラッカーの所有塗料をブランドに関係なく混ぜて計算します。結果の[Mr]・[Gaia]などがブランドです。エナメル・水性塗料は入れません。ブランドを必ず混ぜるわけではなく、1ブランドだけの組み合わせも含めて目標に近い順に表示します。",
+      "**パール・メタリック除外**スイッチ（配合の提案の右上）: オンにすると種類が「メタリック・パール」の塗料を配合計算から外します（初期: オン）。種類は塗料管理で変更できます。",
+      "**塗料の色値に登録**: 今取った色を塗料の色値として登録します。塗料を選ぶと現在の値と新しい値、ΔE、測定条件（基準の白での補正、測定範囲、ばらつき、白飛び）を表示し、確認すると登録します。"
+     ]
+    ],
+    [
+     "色を評価する基準",
+     [
+      "**ΔE（色差）**: 2色のL*a*b*距離(CIE76)です。**3未満はほぼ同じ、8未満は近い、それ以上は差が大きい**と判定します。",
+      "**彩度(HSV S)**: 10%未満で「低彩度: グレーに近い色」、3%未満で色相角(H)が不安定だと知らせます。青く見えても実際はグレーに近いことがよくあります。",
+      "**測定のばらつき**: 測定範囲内のピクセルの平均ΔEが**4を超える**と、反射光・質感・境界が混ざっていると警告します。",
+      "**白飛び**: 測定範囲に元の値250以上（白飛び）があると、実際より明るく測定されると警告します。",
+      "**基準の拒否**: 基準に選んだ場所が白飛び(250以上)、暗すぎる、色が強すぎる（チャンネル比4倍超）場合は基準に使いません。",
+      "**配合提案の計算**: 塗料の色をチャンネル別のKubelka-Munk近似で混ぜ、所有塗料1〜3種を10等分の比率で混ぜた全組み合わせのうちΔEが最も小さい3つを表示します。無色クリアーは除外します。近似モデルなので必ず少量で試し調色してください。",
+      "**印刷CMYK**: ICCプロファイルを使わず単純な式で換算した参考値です。",
+      "**塗料配合比**: 印刷CMYKではなく、基準原色C・M・Y・Kを白(W)に混ぜる体積比です。C・M・Yの共通分はグレー成分として分けて表示します。",
+      "**陰影の関係文**: 基本色に対する明度差(L*)、赤/緑・黄/青の方向(a*・b*の差が2超)、彩度差(3超)で書きます。"
+     ]
+    ],
+    [
+     "ヒント",
+     [
+      "スクリーンショットより**元の写真ファイル**を使ってください。スクリーンショットは画面用に変換された色です。",
+      "実物の見本を撮るときは**白の基準を一緒に写し**、同じ照明で、スマホのHDR・自動補正を切って撮ると比較が正確になります。",
+      "光沢とつや消しは反射のため同じ色でも違って写ります。比べる見本同士は仕上げを揃えてください。",
+      "取得した色は中性グレーの枠の中に表示され、周りの色による錯視を減らします。",
+      "クリアーで薄めても完全に覆ったときの色は同じで、薄く重ねたときだけ淡くなります。"
+     ]
+    ]
+   ]
+  ]
+ },
+ "palette": {
+  "ko": [
+   "팔레트 도움말",
+   [
+    [
+     "이 탭에서 할 수 있는 것",
+     [
+      "스포이드에서 모은 색을 정리하고, 각 색의 **C·M·Y·K·W 배합비**를 봅니다.",
+      "사진 위 + 색 칸 아래 구성의 팔레트를 **PNG·PDF**로 저장합니다(인쇄해 실제 도료와 대 보기용).",
+      "작품·행사·원형사 등 출처 정보와 함께 **라이브러리에 저장**합니다."
+     ]
+    ],
+    [
+     "사용 방법",
+     [
+      "**비율 기준 원색**을 고릅니다: 기본(가상 원색), Mr.컬러 색의 근원 + C1·C2, 가이아 순색 033~035 + 001·002. 실제로 가진 원색을 고르면 그 도료로 섞는 비율이 됩니다.",
+      "목록의 ◀ ▶로 순서를 바꾸고, **배합**을 누르면 그 색을 스포이드 화면에서 다시 봅니다.",
+      "**라이브러리에 저장**: 정보를 적고 저장합니다. 라이브러리에서 연 기록이면 '덮어쓰기'를 체크해 같은 기록을 고칠 수 있습니다."
+     ]
+    ],
+    [
+     "색을 평가하는 기준",
+     [
+      "배합비는 기준 원색 5개를 섞어 그 색과 **ΔE가 가장 작아지는** 부피 비율입니다. 5% 단위로 전체를 찾은 뒤 1%, 0.5% 단위로 다듬습니다.",
+      "**인쇄 CMYK가 아닙니다.** 착색력이 센 원색을 흰색에 섞는 비율이라 값이 작게 나옵니다.",
+      "C·M·Y의 공통분은 사실상 **회색 성분**이라 '회색 0.5 + 색 C1.5 M0.5'처럼 나눠 보여 줍니다.",
+      "원색의 색상값이 실제와 다르면 비율도 틀어집니다. 도료 관리에서 원색을 칠해 찍은 값으로 바꾸면 정확해집니다."
+     ]
+    ],
+    [
+     "팁",
+     [
+      "새 사진을 불러오면 팔레트가 비워집니다. 남기려면 먼저 라이브러리에 저장하세요.",
+      "라이브러리에 저장한 뒤에도 머리글의 **저장**을 눌러야 파일에 기록됩니다."
+     ]
+    ]
+   ]
+  ],
+  "en": [
+   "Palette help",
+   [
+    [
+     "What you can do here",
+     [
+      "Organize the colors collected on the Eyedropper screen and see each color's **C·M·Y·K·W paint mix**.",
+      "Save a palette (photo on top, swatches below) as **PNG or PDF** to print and hold against real paint.",
+      "**Save to library** together with source info such as work, event and sculptor."
+     ]
+    ],
+    [
+     "How to use",
+     [
+      "Choose the **primaries for ratios**: Generic (virtual), Mr. Color Iro-no-Moto + C1·C2, or Gaia Pure 033–035 + 001·002. Choosing primaries you own gives ratios for those paints.",
+      "Reorder with ◀ ▶; **Mix** shows that color again on the Eyedropper screen.",
+      "**Save to library**: fill in the info and save. For a record opened from the library, tick 'Overwrite' to update it."
+     ]
+    ],
+    [
+     "How colors are judged",
+     [
+      "The ratio is the volume mix of the five primaries that gives the **smallest ΔE** to the color: a full search in 5% steps, refined in 1% and 0.5% steps.",
+      "**It is not print CMYK.** Strong primaries mixed into white give small numbers.",
+      "The part common to C, M and Y is effectively **gray**, shown separately as e.g. 'gray 0.5 + color C1.5 M0.5'.",
+      "If a primary's color value is off, the ratios are off. Replace it under Manage paints with a value picked from a painted swatch."
+     ]
+    ],
+    [
+     "Tips",
+     [
+      "Opening a new photo clears the palette; save to the library first if you want to keep it.",
+      "After saving to the library, press **Save** in the header to write it to the file."
+     ]
+    ]
+   ]
+  ],
+  "ja": [
+   "パレットのヘルプ",
+   [
+    [
+     "このタブでできること",
+     [
+      "スポイトで集めた色を整理し、各色の**C·M·Y·K·W配合比**を確認します。",
+      "写真が上・色枠が下のパレットを**PNG・PDF**で保存します（印刷して実際の塗料と比べる用）。",
+      "作品・イベント・原型師などの出典情報と一緒に**ライブラリに保存**します。"
+     ]
+    ],
+    [
+     "使い方",
+     [
+      "**比率の基準原色**を選びます: 汎用（仮想原色）、Mr.カラー色ノ源 + C1・C2、ガイア純色033〜035 + 001・002。実際に持っている原色を選ぶと、その塗料で混ぜる比率になります。",
+      "◀ ▶で順番を変え、**配合**を押すとその色をスポイト画面で再表示します。",
+      "**ライブラリに保存**: 情報を入れて保存します。ライブラリから開いた記録なら「上書き」にチェックして同じ記録を更新できます。"
+     ]
+    ],
+    [
+     "色を評価する基準",
+     [
+      "配合比は基準原色5色を混ぜて、その色との**ΔEが最も小さくなる**体積比です。5%刻みで全体を探した後、1%、0.5%刻みで詰めます。",
+      "**印刷CMYKではありません。**着色力の強い原色を白に混ぜる比率なので小さい値になります。",
+      "C・M・Yの共通分は実質的に**グレー成分**なので「グレー 0.5 + 色 C1.5 M0.5」のように分けて表示します。",
+      "原色の色値が実物と違うと比率もずれます。塗料管理で原色を塗って取った値に置き換えると正確になります。"
+     ]
+    ],
+    [
+     "ヒント",
+     [
+      "新しい写真を開くとパレットは空になります。残したい場合は先にライブラリに保存してください。",
+      "ライブラリに保存した後も、ヘッダーの**保存**を押すとファイルに書き込まれます。"
+     ]
+    ]
+   ]
+  ]
+ },
+ "library": {
+  "ko": [
+   "라이브러리 도움말",
+   [
+    [
+     "이 탭에서 할 수 있는 것",
+     [
+      "저장한 기록(사진 한 장에서 뽑은 색 + 출처 정보)을 모아 봅니다.",
+      "이름·행사·원형사·메모로 **검색**하고, 부위·행사로 **걸러** 봅니다.",
+      "**기록별** 또는 **부위별 모아 보기**로 같은 부위의 명암 세트를 나란히 비교합니다.",
+      "걸러 본 기록을 **A4 PDF**로 인쇄용 저장합니다."
+     ]
+    ],
+    [
+     "사용 방법",
+     [
+      "**열기**: 사진과 색을 팔레트로 불러와 이어서 작업합니다.",
+      "**편집**: 출처 정보만 고칩니다. **삭제**는 한 번 더 눌러야 지워집니다.",
+      "A4 PDF: '사진 포함'을 고르고 저장합니다. 각 색 칸에는 C·M·Y·K·W 배합비와, 스포이드 화면에서 고른 브랜드의 보유 도료로 만든 가장 가까운 배합이 들어갑니다."
+     ]
+    ],
+    [
+     "팁",
+     [
+      "사진은 불러온 해상도(긴 변 최대 2400px, JPEG 90%)로 저장되어, 열면 원래 화질로 다시 찍을 수 있습니다.",
+      "기록의 색상값은 저장할 때 찍은 값이라 사진 압축의 영향을 받지 않습니다."
+     ]
+    ]
+   ]
+  ],
+  "en": [
+   "Library help",
+   [
+    [
+     "What you can do here",
+     [
+      "Browse saved records (colors picked from one photo plus source info).",
+      "**Search** by name, event, sculptor or memo and **filter** by part and event.",
+      "Compare shade sets of the same part side by side with **By record** or **Compare by part**.",
+      "Save the filtered records as a printable **A4 PDF**."
+     ]
+    ],
+    [
+     "How to use",
+     [
+      "**Open**: load the photo and colors into the palette to continue.",
+      "**Edit**: change source info only. **Delete** needs a second press.",
+      "A4 PDF: choose 'Include photos' and save. Each swatch carries its C·M·Y·K·W ratio and the closest mix from owned paints of the brand selected on the Eyedropper screen."
+     ]
+    ],
+    [
+     "Tips",
+     [
+      "Photos are stored at the opened resolution (longest side up to 2400px, JPEG 90%), so you can pick again at full quality.",
+      "A record's color values were picked when saved, so photo compression doesn't affect them."
+     ]
+    ]
+   ]
+  ],
+  "ja": [
+   "ライブラリのヘルプ",
+   [
+    [
+     "このタブでできること",
+     [
+      "保存した記録（写真1枚から取った色 + 出典情報）をまとめて見ます。",
+      "名前・イベント・原型師・メモで**検索**し、部位・イベントで**絞り込み**ます。",
+      "**記録別**または**部位別に比較**で、同じ部位の陰影セットを並べて比べます。",
+      "絞り込んだ記録を**A4 PDF**で印刷用に保存します。"
+     ]
+    ],
+    [
+     "使い方",
+     [
+      "**開く**: 写真と色をパレットに読み込んで作業を続けます。",
+      "**編集**: 出典情報だけを直します。**削除**はもう一度押すと消えます。",
+      "A4 PDF: 「写真を含める」を選んで保存します。各色枠にはC·M·Y·K·W配合比と、スポイト画面で選んだブランドの所有塗料で作る最も近い配合が入ります。"
+     ]
+    ],
+    [
+     "ヒント",
+     [
+      "写真は開いた解像度（長辺最大2400px、JPEG 90%）で保存されるので、開けば元の画質で取り直せます。",
+      "記録の色値は保存時に取った値なので、写真の圧縮の影響を受けません。"
+     ]
+    ]
+   ]
+  ]
+ },
+ "owned": {
+  "ko": [
+   "보유 도료 도움말",
+   [
+    [
+     "이 탭에서 할 수 있는 것",
+     [
+      "보유로 체크한 도료를 카드로 한눈에 봅니다(색 견본, 번호, 이름, 브랜드, 종류·광택·투명도, 색상값, 색상각, 착색력).",
+      "정렬하고, 종류·광택으로 걸러 봅니다."
+     ]
+    ],
+    [
+     "사용 방법",
+     [
+      "보유 여부는 **도료 관리** 탭에서 바꿉니다.",
+      "배합 제안은 여기 있는 도료만으로 계산합니다."
+     ]
+    ],
+    [
+     "정렬 기준",
+     [
+      "**브랜드별**: 브랜드 순서 → 번호 순.",
+      "**제품 번호별**: 번호를 숫자 크기대로 비교합니다(C2 < C10).",
+      "**색상별**: 무채색(L*a*b* 채도 8 미만)을 먼저 밝은 순으로, 그다음 색상각 순, 같은 색상각이면 밝은 순. 무색 클리어는 맨 뒤입니다."
+     ]
+    ],
+    [
+     "견본 보는 법",
+     [
+      "무색 클리어는 체크무늬, 색 있는 클리어는 체크무늬 위에 반투명 색으로 보여 줍니다.",
+      "색상각 옆 '(색상값 기준)'은 도료 색상값에서 계산한 값이고, 측정해 넣은 값은 '(측정값)'으로 표시됩니다."
+     ]
+    ]
+   ]
+  ],
+  "en": [
+   "My paints help",
+   [
+    [
+     "What you can do here",
+     [
+      "See the paints marked as owned as cards (swatch, number, name, brand, type/finish/opacity, color value, hue, tinting strength).",
+      "Sort them and filter by type and finish."
+     ]
+    ],
+    [
+     "How to use",
+     [
+      "Change ownership on the **Manage paints** tab.",
+      "Mix suggestions use only the paints shown here."
+     ]
+    ],
+    [
+     "Sort rules",
+     [
+      "**By brand**: brand order, then number.",
+      "**By product number**: numbers compared numerically (C2 < C10).",
+      "**By color**: neutrals (L*a*b* chroma under 8) first from light to dark, then by hue, then lightness. Colorless clears last."
+     ]
+    ],
+    [
+     "Reading the swatches",
+     [
+      "Colorless clears show a checkerboard; colored clears show a translucent color over it.",
+      "'(from color value)' next to the hue is computed from the paint's color value; measured values show '(measured)'."
+     ]
+    ]
+   ]
+  ],
+  "ja": [
+   "所有塗料のヘルプ",
+   [
+    [
+     "このタブでできること",
+     [
+      "所有にチェックした塗料をカードで一覧します（色見本、番号、名前、ブランド、種類・ツヤ・透明度、色値、色相角、着色力）。",
+      "並べ替えたり、種類・ツヤで絞り込みます。"
+     ]
+    ],
+    [
+     "使い方",
+     [
+      "所有の有無は**塗料管理**タブで変更します。",
+      "配合の提案はここにある塗料だけで計算します。"
+     ]
+    ],
+    [
+     "並べ替えの基準",
+     [
+      "**ブランド別**: ブランドの順 → 番号順。",
+      "**製品番号別**: 番号を数値として比べます(C2 < C10)。",
+      "**色別**: 無彩色（L*a*b*彩度8未満）を明るい順に先に、次に色相角順、同じ色相角なら明るい順。無色クリアーは最後です。"
+     ]
+    ],
+    [
+     "見本の見方",
+     [
+      "無色クリアーは市松模様、色付きクリアーは市松模様の上に半透明の色で表示します。",
+      "色相角の「(色値基準)」は塗料の色値から計算した値で、測定して入れた値は「(測定値)」と表示されます。"
+     ]
+    ]
+   ]
+  ]
+ },
+ "paints": {
+  "ko": [
+   "도료 관리 도움말",
+   [
+    [
+     "이 탭에서 할 수 있는 것",
+     [
+      "도료를 **추가**하고, **보유** 여부를 체크합니다.",
+      "도료의 **색상값**, 종류(일반/클리어, 클리어면 무색 여부), 광택을 고칩니다.",
+      "'측정값 편집'을 켜서 **투명도·착색력**을 입력합니다."
+     ]
+    ],
+    [
+     "사용 방법",
+     [
+      "위쪽 **브랜드 탭**으로 브랜드를 고릅니다. 검색칸에 글자를 넣으면 전체 브랜드에서 한/영/일 이름과 번호로 찾습니다.",
+      "**보유만**을 켜면 보유 도료만 보입니다.",
+      "색 칸을 눌러 색상값을 바꿉니다. 실제로 칠해 찍은 색(기준 흰색으로 보정한 값)으로 바꾸면 배합 제안이 정확해집니다.",
+      "**스포이드 버튼**(색 칸 옆): 스포이드 화면으로 넘어가 사진 속 그 도료의 견본을 클릭해 색상값을 등록합니다. 흰 기준을 함께 찍고 '기준 흰색 찍기'로 보정한 뒤 찍으면 정확합니다.",
+      "**사진에서 연속 찍기**: 찍을 순서대로 도료를 고르면, 한 사진 속 스푼들을 차례로 클릭해 등록합니다. 건너뛰기·등록 취소도 됩니다.",
+      "등록한 도료에는 **실측 날짜** 배지가 붙습니다(마우스를 올리면 측정 조건). 측정은 마지막 1회만 저장되고, '측정값 편집'을 켜면 이전 값이나 기본값으로 되돌릴 수 있습니다.",
+      "도료 추가: 같은 브랜드·번호가 있으면 덮어씁니다. 직접 추가한 도료만 삭제할 수 있습니다.",
+      "**도료 목록 초기화**는 5초 안에 한 번 더 눌러야 실행됩니다."
+     ]
+    ],
+    [
+     "색상값의 출처와 신뢰도",
+     [
+      "**Mr.컬러**: GSI Creos 공식 컬러리스트의 인쇄 견본을 화면용 색으로 바꾼 값(근사값).",
+      "**가이아노츠**: 공식 컬러 차트의 대표색. 순색 033~037은 공식 페이지의 칠한 견본 사진에서 잰 값입니다. 투명·형광·메탈릭은 실제와 차이가 클 수 있습니다.",
+      "**Finisher's**: 공식 쇼핑몰의 프라판 도색 견본 사진에서 잰 값.",
+      "그 밖의 도료(타미야, 스타킹 컬러, GX 일부, 콜라보 시리즈, 수성 등)는 **임시 근사값**입니다."
+     ]
+    ],
+    [
+     "평가에 쓰이는 값",
+     [
+      "**무색 클리어**는 섞어도 완전히 덮었을 때의 색을 바꾸지 않으므로 배합 계산에서 빠집니다.",
+      "**투명도·착색력·색상각**은 측정해서 넣는 값이며 비어 있으면 '미측정'입니다. 지금은 기록용이고, 이후 글레이즈(투명 덧칠) 계산에 쓸 예정입니다.",
+      "색상각을 측정하지 않았으면 색상값에서 계산한 값을 '(색상값 기준)'으로 보여 줍니다."
+     ]
+    ]
+   ]
+  ],
+  "en": [
+   "Manage paints help",
+   [
+    [
+     "What you can do here",
+     [
+      "**Add** paints and tick which ones you **own**.",
+      "Edit a paint's **color value**, type (standard/clear, and colorless for clears) and finish.",
+      "Turn on 'Edit measurements' to enter **opacity and tinting strength**."
+     ]
+    ],
+    [
+     "How to use",
+     [
+      "Choose a brand with the **brand tabs** at the top. Typing in the search box searches all brands by number and Korean/English/Japanese name.",
+      "**Owned only** shows only owned paints.",
+      "Click a swatch to change the color value. Replacing it with a color picked from a real painted swatch (white-reference corrected) makes suggestions more accurate.",
+      "**Eyedropper button** (next to the swatch): goes to the Eyedropper screen; click that paint's swatch in the photo to register its color. Include a white reference and use 'Pick white reference' first for accuracy.",
+      "**Pick several from a photo**: choose paints in picking order, then click the spoons in one photo one after another. Skip and cancel are available.",
+      "Registered paints get a **Measured date** badge (hover for the conditions). Only the latest measurement is kept; with 'Edit measurements' on you can go back to the previous or default value.",
+      "Add a paint: an existing brand + number is overwritten. Only paints you added can be deleted.",
+      "**Reset paint list** runs only if pressed again within 5 seconds."
+     ]
+    ],
+    [
+     "Where color values come from",
+     [
+      "**Mr. Color**: printed swatches of GSI Creos's official color list converted to screen colors (approximate).",
+      "**Gaianotes**: representative colors from the official chart. Pure colors 033–037 were measured from the painted sample photo on the official page. Clears, fluorescents and metallics may differ a lot.",
+      "**Finisher's**: measured from the painted plastic-plate photos in the official shop.",
+      "Others (Tamiya, stocking colors, some GX, collaboration series, water-based, etc.) are **provisional approximations**."
+     ]
+    ],
+    [
+     "Values used in judging",
+     [
+      "**Colorless clears** don't change the fully covered color, so they are left out of mix calculations.",
+      "**Opacity, tinting strength and hue** are measured values; empty means 'not measured'. They are records for now and will be used for glaze (transparent coat) calculations later.",
+      "If the hue isn't measured, the value computed from the color value is shown as '(from color value)'."
+     ]
+    ]
+   ]
+  ],
+  "ja": [
+   "塗料管理のヘルプ",
+   [
+    [
+     "このタブでできること",
+     [
+      "塗料を**追加**し、**所有**の有無をチェックします。",
+      "塗料の**色値**、種類（通常/クリアー、クリアーなら無色かどうか）、ツヤを直します。",
+      "「測定値を編集」をオンにして**透明度・着色力**を入力します。"
+     ]
+    ],
+    [
+     "使い方",
+     [
+      "上の**ブランドタブ**でブランドを選びます。検索欄に入力すると全ブランドから日韓英の名前と番号で探します。",
+      "**所有のみ**をオンにすると所有塗料だけを表示します。",
+      "色枠を押して色値を変えます。実際に塗って取った色（基準の白で補正した値）に置き換えると配合の提案が正確になります。",
+      "**スポイトボタン**（色枠の横）: スポイト画面に移り、写真の中のその塗料の見本をクリックして色値を登録します。白の基準を一緒に写し、「基準の白を取る」で補正してから取ると正確です。",
+      "**写真から連続で取る**: 取る順に塗料を選ぶと、1枚の写真のスプーンを順にクリックして登録します。スキップ・中止もできます。",
+      "登録した塗料には**実測 日付**のバッジが付きます（マウスを乗せると測定条件）。測定は最後の1回だけ保存され、「測定値を編集」をオンにすると前の値や初期値に戻せます。",
+      "塗料の追加: 同じブランド・番号があれば上書きします。自分で追加した塗料だけ削除できます。",
+      "**塗料リストを初期化**は5秒以内にもう一度押すと実行されます。"
+     ]
+    ],
+    [
+     "色値の出典と信頼度",
+     [
+      "**Mr.カラー**: GSIクレオス公式カラーリストの印刷見本を画面用の色に変換した値（近似値）。",
+      "**ガイアノーツ**: 公式カラーチャートの代表色。純色033〜037は公式ページの塗装見本写真から測った値です。透明・蛍光・メタリックは実物と差が大きい場合があります。",
+      "**フィニッシャーズ**: 公式ショップのプラ板塗装見本写真から測った値。",
+      "その他の塗料（タミヤ、ストッキングカラー、GXの一部、コラボシリーズ、水性など）は**暫定の近似値**です。"
+     ]
+    ],
+    [
+     "評価に使う値",
+     [
+      "**無色クリアー**は混ぜても完全に覆ったときの色を変えないため、配合計算から外れます。",
+      "**透明度・着色力・色相角**は測定して入れる値で、空欄は「未測定」です。今は記録用で、今後グレーズ（透明な重ね塗り）の計算に使う予定です。",
+      "色相角を測定していない場合は色値から計算した値を「(色値基準)」で表示します。"
+     ]
+    ]
+   ]
+  ]
+ },
+ "data": {
+  "ko": [
+   "데이터 도움말",
+   [
+    [
+     "이 탭에서 할 수 있는 것",
+     [
+      "도료 목록, 라이브러리, 화면 설정을 **파일로 저장**하고, 백업을 만들고 불러옵니다."
+     ]
+    ],
+    [
+     "버튼",
+     [
+      "**저장**: 프로그램과 같은 폴더의 colormix_data.json에 저장합니다. 언어·정렬·측정 범위 같은 화면 설정도 함께 저장되어 다음에 그대로 시작합니다. 머리글의 저장, Ctrl+S와 같습니다.",
+      "**다른 이름으로 저장**: 도료 목록과 라이브러리를 원하는 위치에 사본으로 저장합니다(백업·이동용). 화면 설정은 담지 않습니다.",
+      "**백업 데이터 불러오기**: 도료 목록은 파일 내용으로 바뀌고, 라이브러리는 지금 없는 기록만 더해집니다. 화면 설정은 바뀌지 않습니다. 불러온 뒤 저장해야 반영됩니다."
+     ]
+    ],
+    [
+     "알아 둘 것",
+     [
+      "머리글에 '저장 안 됨'이 보이면 파일에 아직 기록되지 않은 변경이 있습니다.",
+      "저장하지 않은 변경이 있을 때 창을 닫으면 '저장하고 나가기 / 저장하지 않고 나가기 / 취소'를 묻습니다.",
+      "프로그램을 옮길 때는 exe와 colormix_data.json을 함께 옮기세요."
+     ]
+    ]
+   ]
+  ],
+  "en": [
+   "Data help",
+   [
+    [
+     "What you can do here",
+     [
+      "**Save** the paint list, library and display settings to a file, and make or load backups."
+     ]
+    ],
+    [
+     "Buttons",
+     [
+      "**Save**: saves to colormix_data.json in the program's folder. Display settings such as language, sort and sample size are saved too, so the program opens the way you left it. Same as Save in the header and Ctrl+S.",
+      "**Save as**: saves a copy of the paint list and library wherever you choose (for backups or moving). Display settings are not included.",
+      "**Load backup data**: the paint list is replaced with the file's contents and only library records you don't have are added. Display settings stay. Save afterwards to keep it."
+     ]
+    ],
+    [
+     "Good to know",
+     [
+      "'unsaved' in the header means there are changes not yet written to the file.",
+      "Closing the window with unsaved changes asks 'Save and exit / Exit without saving / Cancel'.",
+      "When moving the program, move the exe together with colormix_data.json."
+     ]
+    ]
+   ]
+  ],
+  "ja": [
+   "データのヘルプ",
+   [
+    [
+     "このタブでできること",
+     [
+      "塗料リスト、ライブラリ、表示設定を**ファイルに保存**し、バックアップを作成・読み込みます。"
+     ]
+    ],
+    [
+     "ボタン",
+     [
+      "**保存**: プログラムと同じフォルダのcolormix_data.jsonに保存します。言語・並べ替え・測定範囲などの表示設定も一緒に保存され、次回そのまま始まります。ヘッダーの保存、Ctrl+Sと同じです。",
+      "**名前を付けて保存**: 塗料リストとライブラリを好きな場所にコピーとして保存します（バックアップ・移行用）。表示設定は含みません。",
+      "**バックアップデータを読み込む**: 塗料リストはファイルの内容に置き換わり、ライブラリはまだない記録だけ追加されます。表示設定は変わりません。読み込んだ後に保存すると反映されます。"
+     ]
+    ],
+    [
+     "知っておくこと",
+     [
+      "ヘッダーに「未保存」と出ていれば、まだファイルに書き込まれていない変更があります。",
+      "未保存の変更があるままウィンドウを閉じると「保存して終了 / 保存せずに終了 / キャンセル」を確認します。",
+      "プログラムを移すときはexeとcolormix_data.jsonを一緒に移してください。"
+     ]
+    ]
+   ]
+  ]
+ }
+}

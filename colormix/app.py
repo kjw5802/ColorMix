@@ -1,19 +1,19 @@
 """조색 스포이드 (ColorMix) - Windows 실행 파일 진입점.
 
-화면은 web/index.html(원래 colormix.html)을 pywebview로 띄우고,
-브라우저가 못 하는 일(데이터 파일 저장, 저장 대화상자, 종료 확인)만 Api 클래스로 처리한다.
+화면(web/)을 pywebview 창에 띄우고, 브라우저가 못 하는 일만 Api 클래스로 처리한다:
+데이터 파일 읽기·쓰기(storage.py), 저장·열기 대화상자, PDF 만들기(pdfmaker.py), 종료 확인.
+화면의 JS는 window.pywebview.api.이름(...)으로 Api의 공개 메서드를 부른다(밑줄로 시작하는 것은 JS에 보이지 않는다).
 """
 
 import base64
-import json
 import os
-import shutil
 import sys
-import tempfile
 import threading
-from datetime import datetime
 
 import webview
+
+import pdfmaker
+import storage
 
 APP_TITLE = "조색 스포이드"
 DATA_NAME = "colormix_data.json"
@@ -45,63 +45,31 @@ FILE_TYPES = {
 class Api:
     def __init__(self):
         self._window = None
-        self._dirty = False
-        self._allow_close = False
+        self._dirty = False        # 저장 안 된 변경이 있는지 (JS가 set_dirty로 알려 준다)
+        self._allow_close = False  # True면 창 닫기를 막지 않는다
 
     # ---- 데이터 파일 ----
     def data_path(self):
         return DATA_PATH
 
     def load_data(self):
-        if not os.path.exists(DATA_PATH):
-            return None
-        with open(DATA_PATH, encoding="utf-8-sig") as f:
-            return f.read()
+        return storage.load_text(DATA_PATH)
 
     def save_data(self, json_text):
-        json.loads(json_text)  # 깨진 내용은 쓰지 않는다
-        # 기존 파일이 JSON으로 읽히지 않으면(손상 등) 덮어쓰기 전에 따로 남겨 둔다
-        if os.path.exists(DATA_PATH):
-            try:
-                with open(DATA_PATH, encoding="utf-8-sig") as f:
-                    json.load(f)
-            except (ValueError, OSError):
-                stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-                shutil.copy2(DATA_PATH, os.path.join(data_dir(), f"colormix_data.broken-{stamp}.json"))
-        # 임시 파일에 쓴 뒤 교체(원자적 저장)
-        fd, tmp = tempfile.mkstemp(prefix=".colormix_data.", suffix=".tmp", dir=data_dir())
-        try:
-            with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as f:
-                f.write(json_text)
-                f.flush()
-                os.fsync(f.fileno())
-            os.replace(tmp, DATA_PATH)
-        except BaseException:
-            if os.path.exists(tmp):
-                os.remove(tmp)
-            raise
-        return datetime.now().strftime("%H:%M")
+        return storage.save_text(DATA_PATH, json_text)
 
     # ---- 파일 대화상자 ----
     def save_file_dialog(self, suggested_name, data_base64):
-        ext = os.path.splitext(suggested_name)[1].lower()
-        types = (FILE_TYPES[ext],) if ext in FILE_TYPES else ()
-        result = self._window.create_file_dialog(
-            webview.FileDialog.SAVE,
-            directory=data_dir(),
-            save_filename=suggested_name,
-            file_types=types,
-        )
-        if not result:
-            return None
-        path = result if isinstance(result, str) else result[0]
-        if ext and not path.lower().endswith(ext):
-            path += ext
-        with open(path, "wb") as f:
-            f.write(base64.b64decode(data_base64))
-        return path
+        """저장 대화상자에서 고른 곳에 base64 내용을 쓴다. 취소하면 None."""
+        return self._save_as(suggested_name, lambda: base64.b64decode(data_base64))
+
+    def save_pdf_dialog(self, suggested_name, pages):
+        """pages: [{"jpeg": base64, "w": pt, "h": pt}, ...]로 PDF를 만들어 저장한다. 취소하면 None."""
+        return self._save_as(suggested_name, lambda: pdfmaker.build_pdf(
+            [(base64.b64decode(p["jpeg"]), float(p["w"]), float(p["h"])) for p in pages]))
 
     def open_json_dialog(self):
+        """열기 대화상자에서 고른 JSON 파일의 {"name", "text"}. 취소하면 None."""
         result = self._window.create_file_dialog(
             webview.FileDialog.OPEN,
             directory=data_dir(),
@@ -110,8 +78,25 @@ class Api:
         if not result:
             return None
         path = result[0]
-        with open(path, encoding="utf-8-sig") as f:
-            return {"name": os.path.basename(path), "text": f.read()}
+        return {"name": os.path.basename(path), "text": storage.load_text(path)}
+
+    def _save_as(self, suggested_name, make_bytes):
+        ext = os.path.splitext(suggested_name)[1].lower()
+        result = self._window.create_file_dialog(
+            webview.FileDialog.SAVE,
+            directory=data_dir(),
+            save_filename=suggested_name,
+            file_types=(FILE_TYPES[ext],) if ext in FILE_TYPES else (),
+        )
+        if not result:
+            return None
+        path = result if isinstance(result, str) else result[0]
+        if ext and not path.lower().endswith(ext):
+            path += ext
+        data = make_bytes()
+        with open(path, "wb") as f:
+            f.write(data)
+        return path
 
     # ---- 종료 ----
     def set_dirty(self, value):
