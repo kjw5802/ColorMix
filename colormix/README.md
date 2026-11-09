@@ -38,7 +38,7 @@ python tests/ui_smoke.py        # 창을 실제로 띄워 주요 동작 확인 (
 | `web/data/paints.json` | 기본 도료 466종: 번호, 이름(한/영/일), 색상값, 종류·광택, 보유 기본값, 색상값 출처 |
 | `web/data/strings.json` | 화면 문구. 키마다 [한국어, English, 日本語] |
 | `web/data/help.json` | 탭별 도움말 |
-| `web/vendor/` | IBM Plex Mono 글꼴 (로컬) |
+| `web/vendor/` | IBM Plex Mono 글꼴 (로컬)과 라이선스 `OFL.txt` |
 | `tests/` | pytest 단위 테스트와 화면 점검 스크립트 |
 
 ### web/js/ (읽는 순서대로)
