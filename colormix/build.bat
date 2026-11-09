@@ -5,8 +5,12 @@ cd /d "%~dp0"
 python -m pip install -r requirements.txt
 if errorlevel 1 goto :fail
 
+python make_version_info.py
+if errorlevel 1 goto :fail
+
 python -m PyInstaller --noconfirm --clean --onefile --windowed ^
   --name ColorMix ^
+  --version-file build\version_info.txt ^
   --add-data "web;web" ^
   app.py
 if errorlevel 1 goto :fail

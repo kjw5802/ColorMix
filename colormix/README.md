@@ -11,6 +11,10 @@ python app.py
 
 `build.bat`를 실행하면 `dist\ColorMix.exe` 하나가 만들어집니다(PyInstaller `--onefile --windowed`). 빌드 전에 실행 중인 ColorMix를 닫아야 합니다.
 
+## 버전
+
+버전은 `version.py` 한 곳에서 정합니다. `1.x`의 x는 지금까지 성공한 빌드 횟수이므로 빌드할 때마다 1씩 올립니다. 창 제목과 exe 속성(자세히 탭)에 표시되며, 릴리즈한 빌드에는 git 태그 `v1.x`를 붙입니다. 데이터 파일 안의 `"version"`은 저장 형식 번호로 별개입니다.
+
 ## 점검
 
 ```
@@ -24,6 +28,8 @@ python tests/ui_smoke.py        # 창을 실제로 띄워 주요 동작 확인 (
 | 경로 | 내용 |
 |---|---|
 | `app.py` | 진입점. 창을 띄우고, 화면의 JS가 부르는 Python API(`Api` 클래스)를 둔다 |
+| `version.py` | 프로그램 버전 |
+| `make_version_info.py` | 빌드할 때 exe 속성에 넣을 버전 정보를 만든다 |
 | `storage.py` | 데이터 파일 읽기·쓰기 (안전하게 바꿔치기 저장, 손상 파일 따로 보관) |
 | `pdfmaker.py` | 쪽 그림(JPEG)들로 PDF 만들기 (외부 라이브러리 없음) |
 | `web/index.html` | 화면 뼈대. 글자는 `data-i18n` 키로 채운다 |

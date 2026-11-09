@@ -14,8 +14,9 @@ import webview
 
 import pdfmaker
 import storage
+from version import VERSION
 
-APP_TITLE = "조색 스포이드"
+APP_TITLE = f"조색 스포이드 v{VERSION}"
 DATA_NAME = "colormix_data.json"
 
 
