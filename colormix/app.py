@@ -1,4 +1,4 @@
-"""조색 스포이드 (ColorMix) - Windows 실행 파일 진입점.
+"""ColorMix - Windows 실행 파일 진입점.
 
 화면(web/)을 pywebview 창에 띄우고, 브라우저가 못 하는 일만 Api 클래스로 처리한다:
 데이터 파일 읽기·쓰기(storage.py), 저장·열기 대화상자, PDF 만들기(pdfmaker.py), 종료 확인.
@@ -16,7 +16,7 @@ import pdfmaker
 import storage
 from version import VERSION
 
-APP_TITLE = f"조색 스포이드 v{VERSION}"
+APP_TITLE = f"ColorMix v{VERSION}"
 DATA_NAME = "colormix_data.json"
 
 

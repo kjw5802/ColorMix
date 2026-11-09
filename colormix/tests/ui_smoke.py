@@ -118,8 +118,8 @@ def run(window, api):
         en = js("document.querySelector('h1').textContent+'|'+$('navpal').textContent+'|'+$('filestat').textContent")
         js("LI=LANGS.indexOf('ja');markDirty();applyLang()")
         ja = js("document.querySelector('h1').textContent+'|'+document.documentElement.lang")
-        check("영어", en.startswith("Paint Mix Eyedropper|Palette (4)"), en)
-        check("일본어", ja == "調色スポイト|ja", ja)
+        check("영어", en.startswith("ColorMix|Palette (4)"), en)
+        check("일본어", ja == "ColorMix|ja", ja)
         js("LI=LANGS.indexOf('ko');markDirty();applyLang()")
 
         # 도움말

@@ -1,4 +1,4 @@
-# 조색 스포이드 (ColorMix) — Windows 버전
+# ColorMix — Windows 버전
 
 사진에서 색을 찍어 보유 도료로 만드는 배합을 제안하는 프로그램입니다. 화면은 웹 기술(HTML·CSS·JS)로 만들고 pywebview 창에 띄우며, 파일 저장·PDF 만들기 같은 일은 Python이 맡습니다. 인터넷 없이 동작합니다.
 

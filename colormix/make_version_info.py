@@ -18,11 +18,11 @@ def version_info(version):
   ),
   kids=[
     StringFileInfo([StringTable('041204B0', [
-      StringStruct('FileDescription', '조색 스포이드 (ColorMix)'),
+      StringStruct('FileDescription', 'ColorMix'),
       StringStruct('FileVersion', '{version}'),
       StringStruct('InternalName', 'ColorMix'),
       StringStruct('OriginalFilename', 'ColorMix.exe'),
-      StringStruct('ProductName', '조색 스포이드 (ColorMix)'),
+      StringStruct('ProductName', 'ColorMix'),
       StringStruct('ProductVersion', '{version}')
     ])]),
     VarFileInfo([VarStruct('Translation', [1042, 1200])])

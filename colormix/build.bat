@@ -1,5 +1,5 @@
 @echo off
-rem ColorMix (josaek spoid) - PyInstaller one-file build. Output: dist\ColorMix.exe
+rem ColorMix - PyInstaller one-file build. Output: dist\ColorMix.exe
 cd /d "%~dp0"
 
 python -m pip install -r requirements.txt

@@ -1,4 +1,4 @@
-/* 조색 스포이드 화면 스타일.
+/* ColorMix 화면 스타일.
    UI에는 유채색을 쓰지 않아 색 판단을 방해하지 않는다. 숫자·코드는 IBM Plex Mono(로컬 파일),
    글자는 시스템 글꼴(맑은 고딕, Yu Gothic)로 쓴다. 인터넷 없이 동작한다. */
 @font-face{font-family:"IBM Plex Mono";font-weight:400;font-style:normal;src:url(../vendor/ibm-plex-mono-400.woff2) format("woff2")}

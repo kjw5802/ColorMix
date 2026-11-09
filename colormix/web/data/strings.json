@@ -1,6 +1,6 @@
 {
  "_order": ["ko", "en", "ja"],
- "title": ["조색 스포이드", "Paint Mix Eyedropper", "調色スポイト"],
+ "title": ["ColorMix", "ColorMix", "ColorMix"],
  "menu": ["메뉴", "Menu", "メニュー"],
  "lang": ["언어", "Language", "言語"],
  "tabMain": ["스포이드", "Eyedropper", "スポイト"],
